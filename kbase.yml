@@ -1,5 +1,5 @@
 module-name:
-    kb_util_dylan
+    kb_SetUtilities
 
 module-description:
     KBase Utilities
@@ -11,5 +11,5 @@ module-version:
     1.0.0
 
 owners:
-    [dylan]
+    [dylan, sychan]
 

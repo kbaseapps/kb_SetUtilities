@@ -1,7 +1,9 @@
 /*
-** A KBase module: kb_util_dylan
+** A KBase module: kb_SetUtilities
 **
-** This module contains basic utilities
+** This module contains basic utilities for set manipulation, originally extracted
+** from kb_util_dylan
+**
 */
 
 module kb_SetUtilities {

@@ -1,7 +1,7 @@
-SERVICE = kb_util_dylan
-SERVICE_CAPS = kb_util_dylan
-SPEC_FILE = kb_util_dylan.spec
-URL = https://kbase.us/services/kb_util_dylan
+SERVICE = kb_SetUtilities
+SERVICE_CAPS = kb_SetUtilities
+SPEC_FILE = kb_SetUtilities.spec
+URL = https://kbase.us/services/kb_SetUtilities
 DIR = $(shell pwd)
 LIB_DIR = lib
 SCRIPTS_DIR = scripts
