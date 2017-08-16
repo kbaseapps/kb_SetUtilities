@@ -4,7 +4,7 @@
 ** This module contains basic utilities
 */
 
-module kb_util_dylan {
+module kb_SetUtilities {
 
     /* 
     ** The workspace object refs are of form:
