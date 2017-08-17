@@ -60,7 +60,7 @@
     "behavior": {
         "service-mapping": {
             "url": "",
-            "name": "kb_util_dylan",
+            "name": "kb_SetUtilities",
             "method": "KButil_Split_Reads",
             "input_mapping": [
                 {
