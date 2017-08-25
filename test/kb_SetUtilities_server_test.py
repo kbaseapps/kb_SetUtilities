@@ -1,5 +1,5 @@
-import unittest
 import os
+import unittest
 import json
 import time
 import requests
@@ -12,25 +12,25 @@ from pprint import pprint
 
 from Workspace.WorkspaceClient import Workspace as workspaceService
 from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
-from kb_util_dylan.kb_util_dylanImpl import kb_util_dylan
+from kb_SetUtilities.kb_SetUtilitiesImpl import kb_SetUtilities
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 
 
-class kb_util_dylanTest(unittest.TestCase):
+class kb_SetUtilitiesTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         token = environ.get('KB_AUTH_TOKEN', None)
         cls.token = token
-        cls.ctx = {'token': token, 'provenance': [{'service': 'kb_util_dylan',
+        cls.ctx = {'token': token, 'provenance': [{'service': 'kb_SetUtilities',
             'method': 'please_never_use_it_in_production', 'method_params': []}],
             'authenticated': 1}
         config_file = environ.get('KB_DEPLOYMENT_CONFIG', None)
         cls.cfg = {}
         config = ConfigParser()
         config.read(config_file)
-        for nameval in config.items('kb_util_dylan'):
+        for nameval in config.items('kb_SetUtilities'):
             print(nameval[0] + '=' + nameval[1])
             cls.cfg[nameval[0]] = nameval[1]
         cls.wsURL = cls.cfg['workspace-url']
@@ -39,7 +39,7 @@ class kb_util_dylanTest(unittest.TestCase):
         cls.serviceWizardURL = cls.cfg['service-wizard-url']
         cls.callbackURL = os.environ['SDK_CALLBACK_URL']
         cls.wsClient = workspaceService(cls.wsURL, token=token)
-        cls.serviceImpl = kb_util_dylan(cls.cfg)
+        cls.serviceImpl = kb_SetUtilities(cls.cfg)
         cls.scratch = os.path.abspath(cls.cfg['scratch'])
         if not os.path.exists(cls.scratch):
             os.makedirs(cls.scratch)
@@ -68,7 +68,7 @@ class kb_util_dylanTest(unittest.TestCase):
         if hasattr(self.__class__, 'wsName'):
             return self.__class__.wsName
         suffix = int(time.time() * 1000)
-        wsName = "test_kb_util_dylan_" + str(suffix)
+        wsName = "test_kb_SetUtilities_" + str(suffix)
         ret = self.getWsClient().create_workspace({'workspace': wsName})
         self.__class__.wsName = wsName
         return wsName
@@ -220,8 +220,8 @@ class kb_util_dylanTest(unittest.TestCase):
                                 'meta':{},
                                 'provenance':[
                                     {
-                                        'service':'kb_util_dylan',
-                                        'method':'test_kb_util_dylan'
+                                        'service':'kb_SetUtilities',
+                                        'method':'test_kb_SetUtilities'
                                     }
                                 ]
                             }]
@@ -279,8 +279,8 @@ class kb_util_dylanTest(unittest.TestCase):
                                 'meta':{},
                                 'provenance':[
                                     {
-                                        'service':'kb_util_dylan',
-                                        'method':'test_kb_util_dylan'
+                                        'service':'kb_SetUtilities',
+                                        'method':'test_kb_SetUtilities'
                                     }
                                 ]
                             }]
@@ -294,40 +294,6 @@ class kb_util_dylanTest(unittest.TestCase):
     ##############
     # UNIT TESTS #
     ##############
-
-
-    #### test_KButil_FASTQ_to_FASTA():
-    ##
-    def test_KButil_FASTQ_to_FASTA (self):
-        method = 'KButil_FASTQ_to_FASTA'
-
-        print ("\n\nRUNNING: test_KButil_FASTQ_to_FASTA()")
-        print ("=====================================\n\n")
-
-        # figure out where the test data lives
-        se_lib_info = self.getSingleEndLibInfo('test_quick')
-        pprint(se_lib_info)
-
-        # run method
-        base_output_name = method+'_output'
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_ref': str(se_lib_info[6])+'/'+str(se_lib_info[0]),
-            'output_name': base_output_name
-        }
-        result = self.getImpl().KButil_FASTQ_to_FASTA(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        output_name = base_output_name
-        output_type = 'KBaseFile.SingleEndLibrary'
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':se_lib_info[7] + '/' + output_name}]})
-        self.assertEqual(len(info_list),1)
-        readsLib_info = info_list[0]
-        self.assertEqual(readsLib_info[1],output_name)
-        self.assertEqual(readsLib_info[2].split('-')[0],output_type)
-        pass
 
 
     #### test_KButil_Merge_FeatureSet_Collection():
@@ -697,77 +663,6 @@ class kb_util_dylanTest(unittest.TestCase):
         self.assertEqual(len(output_obj['elements'].keys()),3)
         pass
 
-
-    #### test_KButil_Concat_MSAs():
-    ##
-    def test_KButil_Concat_MSAs (self):
-        method = 'KButil_Concat_MSAs'
-
-        print ("\n\nRUNNING: test_KButil_Concat_MSAs()")
-        print ("==================================\n\n")
-
-        # MSA
-        MSA_json_file = os.path.join('data', 'DsrA.MSA.json')
-        with open (MSA_json_file, 'r', 0) as MSA_json_fh:
-            MSA_obj = json.load(MSA_json_fh)
-        provenance = [{}]
-        MSA_info_list = self.getWsClient().save_objects({
-            'workspace': self.getWsName(), 
-            'objects': [
-                {
-                    'type': 'KBaseTrees.MSA',
-                    'data': MSA_obj,
-                    'name': 'test_MSA_1',
-                    'meta': {},
-                    'provenance': provenance
-                },
-                {
-                    'type': 'KBaseTrees.MSA',
-                    'data': MSA_obj,
-                    'name': 'test_MSA_2',
-                    'meta': {},
-                    'provenance': provenance
-                },
-                {
-                    'type': 'KBaseTrees.MSA',
-                    'data': MSA_obj,
-                    'name': 'test_MSA_3',
-                    'meta': {},
-                    'provenance': provenance
-                }
-            ]})
-        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
-        MSA_ref_1 = str(MSA_info_list[0][WSID_I])+'/'+str(MSA_info_list[0][OBJID_I])+'/'+str(MSA_info_list[0][VERSION_I])
-        MSA_ref_2 = str(MSA_info_list[1][WSID_I])+'/'+str(MSA_info_list[1][OBJID_I])+'/'+str(MSA_info_list[1][VERSION_I])
-        MSA_ref_3 = str(MSA_info_list[2][WSID_I])+'/'+str(MSA_info_list[2][OBJID_I])+'/'+str(MSA_info_list[2][VERSION_I])
-
-        # run method
-        base_output_name = method+'_output'
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_refs': [MSA_ref_1, MSA_ref_2, MSA_ref_3],
-            'output_name': base_output_name,
-            'desc': 'test'
-        }
-        result = self.getImpl().KButil_Concat_MSAs(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        output_name = base_output_name
-        output_type = 'KBaseTrees.MSA'
-        output_ref = self.getWsName()+'/'+output_name
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':output_ref}]})
-        self.assertEqual(len(info_list),1)
-        output_info = info_list[0]
-        self.assertEqual(output_info[1],output_name)
-        self.assertEqual(output_info[2].split('-')[0],output_type)
-        output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
-        self.assertEqual(len(output_obj['row_order']), len(MSA_obj['row_order']))
-        self.assertEqual(output_obj['alignment_length'], 3*MSA_obj['alignment_length'])
-        pass
-
-
     #### test_KButil_Build_ReadsSet()
     ##
     def test_KButil_Build_ReadsSet (self):
@@ -813,115 +708,6 @@ class kb_util_dylanTest(unittest.TestCase):
         self.assertEqual(len(output_obj['items']), 3)
         pass
 
-
-    #### test_KButil_Split_Reads():
-    ##
-    def test_KButil_Split_Reads (self):
-        method = 'KButil_Split_Reads'
-        
-        print ("\n\nRUNNING: test_KButil_Split_Reads()")
-        print ("==================================\n\n")
-
-        # figure out where the test data lives
-        pe_lib_info = self.getPairedEndLibInfo('small_2')
-        pprint(pe_lib_info)
-
-        # Object Info Contents
-        # 0 - obj_id objid
-        # 1 - obj_name name
-        # 2 - type_string type
-        # 3 - timestamp save_date
-        # 4 - int version
-        # 5 - username saved_by
-        # 6 - ws_id wsid
-        # 7 - ws_name workspace
-        # 8 - string chsum
-        # 9 - int size
-        # 10 - usermeta meta
-
-
-        # run method
-        split_num = 4
-        base_output_name = method+'_output'
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_ref': str(pe_lib_info[6])+'/'+str(pe_lib_info[0]),
-            'split_num': split_num,
-            'output_name': base_output_name,
-            'desc':'test split'
-        }
-        result = self.getImpl().KButil_Split_Reads(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        output_name = base_output_name+'_paired-0'
-        output_type = 'KBaseFile.PairedEndLibrary'
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':pe_lib_info[7] + '/' + output_name}]})
-        self.assertEqual(len(info_list),1)
-        readsLib_info = info_list[0]
-        self.assertEqual(readsLib_info[1],output_name)
-        self.assertEqual(readsLib_info[2].split('-')[0],output_type)
-
-        output_name = base_output_name+'_paired-'+str(split_num-1)
-        output_type = 'KBaseFile.PairedEndLibrary'
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':pe_lib_info[7] + '/' + output_name}]})
-        self.assertEqual(len(info_list),1)
-        readsLib_info = info_list[0]
-        self.assertEqual(readsLib_info[1],output_name)
-        self.assertEqual(readsLib_info[2].split('-')[0],output_type)
-        pass
-
-
-    #### test_KButil_Random_Subsample_Reads():
-    ##
-    def test_KButil_Random_Subsample_Reads (self):
-        method = 'KButil_Random_Subsample_Reads'
-        
-        print ("\n\nRUNNING: test_KButil_Random_Subsample_Reads()")
-        print ("=============================================\n\n")
-
-        # figure out where the test data lives
-        pe_lib_info = self.getPairedEndLibInfo('small_2')
-        pprint(pe_lib_info)
-
-        # run method
-        split_num = 4
-        reads_num = 2500
-        base_output_name = method+'_output'
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_ref': str(pe_lib_info[6])+'/'+str(pe_lib_info[0]),
-            'subsample_fraction': {'split_num': split_num,
-                                   'reads_num': reads_num
-                               },
-            'output_name': base_output_name,
-            'desc':'test random subsample',
-            'seed': 1
-        }
-        result = self.getImpl().KButil_Random_Subsample_Reads(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        output_name = base_output_name+'_paired-0'
-        output_type = 'KBaseFile.PairedEndLibrary'
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':pe_lib_info[7] + '/' + output_name}]})
-        self.assertEqual(len(info_list),1)
-        readsLib_info = info_list[0]
-        self.assertEqual(readsLib_info[1],output_name)
-        self.assertEqual(readsLib_info[2].split('-')[0],output_type)
-
-        output_name = base_output_name+'_paired-'+str(split_num-1)
-        output_type = 'KBaseFile.PairedEndLibrary'
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':pe_lib_info[7] + '/' + output_name}]})
-        self.assertEqual(len(info_list),1)
-        readsLib_info = info_list[0]
-        self.assertEqual(readsLib_info[1],output_name)
-        self.assertEqual(readsLib_info[2].split('-')[0],output_type)
-        pass
-
-
     #### test_KButil_Merge_ReadsSet_to_OneLibrary()
     ##
     def test_KButil_Merge_ReadsSet_to_OneLibrary (self):
@@ -943,49 +729,6 @@ class kb_util_dylanTest(unittest.TestCase):
             'desc':'test merge'
         }
         result = self.getImpl().KButil_Merge_ReadsSet_to_OneLibrary(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        output_name = base_output_name
-        output_type = 'KBaseFile.PairedEndLibrary'
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':self.getWsName() + '/' + output_name}]})
-        self.assertEqual(len(info_list),1)
-        readsLib_info = info_list[0]
-        self.assertEqual(readsLib_info[1],output_name)
-        self.assertEqual(readsLib_info[2].split('-')[0],output_type)
-        pass
-
-
-    #### test_KButil_Merge_MultipleReadsLibs_to_OneLibrary()
-    ##
-    def test_KButil_Merge_MultipleReadsLibs_to_OneLibrary (self):
-        method = 'KButil_Merge_MultipleReadsLibs_to_OneLibrary'
-
-        print ("\n\nRUNNING: test_KButil_Merge_MultipleReadsLibs_to_OneLibrary()")
-        print ("============================================================\n\n")
-
-        # figure out where the test data lives
-        pe_lib_info_1 = self.getPairedEndLibInfo('test_quick', lib_i=0)
-        pprint(pe_lib_info_1)
-        pe_lib_info_2 = self.getPairedEndLibInfo('small', lib_i=1)
-        pprint(pe_lib_info_2)
-        pe_lib_info_3 = self.getPairedEndLibInfo('small_2',lib_i=2)
-        pprint(pe_lib_info_3)
-
-        # run method
-        input_refs = [ str(pe_lib_info_1[6])+'/'+str(pe_lib_info_1[0]),
-                       str(pe_lib_info_2[6])+'/'+str(pe_lib_info_2[0]),
-                       str(pe_lib_info_3[6])+'/'+str(pe_lib_info_3[0])
-                   ]
-        base_output_name = method+'_output'
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_refs': input_refs,
-            'output_name': base_output_name,
-            'desc':'test merge'
-        }
-        result = self.getImpl().KButil_Merge_MultipleReadsLibs_to_OneLibrary(self.getContext(),params)
         print('RESULT:')
         pprint(result)
 
@@ -1041,8 +784,8 @@ class kb_util_dylanTest(unittest.TestCase):
                     'meta':{},
                     'provenance':[
                         {
-                            'service':'kb_util_dylan',
-                            'method':'test_kb_util_dylan'
+                            'service':'kb_SetUtilities',
+                            'method':'test_kb_SetUtilities'
                         }
                     ]
                 }]
@@ -1068,8 +811,8 @@ class kb_util_dylanTest(unittest.TestCase):
                     'meta':{},
                     'provenance':[
                         {
-                            'service':'kb_util_dylan',
-                            'method':'test_kb_util_dylan'
+                            'service':'kb_SetUtilities',
+                            'method':'test_kb_SetUtilities'
                         }
                     ]
                 }]
@@ -1100,135 +843,6 @@ class kb_util_dylanTest(unittest.TestCase):
         output_ref = self.getWsName()+'/'+output_name
         output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
         self.assertEqual(len(output_obj['items']),3)
-        pass
-
-
-    #### test_KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs():
-    ##
-    def test_KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs (self):
-        method = 'KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs'
-
-        print ("\n\nRUNNING: test_KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs()")
-        print ("===================================================================\n\n")
-
-        # figure out where the test data lives
-        lib_basenames = ['test_quick','small_2','small']
-        pe_lib_set_info = self.getPairedEndLib_SetInfo(lib_basenames)
-        pprint(pe_lib_set_info)
-
-        # run method
-        base_output_name = method+'_output'
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_ref': str(pe_lib_set_info[6])+'/'+str(pe_lib_set_info[0]),
-            'output_name': base_output_name,
-            'desc':'test hygiene'
-        }
-        result = self.getImpl().KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        reads_name_ext = "_paired_synched"
-        output_name = base_output_name + reads_name_ext
-        output_type = 'KBaseSets.ReadsSet'
-        output_ref = self.getWsName() + '/' + output_name
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':output_ref}]})
-        self.assertEqual(len(info_list),1)
-        output_info = info_list[0]
-        self.assertEqual(output_info[1],output_name)
-        self.assertEqual(output_info[2].split('-')[0],output_type)
-        output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
-        print ('OUTPUT_OBJ:')
-        pprint(output_obj)
-        self.assertEqual(len(output_obj['items']),len(lib_basenames))
-        pass
-
-
-    #### test_KButil_Translate_ReadsLibs_QualScores()
-    ##
-    def test_KButil_Translate_ReadsLibs_QualScores (self):
-        method = 'KButil_Translate_ReadsLibs_QualScores'
-
-        print ("\n\nRUNNING: test_KButil_Translate_ReadsLibs_QualScores()")
-        print ("=====================================================\n\n")
-
-        # figure out where the test data lives
-        lib_basenames = ['test_quick', 'small']
-        lib_obj_names = []
-        input_refs = []
-        for lib_i,lib_basename in enumerate(lib_basenames):
-            pe_lib_info = self.getPairedEndLibInfo(lib_basename+'-q64_5recs', lib_i=lib_i)
-            pprint(pe_lib_info)
-            lib_obj_names.append(str(pe_lib_info[1]))
-            input_refs.append(str(pe_lib_info[6])+'/'+str(pe_lib_info[0])+'/'+str(pe_lib_info[4]))
-
-        # run method
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_refs': input_refs
-        }
-        result = self.getImpl().KButil_Translate_ReadsLibs_QualScores(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        for lib_i,lib_basename in enumerate(lib_basenames):
-            output_name = lib_obj_names[lib_i]+'.phred33'
-            output_type = 'KBaseFile.PairedEndLibrary'
-            output_ref = self.getWsName()+'/'+output_name
-            info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':output_ref}]})
-            self.assertEqual(len(info_list),1)
-            output_info = info_list[0]
-            self.assertEqual(output_info[1],output_name)
-            self.assertEqual(output_info[2].split('-')[0],output_type)
-        pass
-
-
-    #### test_KButil_AddInsertLen_to_ReadsLibs()
-    ##
-    def test_KButil_AddInsertLen_to_ReadsLibs (self):
-        method = 'KButil_AddInsertLen_to_ReadsLibs'
-
-        print ("\n\nRUNNING: test_KButil_AddInsertLen_to_ReadsLibs()")
-        print ("================================================\n\n")
-
-        # figure out where the test data lives
-        lib_basenames = ['test_quick', 'small']
-        lib_obj_names = []
-        input_refs = []
-        for lib_i,lib_basename in enumerate(lib_basenames):
-            pe_lib_info = self.getPairedEndLibInfo(lib_basename, lib_i=lib_i)
-            pprint(pe_lib_info)
-            lib_obj_names.append(str(pe_lib_info[1]))
-            input_refs.append(str(pe_lib_info[6])+'/'+str(pe_lib_info[0])+'/'+str(pe_lib_info[4]))
-
-        # run method
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_refs': input_refs,
-            'insert_len': '450.0',
-            'insert_stddev': '15.0'
-        }
-        result = self.getImpl().KButil_AddInsertLen_to_ReadsLibs(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        for lib_i,lib_basename in enumerate(lib_basenames):
-            output_name = lib_obj_names[lib_i]
-            output_type = 'KBaseFile.PairedEndLibrary'
-            output_ref = self.getWsName()+'/'+output_name
-            info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':output_ref}]})
-            self.assertEqual(len(info_list),1)
-            output_info = info_list[0]
-            self.assertEqual(output_info[1],output_name)
-            self.assertEqual(output_info[2].split('-')[0],output_type)
-            output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
-            print ('OUTPUT_OBJ:')
-            pprint(output_obj)
-            self.assertEqual(output_obj['insert_size_mean'],450.0)
-            self.assertEqual(output_obj['insert_size_std_dev'],15.0)
         pass
 
 
