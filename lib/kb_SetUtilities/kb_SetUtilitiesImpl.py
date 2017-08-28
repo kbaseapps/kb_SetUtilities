@@ -7,11 +7,9 @@ import re
 from datetime import datetime
 from pprint import pformat  # ,pprint
 import uuid
-from Workspace.WorkspaceClient import Workspace as workspaceService
-from requests_toolbelt import MultipartEncoder  # added
-from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
 
 # SDK Utils
+from Workspace.WorkspaceClient import Workspace as workspaceService
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
 from SetAPI.SetAPIServiceClient import SetAPI
 from KBaseReport.KBaseReportClient import KBaseReport
@@ -74,112 +72,6 @@ class kb_SetUtilities:
     def get_genome_set_feature_seqs(self, ws_data, ws_info):
         pass
 
-    # Helper script borrowed from the transform service, logger removed
-    #
-    def upload_file_to_shock(self,
-                             console,  # DEBUG
-                             shock_service_url=None,
-                             filePath=None,
-                             ssl_verify=True,
-                             token=None):
-        """
-        Use HTTP multi-part POST to save a file to a SHOCK instance.
-        """
-        self.log(console, "UPLOADING FILE " + filePath + " TO SHOCK")
-
-        if token is None:
-            raise Exception("Authentication token required!")
-
-        #build the header
-        header = dict()
-        header["Authorization"] = "Oauth {0}".format(token)
-        if filePath is None:
-            raise Exception("No file given for upload to SHOCK!")
-
-        dataFile = open(os.path.abspath(filePath), 'rb')
-        m = MultipartEncoder(fields={'upload': (os.path.split(filePath)[-1], dataFile)})
-        header['Content-Type'] = m.content_type
-
-        #logger.info("Sending {0} to {1}".format(filePath,shock_service_url))
-        try:
-            response = requests.post(shock_service_url + "/node", headers=header, data=m,
-                                     allow_redirects=True, verify=ssl_verify)
-            dataFile.close()
-        except:
-            dataFile.close()
-            raise
-        if not response.ok:
-            response.raise_for_status()
-        result = response.json()
-        if result['error']:
-            raise Exception(result['error'][0])
-        else:
-            return result["data"]
-
-    def upload_SingleEndLibrary_to_shock_and_ws(self,
-                                                ctx,
-                                                console,  # DEBUG
-                                                workspace_name,
-                                                obj_name,
-                                                file_path,
-                                                provenance,
-                                                sequencing_tech):
-
-        self.log(console, 'UPLOADING FILE ' + file_path + ' TO ' + workspace_name + '/' + obj_name)
-
-        # 1) upload files to shock
-        token = ctx['token']
-        forward_shock_file = self.upload_file_to_shock(console,  # DEBUG
-                                                       shock_service_url=self.shockURL,
-                                                       filePath=file_path,
-                                                       token=token
-                                                       )
-        #pprint(forward_shock_file)
-        self.log(console, 'SHOCK UPLOAD DONE')
-
-        # 2) create handle
-        self.log(console, 'GETTING HANDLE')
-        hs = HandleService(url=self.handleURL, token=token)
-        forward_handle = hs.persist_handle({'id': forward_shock_file['id'],
-                                            'type': 'shock',
-                                            'url': self.shockURL,
-                                            'file_name': forward_shock_file['file']['name'],
-                                            'remote_md5': forward_shock_file['file']['checksum']
-                                                                            ['md5']})
-
-        # 3) save to WS
-        self.log(console, 'SAVING TO WORKSPACE')
-        single_end_library = {
-            'lib': {
-                'file': {
-                    'hid': forward_handle,
-                    'file_name': forward_shock_file['file']['name'],
-                    'id': forward_shock_file['id'],
-                    'url': self.shockURL,
-                    'type': 'shock',
-                    'remote_md5': forward_shock_file['file']['checksum']['md5']
-                },
-                'encoding': 'UTF8',
-                'type': 'fasta',
-                'size': forward_shock_file['file']['size']
-            },
-            'sequencing_tech': sequencing_tech
-        }
-        self.log(console, 'GETTING WORKSPACE SERVICE OBJECT')
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        self.log(console, 'SAVE OPERATION...')
-        new_obj_info = ws.save_objects({'workspace': workspace_name,
-                                        'objects': [{'type': 'KBaseFile.SingleEndLibrary',
-                                                     'data': single_end_library,
-                                                     'name': obj_name,
-                                                     'meta': {},
-                                                     'provenance': provenance
-                                                     }]
-                                        })
-        self.log(console, 'SAVED TO WORKSPACE')
-
-        return new_obj_info[0]
-
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -188,7 +80,6 @@ class kb_SetUtilities:
         #BEGIN_CONSTRUCTOR
         self.workspaceURL = config['workspace-url']
         self.shockURL = config['shock-url']
-        self.handleURL = config['handle-service-url']
         self.serviceWizardURL = config['service-wizard-url']
 
         self.callbackURL = os.environ.get('SDK_CALLBACK_URL')
