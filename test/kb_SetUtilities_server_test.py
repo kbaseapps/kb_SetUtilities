@@ -7,11 +7,9 @@ import shutil
 
 from os import environ
 from ConfigParser import ConfigParser
-from requests_toolbelt import MultipartEncoder
 from pprint import pprint
 
 from Workspace.WorkspaceClient import Workspace as workspaceService
-from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
 from kb_SetUtilities.kb_SetUtilitiesImpl import kb_SetUtilities
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
@@ -35,7 +33,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
             cls.cfg[nameval[0]] = nameval[1]
         cls.wsURL = cls.cfg['workspace-url']
         cls.shockURL = cls.cfg['shock-url']
-        cls.handleURL = cls.cfg['handle-service-url']
         cls.serviceWizardURL = cls.cfg['service-wizard-url']
         cls.callbackURL = os.environ['SDK_CALLBACK_URL']
         cls.wsClient = workspaceService(cls.wsURL, token=token)
