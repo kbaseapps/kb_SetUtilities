@@ -705,40 +705,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         self.assertEqual(len(output_obj['items']), 3)
         pass
 
-    #### test_KButil_Merge_ReadsSet_to_OneLibrary()
-    ##
-    def test_KButil_Merge_ReadsSet_to_OneLibrary (self):
-        method = 'KButil_Merge_ReadsSet_to_OneLibrary'
-
-        print ("\n\nRUNNING: test_KButil_Merge_ReadsSet_to_OneLibrary()")
-        print ("===================================================\n\n")
-
-        # figure out where the test data lives
-        pe_lib_set_info = self.getPairedEndLib_SetInfo(['test_quick','small_2'])
-        pprint(pe_lib_set_info)
-
-        # run method
-        base_output_name = method+'_output'
-        params = {
-            'workspace_name': self.getWsName(),
-            'input_ref': str(pe_lib_set_info[6])+'/'+str(pe_lib_set_info[0]),
-            'output_name': base_output_name,
-            'desc':'test merge'
-        }
-        result = self.getImpl().KButil_Merge_ReadsSet_to_OneLibrary(self.getContext(),params)
-        print('RESULT:')
-        pprint(result)
-
-        # check the output
-        output_name = base_output_name
-        output_type = 'KBaseFile.PairedEndLibrary'
-        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':self.getWsName() + '/' + output_name}]})
-        self.assertEqual(len(info_list),1)
-        readsLib_info = info_list[0]
-        self.assertEqual(readsLib_info[1],output_name)
-        self.assertEqual(readsLib_info[2].split('-')[0],output_type)
-        pass
-
 
     #### test_KButil_Merge_MultipleReadsSets_to_OneReadsSet()
     ##
@@ -845,7 +811,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_AssemblySet()
     ##
-    def test_KButil_Build_AssemblySet (self):
+    def HIDE_KButil_Build_AssemblySet (self):
         method = 'KButil_Build_AssemblySet'
         
         print ("\n\nRUNNING: test_KButil_Build_AssemblySet()")
