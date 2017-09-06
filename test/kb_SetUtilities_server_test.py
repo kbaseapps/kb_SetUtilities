@@ -359,18 +359,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         print ("\n\nRUNNING: test_KButil_Merge_FeatureSet_Collection()")
         print ("==================================================\n\n")
 
-        """
         # input_data
-        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
-        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
-        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
-        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
-        genome_id_feature_id_delim = '.f:'
-        feature_id_1 = 'AWN69_RS07145'
-        feature_id_2 = 'DVMF_RS00005'
-        feature_id_3 = 'BUE16_RS15805'
-        """
-
         genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
         genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
         genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
@@ -476,17 +465,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         print ("=======================================\n\n")
 
         # input_data
-        """
-        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
-        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
-        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
-        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
-        #genome_id_feature_id_delim = '.f:'
-        #feature_id_1 = 'AWN69_RS07145'
-        #feature_id_2 = 'DVMF_RS00005'
-        #feature_id_3 = 'BUE16_RS15805'
-        """
-
         genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
         genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
         genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
@@ -583,17 +561,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         print ("======================================\n\n")
 
         # input_data
-        """
-        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
-        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
-        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
-        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
-        #genome_id_feature_id_delim = '.f:'
-        #feature_id_1 = 'AWN69_RS07145'
-        #feature_id_2 = 'DVMF_RS00005'
-        #feature_id_3 = 'BUE16_RS15805'
-        """
-
         genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
         genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
         genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
@@ -645,17 +612,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         print ("======================================================\n\n")
 
         # input_data
-        """
-        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
-        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
-        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
-        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
-        #genome_id_feature_id_delim = '.f:'
-        feature_id_1 = 'AWN69_RS07145'
-        feature_id_2 = 'DVMF_RS00005'
-        feature_id_3 = 'BUE16_RS15805'
-        """
-
         genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
         genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
         genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
@@ -738,17 +694,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         print ("===============================================\n\n")
 
         # input_data
-        """
-        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
-        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
-        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
-        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
-        #genome_id_feature_id_delim = '.f:'
-        #feature_id_1 = 'AWN69_RS07145'
-        #feature_id_2 = 'DVMF_RS00005'
-        #feature_id_3 = 'BUE16_RS15805'
-        """
-
         genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
         genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
         genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
