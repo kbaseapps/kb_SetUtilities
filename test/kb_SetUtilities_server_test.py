@@ -469,13 +469,14 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_GenomeSets():
     ##
-    def HIDE_KButil_Merge_GenomeSets (self):
+    def test_KButil_Merge_GenomeSets (self):
         method = 'KButil_Merge_GenomeSets'
 
         print ("\n\nRUNNING: test_KButil_Merge_GenomeSets()")
         print ("=======================================\n\n")
 
         # input_data
+        """
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
         genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
         genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
@@ -484,11 +485,28 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         #feature_id_1 = 'AWN69_RS07145'
         #feature_id_2 = 'DVMF_RS00005'
         #feature_id_3 = 'BUE16_RS15805'
+        """
+
+        genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
+        genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
+        genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
+        genomeInfo_3 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic',  3)
+
+        genome_ref_0 = self.getWsName() + '/' + str(genomeInfo_0[0]) + '/' + str(genomeInfo_0[4])
+        genome_ref_1 = self.getWsName() + '/' + str(genomeInfo_1[0]) + '/' + str(genomeInfo_1[4])
+        genome_ref_2 = self.getWsName() + '/' + str(genomeInfo_2[0]) + '/' + str(genomeInfo_2[4])
+        genome_ref_3 = self.getWsName() + '/' + str(genomeInfo_3[0]) + '/' + str(genomeInfo_3[4])
+
+        #feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        #feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        #feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        #feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+        num_merged_genomes = 4
 
         # GenomeSet 1
         genomeSet_obj_1 = { 'description': 'test genomeSet 1',
-                            'elements': { 'genome_1': { 'ref': genome_ref_1 },
-                                          'genome_2': { 'ref': genome_ref_2 }
+                            'elements': { 'genome_0': { 'ref': genome_ref_0 },
+                                          'genome_1': { 'ref': genome_ref_1 }
                                       }
                         }            
         provenance = [{}]
@@ -509,7 +527,8 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
         # GenomeSet 2
         genomeSet_obj_2 = { 'description': 'test genomeSet 2',
-                            'elements': { 'genome_3': { 'ref': genome_ref_3 }
+                            'elements': { 'genome_2': { 'ref': genome_ref_2 },
+                                          'genome_3': { 'ref': genome_ref_3 }
                                       }
                         }            
         provenance = [{}]
@@ -551,19 +570,20 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         self.assertEqual(output_info[1],output_name)
         self.assertEqual(output_info[2].split('-')[0],output_type)
         output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
-        self.assertEqual(len(output_obj['elements'].keys()),3)
+        self.assertEqual(len(output_obj['elements'].keys()),num_merged_genomes)
         pass
 
 
     #### test_KButil_Build_GenomeSet():
     ##
-    def HIDE_KButil_Build_GenomeSet (self):
+    def test_KButil_Build_GenomeSet (self):
         method = 'KButil_Build_GenomeSet'
 
         print ("\n\nRUNNING: test_KButil_Build_GenomeSet()")
         print ("======================================\n\n")
 
         # input_data
+        """
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
         genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
         genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
@@ -572,12 +592,29 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         #feature_id_1 = 'AWN69_RS07145'
         #feature_id_2 = 'DVMF_RS00005'
         #feature_id_3 = 'BUE16_RS15805'
+        """
+
+        genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
+        genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
+        genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
+        genomeInfo_3 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic',  3)
+
+        genome_ref_0 = self.getWsName() + '/' + str(genomeInfo_0[0]) + '/' + str(genomeInfo_0[4])
+        genome_ref_1 = self.getWsName() + '/' + str(genomeInfo_1[0]) + '/' + str(genomeInfo_1[4])
+        genome_ref_2 = self.getWsName() + '/' + str(genomeInfo_2[0]) + '/' + str(genomeInfo_2[4])
+        genome_ref_3 = self.getWsName() + '/' + str(genomeInfo_3[0]) + '/' + str(genomeInfo_3[4])
+
+        #feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        #feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        #feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        #feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+        num_genomes = 4
 
         # run method
         base_output_name = method+'_output'
         params = {
             'workspace_name': self.getWsName(),
-            'input_refs': [genome_ref_1, genome_ref_2, genome_ref_3],
+            'input_refs': [genome_ref_0, genome_ref_1, genome_ref_2, genome_ref_3],
             'output_name': base_output_name,
             'desc': 'test'
         }
@@ -595,19 +632,20 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         self.assertEqual(output_info[1],output_name)
         self.assertEqual(output_info[2].split('-')[0],output_type)
         output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
-        self.assertEqual(len(output_obj['elements'].keys()),3)
+        self.assertEqual(len(output_obj['elements'].keys()),num_genomes)
         pass
 
 
     #### test_KButil_Build_GenomeSet_from_FeatureSet():
     ##
-    def HIDE_KButil_Build_GenomeSet_from_FeatureSet (self):
+    def test_KButil_Build_GenomeSet_from_FeatureSet (self):
         method = 'KButil_Build_GenomeSet_from_FeatureSet'
 
         print ("\n\nRUNNING: test_KButil_Build_GenomeSet_from_FeatureSet()")
         print ("======================================================\n\n")
 
         # input_data
+        """
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
         genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
         genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
@@ -616,15 +654,34 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         feature_id_1 = 'AWN69_RS07145'
         feature_id_2 = 'DVMF_RS00005'
         feature_id_3 = 'BUE16_RS15805'
+        """
+
+        genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
+        genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
+        genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
+        genomeInfo_3 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic',  3)
+
+        genome_ref_0 = self.getWsName() + '/' + str(genomeInfo_0[0]) + '/' + str(genomeInfo_0[4])
+        genome_ref_1 = self.getWsName() + '/' + str(genomeInfo_1[0]) + '/' + str(genomeInfo_1[4])
+        genome_ref_2 = self.getWsName() + '/' + str(genomeInfo_2[0]) + '/' + str(genomeInfo_2[4])
+        genome_ref_3 = self.getWsName() + '/' + str(genomeInfo_3[0]) + '/' + str(genomeInfo_3[4])
+
+        feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+        num_genomes = 4
 
         # featureSet
         featureSet_obj = { 'description': 'test featureSet',
                            'element_ordering': [
+                               feature_id_0,
                                feature_id_1,
                                feature_id_2,
                                feature_id_3
                            ],
                            'elements': { 
+                               feature_id_0: [genome_ref_0],
                                feature_id_1: [genome_ref_1],
                                feature_id_2: [genome_ref_2],
                                feature_id_3: [genome_ref_3]
@@ -668,19 +725,20 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         self.assertEqual(output_info[1],output_name)
         self.assertEqual(output_info[2].split('-')[0],output_type)
         output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
-        self.assertEqual(len(output_obj['elements'].keys()),3)
+        self.assertEqual(len(output_obj['elements'].keys()),num_genomes)
         pass
 
 
     #### test_KButil_Add_Genomes_to_GenomeSet():
     ##
-    def HIDE_KButil_Add_Genomes_to_GenomeSet (self):
+    def test_KButil_Add_Genomes_to_GenomeSet (self):
         method = 'KButil_Add_Genomes_to_GenomeSet'
 
         print ("\n\nRUNNING: test_KButil_Add_Genomes_to_GenomeSet()")
         print ("===============================================\n\n")
 
         # input_data
+        """
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
         genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
         genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
@@ -689,10 +747,27 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         #feature_id_1 = 'AWN69_RS07145'
         #feature_id_2 = 'DVMF_RS00005'
         #feature_id_3 = 'BUE16_RS15805'
+        """
+
+        genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
+        genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
+        genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
+        genomeInfo_3 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic',  3)
+
+        genome_ref_0 = self.getWsName() + '/' + str(genomeInfo_0[0]) + '/' + str(genomeInfo_0[4])
+        genome_ref_1 = self.getWsName() + '/' + str(genomeInfo_1[0]) + '/' + str(genomeInfo_1[4])
+        genome_ref_2 = self.getWsName() + '/' + str(genomeInfo_2[0]) + '/' + str(genomeInfo_2[4])
+        genome_ref_3 = self.getWsName() + '/' + str(genomeInfo_3[0]) + '/' + str(genomeInfo_3[4])
+
+        #feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        #feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        #feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        #feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+        num_merged_genomes = 4
 
         # GenomeSet 1
         genomeSet_obj_1 = { 'description': 'test genomeSet 1',
-                            'elements': { 'genome_1': { 'ref': genome_ref_1 }
+                            'elements': { 'genome_1': { 'ref': genome_ref_0 }
                                       }
                         }            
         provenance = [{}]
@@ -716,7 +791,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         base_output_name = method+'_output'
         params = {
             'workspace_name': self.getWsName(),
-            'input_genome_refs': [genome_ref_2, genome_ref_3],
+            'input_genome_refs': [genome_ref_1, genome_ref_2, genome_ref_3],
             'input_genomeset_ref': genomeSet_ref_1,
             'output_name': base_output_name,
             'desc': 'test'
@@ -735,12 +810,13 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         self.assertEqual(output_info[1],output_name)
         self.assertEqual(output_info[2].split('-')[0],output_type)
         output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
-        self.assertEqual(len(output_obj['elements'].keys()),3)
+        self.assertEqual(len(output_obj['elements'].keys()),num_merged_genomes)
         pass
+
 
     #### test_KButil_Build_ReadsSet()
     ##
-    def HIDE_KButil_Build_ReadsSet (self):
+    def test_KButil_Build_ReadsSet (self):
         method = 'KButil_Build_ReadsSet'
         
         print ("\n\nRUNNING: test_KButil_Build_ReadsSet()")
@@ -786,7 +862,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_MultipleReadsSets_to_OneReadsSet()
     ##
-    def HIDE_KButil_Merge_MultipleReadsSets_to_OneReadsSet (self):
+    def test_KButil_Merge_MultipleReadsSets_to_OneReadsSet (self):
         method = 'KButil_Merge_MultipleReadsSets_to_OneReadsSet'
 
         print ("\n\nRUNNING: test_KButil_Merge_MultipleReadsSetss_to_OneReadsSet()")
@@ -889,7 +965,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_AssemblySet()
     ##
-    def HIDE_KButil_Build_AssemblySet (self):
+    def test_KButil_Build_AssemblySet (self):
         method = 'KButil_Build_AssemblySet'
         
         print ("\n\nRUNNING: test_KButil_Build_AssemblySet()")
