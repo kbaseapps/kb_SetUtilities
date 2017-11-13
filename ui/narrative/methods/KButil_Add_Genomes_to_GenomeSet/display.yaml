@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Add Genomes to GenomeSet
+name: Add Genomes to GenomeSet - v1.0.1
 tooltip: |
     Allows user to add a Genome to a GenomeSet (or create a new GenomeSet)
 screenshots: []
