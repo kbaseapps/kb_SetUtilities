@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Merge FeatureSets
+name: Merge FeatureSets - v1.0.1
 tooltip: |
     Allows user to merge multiple FeatureSets
 screenshots: []

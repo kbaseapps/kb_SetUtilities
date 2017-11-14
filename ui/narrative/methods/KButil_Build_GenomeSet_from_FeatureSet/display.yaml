@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Build GenomeSet from FeatureSet
+name: Build GenomeSet from FeatureSet - v1.0.1
 tooltip: |
     Allows user to extract GenomeSet from FeatureSet
 screenshots: []
