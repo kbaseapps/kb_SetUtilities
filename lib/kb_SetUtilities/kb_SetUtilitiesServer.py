@@ -333,14 +333,14 @@ class Application(object):
         self.serverlog.set_log_level(6)
         self.rpc_service = JSONRPCServiceCustom()
         self.method_authentication = dict()
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_FASTQ_to_FASTA,
-                             name='kb_SetUtilities.KButil_FASTQ_to_FASTA',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_FASTQ_to_FASTA'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Merge_FeatureSet_Collection,
                              name='kb_SetUtilities.KButil_Merge_FeatureSet_Collection',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Merge_FeatureSet_Collection'] = 'required'  # noqa
+        self.rpc_service.add(impl_kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes,
+                             name='kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes',
+                             types=[dict])
+        self.method_authentication['kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Merge_GenomeSets,
                              name='kb_SetUtilities.KButil_Merge_GenomeSets',
                              types=[dict])
@@ -357,46 +357,14 @@ class Application(object):
                              name='kb_SetUtilities.KButil_Add_Genomes_to_GenomeSet',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Add_Genomes_to_GenomeSet'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_Concat_MSAs,
-                             name='kb_SetUtilities.KButil_Concat_MSAs',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_Concat_MSAs'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Build_ReadsSet,
                              name='kb_SetUtilities.KButil_Build_ReadsSet',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Build_ReadsSet'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_Split_Reads,
-                             name='kb_SetUtilities.KButil_Split_Reads',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_Split_Reads'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_Random_Subsample_Reads,
-                             name='kb_SetUtilities.KButil_Random_Subsample_Reads',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_Random_Subsample_Reads'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_Merge_ReadsSet_to_OneLibrary,
-                             name='kb_SetUtilities.KButil_Merge_ReadsSet_to_OneLibrary',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_Merge_ReadsSet_to_OneLibrary'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_Merge_MultipleReadsLibs_to_OneLibrary,
-                             name='kb_SetUtilities.KButil_Merge_MultipleReadsLibs_to_OneLibrary',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_Merge_MultipleReadsLibs_to_OneLibrary'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Merge_MultipleReadsSets_to_OneReadsSet,
                              name='kb_SetUtilities.KButil_Merge_MultipleReadsSets_to_OneReadsSet',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Merge_MultipleReadsSets_to_OneReadsSet'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs,
-                             name='kb_SetUtilities.KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_Translate_ReadsLibs_QualScores,
-                             name='kb_SetUtilities.KButil_Translate_ReadsLibs_QualScores',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_Translate_ReadsLibs_QualScores'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_AddInsertLen_to_ReadsLibs,
-                             name='kb_SetUtilities.KButil_AddInsertLen_to_ReadsLibs',
-                             types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_AddInsertLen_to_ReadsLibs'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Build_AssemblySet,
                              name='kb_SetUtilities.KButil_Build_AssemblySet',
                              types=[dict])

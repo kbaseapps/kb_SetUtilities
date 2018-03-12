@@ -1,0 +1,56 @@
+#
+# define display information
+#
+name: Merge FeatureSets - v1.1.0
+tooltip: |
+    Allows user to slice FeatureSets by Genomes
+screenshots: []
+
+icon: kb-purple.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    desc:
+        ui-name : |
+            Description
+        short-hint : |
+            Describe Purpose or Contents of Output FeatureSet(s)
+        placeholder: |
+            Enter Description
+    input_featureSet_refs:
+        ui-name : |
+            Input FeatureSet(s)
+        short-hint : |
+            Add a list of FeatureSet Names here
+    input_genome_refs:
+        ui-name : |
+            Input Slicing Genomes
+        short-hint : |
+            Add a list of Genomes here
+    output_name:
+        ui-name : |
+            Output FeatureSet(s) Basename
+        short-hint : |
+            Basename for the Output FeatureSet(s)
+
+
+description : |
+    <p>This method allows the user to slice Features from FeatureSets into reduced FeatureSets containing only features that correspond to requested genomes.</p>
+

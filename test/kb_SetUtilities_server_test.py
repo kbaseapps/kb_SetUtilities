@@ -353,7 +353,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_FeatureSet_Collection():
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Merge_FeatureSet_Collection()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Merge_FeatureSet_Collection()")  # uncomment to skip
     def test_KButil_Merge_FeatureSet_Collection (self):
         method = 'KButil_Merge_FeatureSet_Collection'
 
@@ -544,7 +544,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_GenomeSets():
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Merge_GenomeSets()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Merge_GenomeSets()")  # uncomment to skip
     def test_KButil_Merge_GenomeSets (self):
         method = 'KButil_Merge_GenomeSets'
 
@@ -641,7 +641,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_GenomeSet():
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Build_GenomeSet()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Build_GenomeSet()")  # uncomment to skip
     def test_KButil_Build_GenomeSet (self):
         method = 'KButil_Build_GenomeSet'
 
@@ -693,7 +693,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_GenomeSet_from_FeatureSet():
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Build_GenomeSet_from_FeatureSet()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Build_GenomeSet_from_FeatureSet()")  # uncomment to skip
     def test_KButil_Build_GenomeSet_from_FeatureSet (self):
         method = 'KButil_Build_GenomeSet_from_FeatureSet'
 
@@ -776,7 +776,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Add_Genomes_to_GenomeSet():
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Add_Genomes_to_GenomeSet()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Add_Genomes_to_GenomeSet()")  # uncomment to skip
     def test_KButil_Add_Genomes_to_GenomeSet (self):
         method = 'KButil_Add_Genomes_to_GenomeSet'
 
@@ -851,7 +851,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_ReadsSet()
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Build_ReadsSet()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Build_ReadsSet()")  # uncomment to skip
     def test_KButil_Build_ReadsSet (self):
         method = 'KButil_Build_ReadsSet'
         
@@ -898,7 +898,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_MultipleReadsSets_to_OneReadsSet()
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Merge_MultipleReadsSets_to_OneReadsSet()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Merge_MultipleReadsSets_to_OneReadsSet()")  # uncomment to skip
     def test_KButil_Merge_MultipleReadsSets_to_OneReadsSet (self):
         method = 'KButil_Merge_MultipleReadsSets_to_OneReadsSet'
 
@@ -1002,7 +1002,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_AssemblySet()
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Build_AssemblySet()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Build_AssemblySet()")  # uncomment to skip
     def test_KButil_Build_AssemblySet (self):
         method = 'KButil_Build_AssemblySet'
         
