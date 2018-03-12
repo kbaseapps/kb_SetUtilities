@@ -465,7 +465,7 @@ class kb_SetUtilities:
                 'text_message': report
             }
 
-        reportName = 'kb_SetUtilities_merge_featureset_report_' + str(uuid.uuid4())
+        reportName = 'kb_SetUtilities_slice_featureset_by_genomes_report_' + str(uuid.uuid4())
         ws = workspaceService(self.workspaceURL, token=ctx['token'])
         report_obj_info = ws.save_objects({'workspace': params['workspace_name'],
                                            'objects': [{'type': 'KBaseReport.Report',
@@ -480,7 +480,7 @@ class kb_SetUtilities:
         report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
         returnVal = {'report_name': reportName,
                      'report_ref': report_ref}
-        self.log(console, "KButil_Merge_FeatureSet_Collection DONE")
+        self.log(console, "KButil_Slice_FeatureSets_by_Genomes DONE")
         #END KButil_Slice_FeatureSets_by_Genomes
 
         # At some point might do deeper type checking...
