@@ -40,9 +40,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.0.1"
-    GIT_URL = "git@github.com:kbaseapps/kb_SetUtilities.git"
-    GIT_COMMIT_HASH = "a6d4cdc2320da7c7029bbebe206ecf495b66c11a"
+    VERSION = "1.1.0"
+    GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
+    GIT_COMMIT_HASH = "bbeeb52aba8a150df689ec5bae12a3e182c57342"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -99,13 +99,14 @@ class kb_SetUtilities:
         #END_CONSTRUCTOR
         pass
 
+
     def KButil_Merge_FeatureSet_Collection(self, ctx, params):
         """
         :param params: instance of type
            "KButil_Merge_FeatureSet_Collection_Params"
            (KButil_Merge_FeatureSet_Collection() ** **  Method for merging
            FeatureSets) -> structure: parameter "workspace_name" of type
-           "workspace_name" (** The workspace object refs are of form: ** **
+           "workspace_name" (** The workspace object refs are of form: ** ** 
            objects = ws.get_objects([{'ref':
            params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
            the entire name combining the workspace id and the object name **
@@ -276,6 +277,215 @@ class kb_SetUtilities:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method KButil_Merge_FeatureSet_Collection return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def KButil_Slice_FeatureSets_by_Genomes(self, ctx, params):
+        """
+        :param params: instance of type
+           "KButil_Slice_FeatureSets_by_Genomes_Params"
+           (KButil_Slice_FeatureSets_by_Genomes() ** **  Method for Slicing a
+           FeatureSet or FeatureSets by a Genome, Genomes, or GenomeSet) ->
+           structure: parameter "workspace_name" of type "workspace_name" (**
+           The workspace object refs are of form: ** **    objects =
+           ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_featureSet_refs" of type "data_obj_ref",
+           parameter "input_genome_refs" of type "data_obj_ref", parameter
+           "output_name" of type "data_obj_name", parameter "desc" of String
+        :returns: instance of type
+           "KButil_Slice_FeatureSets_by_Genomes_Output" -> structure:
+           parameter "report_name" of type "data_obj_name", parameter
+           "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Slice_FeatureSets_by_Genomes
+        console = []
+        invalid_msgs = []
+        self.log(console, 'Running Slice_FeatureSets_by_Genomes with params=')
+        self.log(console, "\n" + pformat(params))
+        logMsg = ''
+        report = ''
+
+        #### do some basic checks
+        #
+        if 'workspace_name' not in params:
+            raise ValueError('workspace_name parameter is required')
+        if 'desc' not in params:
+            raise ValueError('desc parameter is required')
+        if 'input_featureSet_refs' not in params:
+            raise ValueError('input_featureSet_refs parameter is required')
+        if 'input_genome_refs' not in params:
+            raise ValueError('input_genome_refs parameter is required')
+        if 'output_name' not in params:
+            raise ValueError('output_name parameter is required')
+
+        # clean input_feature_refs
+        clean_input_refs = []
+        for ref in params['input_featureSet_refs']:
+            if ref is not None and ref != '':
+                clean_input_refs.append(ref)
+        params['input_featureSet_refs'] = clean_input_refs
+
+        # clean input_genome_refs
+        clean_input_refs = []
+        for ref in params['input_genome_refs']:
+            if ref is not None and ref != '':
+                clean_input_refs.append(ref)
+        params['input_genome_refs'] = clean_input_refs
+
+        # Build FeatureSets
+        featureSet_seen = dict()
+        objects_created = []
+
+        for featureSet_ref in params['input_featureSet_refs']:
+            if featureSet_ref not in featureSet_seen.keys():
+                featureSet_seen[featureSet_ref] = 1
+            else:
+                self.log("repeat featureSet_ref: '" + featureSet_ref + "'")
+                self.log(invalid_msgs, "repeat featureSet_ref: '" + featureSet_ref + "'")
+                continue
+
+            try:
+                ws = workspaceService(self.workspaceURL, token=ctx['token'])
+                #objects = ws.get_objects([{'ref': featureSet_ref}])
+                objects = ws.get_objects2({'objects': [{'ref': featureSet_ref}]})['data']
+                data = objects[0]['data']
+                info = objects[0]['info']
+                # Object Info Contents
+                # absolute ref = info[6] + '/' + info[0] + '/' + info[4]
+                # 0 - obj_id objid
+                # 1 - obj_name name
+                # 2 - type_string type
+                # 3 - timestamp save_date
+                # 4 - int version
+                # 5 - username saved_by
+                # 6 - ws_id wsid
+                # 7 - ws_name workspace
+                # 8 - string chsum
+                # 9 - int size
+                # 10 - usermeta meta
+                this_featureSet_obj_name = info[1]
+                type_name = info[2].split('.')[1].split('-')[0]
+
+            except Exception as e:
+                raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+                #to get the full stack trace: traceback.format_exc()
+
+            if type_name != 'FeatureSet':
+                raise ValueError("Bad Type:  Should be FeatureSet instead of '" + type_name + "'")
+                
+            this_featureSet = data
+
+            this_element_ordering = []
+            if 'element_ordering' in this_featureSet.keys():
+                this_element_ordering = this_featureSet['element_ordering']
+            else:
+                this_element_ordering = sorted(this_featureSet['elements'].keys())
+            logMsg = 'features in input set {}: {}'.format(featureSet_ref,
+                                                           len(this_element_ordering))
+            self.log(console, logMsg)
+
+
+            # Build sliced FeatureSet
+            #
+            self.log(console, "SETTING PROVENANCE")  # DEBUG
+            element_ordering = []
+            elements = {}
+            for fId in this_element_ordering:
+                hit = False
+                genomes_retained = []
+                for this_genome_ref in this_featureSet['elements'][fId]:
+                    if this_genome_ref in params['input_genome_refs']:
+                        hit = True
+                        genomes_retained.append(this_genome_ref)
+                if hit:
+                    element_ordering.append(fId)
+                    elements[fId] = genomes_retained
+            logMsg = 'features in sliced output set: {}'.format(len(this_element_ordering))
+            self.log(console, logMsg)
+
+
+            # load the method provenance from the context object
+            self.log(console, "SETTING PROVENANCE")  # DEBUG
+            provenance = [{}]
+            if 'provenance' in ctx:
+                provenance = ctx['provenance']
+            # add additional info to provenance here, in this case the input data object reference
+            provenance[0]['input_ws_objects'] = []
+            provenance[0]['input_ws_objects'].append(featureSet_ref)
+            for genome_ref in params['input_genome_refs']:
+                provenance[0]['input_ws_objects'].append(genome_ref)
+            provenance[0]['service'] = 'kb_SetUtilities'
+            provenance[0]['method'] = 'KButil_Slice_FeatureSets_by_Genome'
+
+            # Store output object
+            if len(invalid_msgs) == 0:
+                self.log(console, "SAVING FEATURESET")  # DEBUG
+                output_FeatureSet = {'description': params['desc'],
+                                     'element_ordering': element_ordering,
+                                     'elements': elements}
+
+                output_name = params['output_name']
+                if len(params['input_featureSet_refs']) > 1:
+                    output_name += '-' + this_featureSet_obj_name
+
+                new_obj_info = ws.save_objects({'workspace': params['workspace_name'],
+                                                'objects': [{
+                                                    'type': 'KBaseCollections.FeatureSet',
+                                                    'data': output_FeatureSet,
+                                                    'name': output_name,
+                                                    'meta': {},
+                                                    'provenance': provenance}]})
+
+                objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
+                                        'description': params['desc']})
+
+        # build output report object
+        self.log(console, "BUILDING REPORT")  # DEBUG
+        if len(invalid_msgs) == 0:
+            self.log(console, "features in output set " + params['output_name'] + ": "
+                     + str(len(element_ordering)))
+            report += 'features in output set ' + params['output_name'] + ': '
+            report += str(len(element_ordering)) + "\n"
+            reportObj = {
+                'objects_created': objects_created,
+                'text_message': report
+            }
+        else:
+            report += "FAILURE:\n\n" + "\n".join(invalid_msgs) + "\n"
+            reportObj = {
+                'objects_created': [],
+                'text_message': report
+            }
+
+        reportName = 'kb_SetUtilities_slice_featureset_by_genomes_report_' + str(uuid.uuid4())
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        report_obj_info = ws.save_objects({'workspace': params['workspace_name'],
+                                           'objects': [{'type': 'KBaseReport.Report',
+                                                        'data': reportObj,
+                                                        'name': reportName,
+                                                        'meta': {},
+                                                        'hidden': 1,
+                                                        'provenance': provenance}]})[0]
+
+        # Build report and return
+        self.log(console, "BUILDING RETURN OBJECT")
+        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
+        returnVal = {'report_name': reportName,
+                     'report_ref': report_ref}
+        self.log(console, "KButil_Slice_FeatureSets_by_Genomes DONE")
+        #END KButil_Slice_FeatureSets_by_Genomes
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Slice_FeatureSets_by_Genomes return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]
@@ -1140,7 +1350,6 @@ class kb_SetUtilities:
         # return the results
         return [returnVal]
 
-
     def KButil_Merge_MultipleReadsSets_to_OneReadsSet(self, ctx, params):
         """
         :param params: instance of type
@@ -1327,7 +1536,6 @@ class kb_SetUtilities:
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]
-
 
     def KButil_Build_AssemblySet(self, ctx, params):
         """

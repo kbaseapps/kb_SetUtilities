@@ -353,6 +353,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_FeatureSet_Collection():
     ##
+    # HIDE @unittest.skip("skipped test_KButil_Merge_FeatureSet_Collection()")  # uncomment to skip
     def test_KButil_Merge_FeatureSet_Collection (self):
         method = 'KButil_Merge_FeatureSet_Collection'
 
@@ -456,8 +457,94 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         pass
 
 
+    #### test_KButil_Slice_FeatureSets_by_Genomes():
+    ##
+    # HIDE @unittest.skip("skipped test_KButil_Slice_FeatureSets_by_Genomes()")  # uncomment to skip
+    def test_KButil_Slice_FeatureSets_by_Genomes (self):
+        method = 'KButil_Slice_FeatureSets_by_Genomes'
+
+        print ("\n\nRUNNING: test_KButil_Slice_FeatureSets_by_Genomes()")
+        print ("===================================================\n\n")
+
+        # input_data
+        genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
+        genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
+        genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
+        genomeInfo_3 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic',  3)
+
+        genome_ref_0 = self.getWsName() + '/' + str(genomeInfo_0[0]) + '/' + str(genomeInfo_0[4])
+        genome_ref_1 = self.getWsName() + '/' + str(genomeInfo_1[0]) + '/' + str(genomeInfo_1[4])
+        genome_ref_2 = self.getWsName() + '/' + str(genomeInfo_2[0]) + '/' + str(genomeInfo_2[4])
+        genome_ref_3 = self.getWsName() + '/' + str(genomeInfo_3[0]) + '/' + str(genomeInfo_3[4])
+
+        feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+        num_sliced_features = 4
+
+        # featureSet 1
+        featureSet_obj_1 = { 'description': 'test featureSet 1',
+                             'element_ordering': [
+                                 feature_id_0,
+                                 feature_id_1,
+                                 feature_id_2,
+                                 feature_id_3
+                             ],
+                             'elements': { 
+                                 feature_id_0: [genome_ref_0],
+                                 feature_id_1: [genome_ref_1],
+                                 feature_id_2: [genome_ref_2],
+                                 feature_id_3: [genome_ref_3]
+                             }
+                         }
+        provenance = [{}]
+        featureSet_info = self.getWsClient().save_objects({
+            'workspace': self.getWsName(), 
+            'objects': [
+                {
+                    'type': 'KBaseCollections.FeatureSet',
+                    'data': featureSet_obj_1,
+                    'name': 'test_featureSet_1',
+                    'meta': {},
+                    'provenance': provenance
+                }
+            ]})[0]
+
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        featureSet_ref_1 = str(featureSet_info[WSID_I])+'/'+str(featureSet_info[OBJID_I])+'/'+str(featureSet_info[VERSION_I])
+
+
+        # run method
+        base_output_name = method+'_output'
+        params = {
+            'workspace_name': self.getWsName(),
+            'input_featureSet_refs': [featureSet_ref_1],
+            'input_genome_refs': [genome_ref_0, genome_ref_2],
+            'output_name': base_output_name,
+            'desc': 'test'
+        }
+        result = self.getImpl().KButil_Slice_FeatureSets_by_Genomes(self.getContext(),params)
+        print('RESULT:')
+        pprint(result)
+
+        # check the output
+        output_name = base_output_name
+        output_type = 'KBaseCollections.FeatureSet'
+        output_ref = self.getWsName()+'/'+output_name
+        info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':output_ref}]})
+        self.assertEqual(len(info_list),1)
+        output_info = info_list[0]
+        self.assertEqual(output_info[1],output_name)
+        self.assertEqual(output_info[2].split('-')[0],output_type)
+        output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        self.assertEqual(len(output_obj['element_ordering']),num_sliced_features)
+        pass
+
+
     #### test_KButil_Merge_GenomeSets():
     ##
+    # HIDE @unittest.skip("skipped test_KButil_Merge_GenomeSets()")  # uncomment to skip
     def test_KButil_Merge_GenomeSets (self):
         method = 'KButil_Merge_GenomeSets'
 
@@ -554,6 +641,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_GenomeSet():
     ##
+    # HIDE @unittest.skip("skipped test_KButil_Build_GenomeSet()")  # uncomment to skip
     def test_KButil_Build_GenomeSet (self):
         method = 'KButil_Build_GenomeSet'
 
@@ -605,6 +693,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_GenomeSet_from_FeatureSet():
     ##
+    # HIDE @unittest.skip("skipped test_KButil_Build_GenomeSet_from_FeatureSet()")  # uncomment to skip
     def test_KButil_Build_GenomeSet_from_FeatureSet (self):
         method = 'KButil_Build_GenomeSet_from_FeatureSet'
 
@@ -687,6 +776,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Add_Genomes_to_GenomeSet():
     ##
+    # HIDE @unittest.skip("skipped test_KButil_Add_Genomes_to_GenomeSet()")  # uncomment to skip
     def test_KButil_Add_Genomes_to_GenomeSet (self):
         method = 'KButil_Add_Genomes_to_GenomeSet'
 
@@ -761,6 +851,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_ReadsSet()
     ##
+    # HIDE @unittest.skip("skipped test_KButil_Build_ReadsSet()")  # uncomment to skip
     def test_KButil_Build_ReadsSet (self):
         method = 'KButil_Build_ReadsSet'
         
@@ -807,6 +898,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_MultipleReadsSets_to_OneReadsSet()
     ##
+    # HIDE @unittest.skip("skipped test_KButil_Merge_MultipleReadsSets_to_OneReadsSet()")  # uncomment to skip
     def test_KButil_Merge_MultipleReadsSets_to_OneReadsSet (self):
         method = 'KButil_Merge_MultipleReadsSets_to_OneReadsSet'
 
@@ -910,6 +1002,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_AssemblySet()
     ##
+    # HIDE @unittest.skip("skipped test_KButil_Build_AssemblySet()")  # uncomment to skip
     def test_KButil_Build_AssemblySet (self):
         method = 'KButil_Build_AssemblySet'
         
