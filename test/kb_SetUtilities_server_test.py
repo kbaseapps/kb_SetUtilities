@@ -481,7 +481,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
         feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
         feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
-        num_sliced_features = 4
+        num_sliced_features = 2
 
         # featureSet 1
         featureSet_obj_1 = { 'description': 'test featureSet 1',
@@ -514,9 +514,8 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
         featureSet_ref_1 = str(featureSet_info[WSID_I])+'/'+str(featureSet_info[OBJID_I])+'/'+str(featureSet_info[VERSION_I])
 
-
         # run method
-        base_output_name = method+'_output'
+        base_output_name = 'Slice_output'
         params = {
             'workspace_name': self.getWsName(),
             'input_featureSet_refs': [featureSet_ref_1],
