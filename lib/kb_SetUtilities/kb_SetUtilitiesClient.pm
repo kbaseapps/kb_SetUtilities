@@ -112,108 +112,6 @@ sub new
 
 
 
-=head2 KButil_FASTQ_to_FASTA
-
-  $return = $obj->KButil_FASTQ_to_FASTA($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_FASTQ_to_FASTA_Params
-$return is a kb_SetUtilities.KButil_FASTQ_to_FASTA_Output
-KButil_FASTQ_to_FASTA_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_FASTQ_to_FASTA_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_FASTQ_to_FASTA_Params
-$return is a kb_SetUtilities.KButil_FASTQ_to_FASTA_Output
-KButil_FASTQ_to_FASTA_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_FASTQ_to_FASTA_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_FASTQ_to_FASTA
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_FASTQ_to_FASTA (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_FASTQ_to_FASTA:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_FASTQ_to_FASTA');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_FASTQ_to_FASTA",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_FASTQ_to_FASTA',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_FASTQ_to_FASTA",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_FASTQ_to_FASTA',
-				       );
-    }
-}
- 
-
-
 =head2 KButil_Merge_FeatureSet_Collection
 
   $return = $obj->KButil_Merge_FeatureSet_Collection($params)
@@ -312,6 +210,112 @@ KButil_Merge_FeatureSet_Collection_Output is a reference to a hash where the fol
         Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Merge_FeatureSet_Collection",
 					    status_line => $self->{client}->status_line,
 					    method_name => 'KButil_Merge_FeatureSet_Collection',
+				       );
+    }
+}
+ 
+
+
+=head2 KButil_Slice_FeatureSets_by_Genomes
+
+  $return = $obj->KButil_Slice_FeatureSets_by_Genomes($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes_Params
+$return is a kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes_Output
+KButil_Slice_FeatureSets_by_Genomes_Params is a reference to a hash where the following keys are defined:
+	workspace_name has a value which is a kb_SetUtilities.workspace_name
+	input_featureSet_refs has a value which is a kb_SetUtilities.data_obj_ref
+	input_genome_refs has a value which is a kb_SetUtilities.data_obj_ref
+	output_name has a value which is a kb_SetUtilities.data_obj_name
+	desc has a value which is a string
+workspace_name is a string
+data_obj_ref is a string
+data_obj_name is a string
+KButil_Slice_FeatureSets_by_Genomes_Output is a reference to a hash where the following keys are defined:
+	report_name has a value which is a kb_SetUtilities.data_obj_name
+	report_ref has a value which is a kb_SetUtilities.data_obj_ref
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes_Params
+$return is a kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes_Output
+KButil_Slice_FeatureSets_by_Genomes_Params is a reference to a hash where the following keys are defined:
+	workspace_name has a value which is a kb_SetUtilities.workspace_name
+	input_featureSet_refs has a value which is a kb_SetUtilities.data_obj_ref
+	input_genome_refs has a value which is a kb_SetUtilities.data_obj_ref
+	output_name has a value which is a kb_SetUtilities.data_obj_name
+	desc has a value which is a string
+workspace_name is a string
+data_obj_ref is a string
+data_obj_name is a string
+KButil_Slice_FeatureSets_by_Genomes_Output is a reference to a hash where the following keys are defined:
+	report_name has a value which is a kb_SetUtilities.data_obj_name
+	report_ref has a value which is a kb_SetUtilities.data_obj_ref
+
+
+=end text
+
+=item Description
+
+
+
+=back
+
+=cut
+
+ sub KButil_Slice_FeatureSets_by_Genomes
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function KButil_Slice_FeatureSets_by_Genomes (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to KButil_Slice_FeatureSets_by_Genomes:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'KButil_Slice_FeatureSets_by_Genomes');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'KButil_Slice_FeatureSets_by_Genomes',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Slice_FeatureSets_by_Genomes",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'KButil_Slice_FeatureSets_by_Genomes',
 				       );
     }
 }
@@ -736,114 +740,6 @@ KButil_Add_Genomes_to_GenomeSet_Output is a reference to a hash where the follow
  
 
 
-=head2 KButil_Concat_MSAs
-
-  $return = $obj->KButil_Concat_MSAs($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_Concat_MSAs_Params
-$return is a kb_SetUtilities.KButil_Concat_MSAs_Output
-KButil_Concat_MSAs_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_refs has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	desc has a value which is a string
-	blanks_flag has a value which is a kb_SetUtilities.bool
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-bool is an int
-KButil_Concat_MSAs_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_Concat_MSAs_Params
-$return is a kb_SetUtilities.KButil_Concat_MSAs_Output
-KButil_Concat_MSAs_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_refs has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	desc has a value which is a string
-	blanks_flag has a value which is a kb_SetUtilities.bool
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-bool is an int
-KButil_Concat_MSAs_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_Concat_MSAs
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_Concat_MSAs (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_Concat_MSAs:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_Concat_MSAs');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_Concat_MSAs",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_Concat_MSAs',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Concat_MSAs",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_Concat_MSAs',
-				       );
-    }
-}
- 
-
-
 =head2 KButil_Build_ReadsSet
 
   $return = $obj->KButil_Build_ReadsSet($params)
@@ -948,436 +844,6 @@ KButil_Build_ReadsSet_Output is a reference to a hash where the following keys a
  
 
 
-=head2 KButil_Split_Reads
-
-  $return = $obj->KButil_Split_Reads($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_Split_Reads_Params
-$return is a kb_SetUtilities.KButil_Split_Reads_Output
-KButil_Split_Reads_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	split_num has a value which is an int
-	desc has a value which is a string
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_Split_Reads_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_Split_Reads_Params
-$return is a kb_SetUtilities.KButil_Split_Reads_Output
-KButil_Split_Reads_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	split_num has a value which is an int
-	desc has a value which is a string
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_Split_Reads_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_Split_Reads
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_Split_Reads (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_Split_Reads:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_Split_Reads');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_Split_Reads",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_Split_Reads',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Split_Reads",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_Split_Reads',
-				       );
-    }
-}
- 
-
-
-=head2 KButil_Random_Subsample_Reads
-
-  $return = $obj->KButil_Random_Subsample_Reads($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_Random_Subsample_Reads_Params
-$return is a kb_SetUtilities.KButil_Random_Subsample_Reads_Output
-KButil_Random_Subsample_Reads_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	subsample_fraction has a value which is a kb_SetUtilities.Fractionate_Options
-	desc has a value which is a string
-	seed has a value which is an int
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-Fractionate_Options is a reference to a hash where the following keys are defined:
-	split_num has a value which is an int
-	reads_num has a value which is an int
-	reads_perc has a value which is a float
-KButil_Random_Subsample_Reads_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_Random_Subsample_Reads_Params
-$return is a kb_SetUtilities.KButil_Random_Subsample_Reads_Output
-KButil_Random_Subsample_Reads_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	subsample_fraction has a value which is a kb_SetUtilities.Fractionate_Options
-	desc has a value which is a string
-	seed has a value which is an int
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-Fractionate_Options is a reference to a hash where the following keys are defined:
-	split_num has a value which is an int
-	reads_num has a value which is an int
-	reads_perc has a value which is a float
-KButil_Random_Subsample_Reads_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_Random_Subsample_Reads
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_Random_Subsample_Reads (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_Random_Subsample_Reads:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_Random_Subsample_Reads');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_Random_Subsample_Reads",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_Random_Subsample_Reads',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Random_Subsample_Reads",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_Random_Subsample_Reads',
-				       );
-    }
-}
- 
-
-
-=head2 KButil_Merge_ReadsSet_to_OneLibrary
-
-  $return = $obj->KButil_Merge_ReadsSet_to_OneLibrary($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_Merge_ReadsSet_to_OneLibrary_Params
-$return is a kb_SetUtilities.KButil_Merge_ReadsSet_to_OneLibrary_Output
-KButil_Merge_ReadsSet_to_OneLibrary_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	desc has a value which is a string
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_Merge_ReadsSet_to_OneLibrary_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_Merge_ReadsSet_to_OneLibrary_Params
-$return is a kb_SetUtilities.KButil_Merge_ReadsSet_to_OneLibrary_Output
-KButil_Merge_ReadsSet_to_OneLibrary_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	desc has a value which is a string
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_Merge_ReadsSet_to_OneLibrary_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_Merge_ReadsSet_to_OneLibrary
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_Merge_ReadsSet_to_OneLibrary (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_Merge_ReadsSet_to_OneLibrary:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_Merge_ReadsSet_to_OneLibrary');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_Merge_ReadsSet_to_OneLibrary",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_Merge_ReadsSet_to_OneLibrary',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Merge_ReadsSet_to_OneLibrary",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_Merge_ReadsSet_to_OneLibrary',
-				       );
-    }
-}
- 
-
-
-=head2 KButil_Merge_MultipleReadsLibs_to_OneLibrary
-
-  $return = $obj->KButil_Merge_MultipleReadsLibs_to_OneLibrary($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_Merge_MultipleReadsLibs_to_OneLibrary_Params
-$return is a kb_SetUtilities.KButil_Merge_MultipleReadsLibs_to_OneLibrary_Output
-KButil_Merge_MultipleReadsLibs_to_OneLibrary_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_refs has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	desc has a value which is a string
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_Merge_MultipleReadsLibs_to_OneLibrary_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_Merge_MultipleReadsLibs_to_OneLibrary_Params
-$return is a kb_SetUtilities.KButil_Merge_MultipleReadsLibs_to_OneLibrary_Output
-KButil_Merge_MultipleReadsLibs_to_OneLibrary_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_refs has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	desc has a value which is a string
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_Merge_MultipleReadsLibs_to_OneLibrary_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_Merge_MultipleReadsLibs_to_OneLibrary
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_Merge_MultipleReadsLibs_to_OneLibrary (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_Merge_MultipleReadsLibs_to_OneLibrary:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_Merge_MultipleReadsLibs_to_OneLibrary');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_Merge_MultipleReadsLibs_to_OneLibrary",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_Merge_MultipleReadsLibs_to_OneLibrary',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Merge_MultipleReadsLibs_to_OneLibrary",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_Merge_MultipleReadsLibs_to_OneLibrary',
-				       );
-    }
-}
- 
-
-
 =head2 KButil_Merge_MultipleReadsSets_to_OneReadsSet
 
   $return = $obj->KButil_Merge_MultipleReadsSets_to_OneReadsSet($params)
@@ -1476,314 +942,6 @@ KButil_Merge_MultipleReadsSets_to_OneReadsSet_Output is a reference to a hash wh
         Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Merge_MultipleReadsSets_to_OneReadsSet",
 					    status_line => $self->{client}->status_line,
 					    method_name => 'KButil_Merge_MultipleReadsSets_to_OneReadsSet',
-				       );
-    }
-}
- 
-
-
-=head2 KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs
-
-  $return = $obj->KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_Extract_Unpaired_Reads_Params
-$return is a kb_SetUtilities.KButil_Extract_Unpaired_Reads_Output
-KButil_Extract_Unpaired_Reads_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	desc has a value which is a string
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_Extract_Unpaired_Reads_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_Extract_Unpaired_Reads_Params
-$return is a kb_SetUtilities.KButil_Extract_Unpaired_Reads_Output
-KButil_Extract_Unpaired_Reads_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_ref has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
-	desc has a value which is a string
-workspace_name is a string
-data_obj_ref is a string
-data_obj_name is a string
-KButil_Extract_Unpaired_Reads_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs',
-				       );
-    }
-}
- 
-
-
-=head2 KButil_Translate_ReadsLibs_QualScores
-
-  $return = $obj->KButil_Translate_ReadsLibs_QualScores($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_Translate_ReadsLibs_QualScores_Params
-$return is a kb_SetUtilities.KButil_Translate_ReadsLibs_QualScores_Output
-KButil_Translate_ReadsLibs_QualScores_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_refs has a value which is a kb_SetUtilities.data_obj_ref
-workspace_name is a string
-data_obj_ref is a string
-KButil_Translate_ReadsLibs_QualScores_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-data_obj_name is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_Translate_ReadsLibs_QualScores_Params
-$return is a kb_SetUtilities.KButil_Translate_ReadsLibs_QualScores_Output
-KButil_Translate_ReadsLibs_QualScores_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_refs has a value which is a kb_SetUtilities.data_obj_ref
-workspace_name is a string
-data_obj_ref is a string
-KButil_Translate_ReadsLibs_QualScores_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-data_obj_name is a string
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_Translate_ReadsLibs_QualScores
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_Translate_ReadsLibs_QualScores (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_Translate_ReadsLibs_QualScores:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_Translate_ReadsLibs_QualScores');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_Translate_ReadsLibs_QualScores",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_Translate_ReadsLibs_QualScores',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Translate_ReadsLibs_QualScores",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_Translate_ReadsLibs_QualScores',
-				       );
-    }
-}
- 
-
-
-=head2 KButil_AddInsertLen_to_ReadsLibs
-
-  $return = $obj->KButil_AddInsertLen_to_ReadsLibs($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a kb_SetUtilities.KButil_AddInsertLen_to_ReadsLibs_Params
-$return is a kb_SetUtilities.KButil_AddInsertLen_to_ReadsLibs_Output
-KButil_AddInsertLen_to_ReadsLibs_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_refs has a value which is a kb_SetUtilities.data_obj_ref
-	insert_len has a value which is a float
-	insert_stddev has a value which is a float
-workspace_name is a string
-data_obj_ref is a string
-KButil_AddInsertLen_to_ReadsLibs_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-data_obj_name is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a kb_SetUtilities.KButil_AddInsertLen_to_ReadsLibs_Params
-$return is a kb_SetUtilities.KButil_AddInsertLen_to_ReadsLibs_Output
-KButil_AddInsertLen_to_ReadsLibs_Params is a reference to a hash where the following keys are defined:
-	workspace_name has a value which is a kb_SetUtilities.workspace_name
-	input_refs has a value which is a kb_SetUtilities.data_obj_ref
-	insert_len has a value which is a float
-	insert_stddev has a value which is a float
-workspace_name is a string
-data_obj_ref is a string
-KButil_AddInsertLen_to_ReadsLibs_Output is a reference to a hash where the following keys are defined:
-	report_name has a value which is a kb_SetUtilities.data_obj_name
-	report_ref has a value which is a kb_SetUtilities.data_obj_ref
-data_obj_name is a string
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub KButil_AddInsertLen_to_ReadsLibs
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function KButil_AddInsertLen_to_ReadsLibs (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to KButil_AddInsertLen_to_ReadsLibs:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'KButil_AddInsertLen_to_ReadsLibs');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_SetUtilities.KButil_AddInsertLen_to_ReadsLibs",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'KButil_AddInsertLen_to_ReadsLibs',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_AddInsertLen_to_ReadsLibs",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'KButil_AddInsertLen_to_ReadsLibs',
 				       );
     }
 }
@@ -2122,79 +1280,6 @@ an int
 
 
 
-=head2 KButil_FASTQ_to_FASTA_Params
-
-=over 4
-
-
-
-=item Description
-
-KButil_FASTQ_to_FASTA()
-**
-** Method for Converting a FASTQ SingleEndLibrary to a FASTA SingleEndLibrary
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_FASTQ_to_FASTA_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
 =head2 KButil_Merge_FeatureSet_Collection_Params
 
 =over 4
@@ -2239,6 +1324,83 @@ desc has a value which is a string
 
 
 =head2 KButil_Merge_FeatureSet_Collection_Output
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+report_name has a value which is a kb_SetUtilities.data_obj_name
+report_ref has a value which is a kb_SetUtilities.data_obj_ref
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+report_name has a value which is a kb_SetUtilities.data_obj_name
+report_ref has a value which is a kb_SetUtilities.data_obj_ref
+
+
+=end text
+
+=back
+
+
+
+=head2 KButil_Slice_FeatureSets_by_Genomes_Params
+
+=over 4
+
+
+
+=item Description
+
+KButil_Slice_FeatureSets_by_Genomes()
+**
+**  Method for Slicing a FeatureSet or FeatureSets by a Genome, Genomes, or GenomeSet
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+workspace_name has a value which is a kb_SetUtilities.workspace_name
+input_featureSet_refs has a value which is a kb_SetUtilities.data_obj_ref
+input_genome_refs has a value which is a kb_SetUtilities.data_obj_ref
+output_name has a value which is a kb_SetUtilities.data_obj_name
+desc has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+workspace_name has a value which is a kb_SetUtilities.workspace_name
+input_featureSet_refs has a value which is a kb_SetUtilities.data_obj_ref
+input_genome_refs has a value which is a kb_SetUtilities.data_obj_ref
+output_name has a value which is a kb_SetUtilities.data_obj_name
+desc has a value which is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 KButil_Slice_FeatureSets_by_Genomes_Output
 
 =over 4
 
@@ -2572,83 +1734,6 @@ report_ref has a value which is a kb_SetUtilities.data_obj_ref
 
 
 
-=head2 KButil_Concat_MSAs_Params
-
-=over 4
-
-
-
-=item Description
-
-KButil_Concat_MSAs()
-**
-**  Method for Concatenating MSAs into a combined MSA
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_refs has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-desc has a value which is a string
-blanks_flag has a value which is a kb_SetUtilities.bool
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_refs has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-desc has a value which is a string
-blanks_flag has a value which is a kb_SetUtilities.bool
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Concat_MSAs_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
 =head2 KButil_Build_ReadsSet_Params
 
 =over 4
@@ -2724,346 +1809,6 @@ report_ref has a value which is a kb_SetUtilities.data_obj_ref
 
 
 
-=head2 KButil_Split_Reads_Params
-
-=over 4
-
-
-
-=item Description
-
-KButil_Split_Reads()
-**
-**  Method for spliting a ReadsLibrary into evenly sized ReadsLibraries
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-split_num has a value which is an int
-desc has a value which is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-split_num has a value which is an int
-desc has a value which is a string
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Split_Reads_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
-=head2 Fractionate_Options
-
-=over 4
-
-
-
-=item Description
-
-KButil_Random_Subsample_Reads()
-**
-**  Method for random subsampling of reads library
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-split_num has a value which is an int
-reads_num has a value which is an int
-reads_perc has a value which is a float
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-split_num has a value which is an int
-reads_num has a value which is an int
-reads_perc has a value which is a float
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Random_Subsample_Reads_Params
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-subsample_fraction has a value which is a kb_SetUtilities.Fractionate_Options
-desc has a value which is a string
-seed has a value which is an int
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-subsample_fraction has a value which is a kb_SetUtilities.Fractionate_Options
-desc has a value which is a string
-seed has a value which is an int
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Random_Subsample_Reads_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Merge_ReadsSet_to_OneLibrary_Params
-
-=over 4
-
-
-
-=item Description
-
-KButil_Merge_ReadsSet_to_OneLibrary()
-**
-**  Method for merging a ReadsSet into one library
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-desc has a value which is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-desc has a value which is a string
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Merge_ReadsSet_to_OneLibrary_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Merge_MultipleReadsLibs_to_OneLibrary_Params
-
-=over 4
-
-
-
-=item Description
-
-KButil_Merge_MultipleReadsLibs_to_OneLibrary()
-**
-**  Method for merging ReadsLibs into one library
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_refs has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-desc has a value which is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_refs has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-desc has a value which is a string
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Merge_MultipleReadsLibs_to_OneLibrary_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
 =head2 KButil_Merge_MultipleReadsSets_to_OneReadsSet_Params
 
 =over 4
@@ -3108,227 +1853,6 @@ desc has a value which is a string
 
 
 =head2 KButil_Merge_MultipleReadsSets_to_OneReadsSet_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Extract_Unpaired_Reads_Params
-
-=over 4
-
-
-
-=item Description
-
-KButil_Extract_Unpaired_Reads_and_Synchronize_Pairs()
-**
-**  Method for removing unpaired reads from a paired end library or set and matching the order of reads
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-desc has a value which is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_ref has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
-desc has a value which is a string
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Extract_Unpaired_Reads_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Translate_ReadsLibs_QualScores_Params
-
-=over 4
-
-
-
-=item Description
-
-KButil_Translate_ReadsLibs_QualScores()
-**
-**  Method for Translating ReadsLibs Qual scores
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_refs has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_refs has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_Translate_ReadsLibs_QualScores_Output
-
-=over 4
-
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-report_name has a value which is a kb_SetUtilities.data_obj_name
-report_ref has a value which is a kb_SetUtilities.data_obj_ref
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_AddInsertLen_to_ReadsLibs_Params
-
-=over 4
-
-
-
-=item Description
-
-KButil_AddInsertLen_to_ReadsLibs()
-**
-**  Method for Adding Insert Len to PairedEnd ReadsLibs
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_refs has a value which is a kb_SetUtilities.data_obj_ref
-insert_len has a value which is a float
-insert_stddev has a value which is a float
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-workspace_name has a value which is a kb_SetUtilities.workspace_name
-input_refs has a value which is a kb_SetUtilities.data_obj_ref
-insert_len has a value which is a float
-insert_stddev has a value which is a float
-
-
-=end text
-
-=back
-
-
-
-=head2 KButil_AddInsertLen_to_ReadsLibs_Output
 
 =over 4
 

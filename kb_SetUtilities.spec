@@ -43,6 +43,26 @@ module kb_SetUtilities {
     funcdef KButil_Merge_FeatureSet_Collection (KButil_Merge_FeatureSet_Collection_Params params)  returns (KButil_Merge_FeatureSet_Collection_Output) authentication required;
 
 
+    /* KButil_Slice_FeatureSets_by_Genomes()
+    **
+    **  Method for Slicing a FeatureSet or FeatureSets by a Genome, Genomes, or GenomeSet
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	data_obj_ref   input_featureSet_refs;
+	data_obj_ref   input_genome_refs;
+        data_obj_name  output_name;
+	string         desc;
+    } KButil_Slice_FeatureSets_by_Genomes_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Slice_FeatureSets_by_Genomes_Output;
+
+    funcdef KButil_Slice_FeatureSets_by_Genomes (KButil_Slice_FeatureSets_by_Genomes_Params params)  returns (KButil_Slice_FeatureSets_by_Genomes_Output) authentication required;
+
+
     /* KButil_Merge_GenomeSets()
     **
     **  Method for merging GenomeSets
