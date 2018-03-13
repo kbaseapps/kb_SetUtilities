@@ -201,6 +201,23 @@ public class KbSetUtilitiesClient {
     }
 
     /**
+     * <p>Original spec-file function name: KButil_Logical_Slice_Two_FeatureSets</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbsetutilities.KButilLogicalSliceTwoFeatureSetsParams KButilLogicalSliceTwoFeatureSetsParams} (original type "KButil_Logical_Slice_Two_FeatureSets_Params")
+     * @return   instance of type {@link us.kbase.kbsetutilities.KButilLogicalSliceTwoFeatureSetsOutput KButilLogicalSliceTwoFeatureSetsOutput} (original type "KButil_Logical_Slice_Two_FeatureSets_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public KButilLogicalSliceTwoFeatureSetsOutput kButilLogicalSliceTwoFeatureSets(KButilLogicalSliceTwoFeatureSetsParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<KButilLogicalSliceTwoFeatureSetsOutput>> retType = new TypeReference<List<KButilLogicalSliceTwoFeatureSetsOutput>>() {};
+        List<KButilLogicalSliceTwoFeatureSetsOutput> res = caller.jsonrpcCall("kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
      * <p>Original spec-file function name: KButil_Merge_GenomeSets</p>
      * <pre>
      * </pre>

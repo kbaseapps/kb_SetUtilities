@@ -322,6 +322,114 @@ KButil_Slice_FeatureSets_by_Genomes_Output is a reference to a hash where the fo
  
 
 
+=head2 KButil_Logical_Slice_Two_FeatureSets
+
+  $return = $obj->KButil_Logical_Slice_Two_FeatureSets($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets_Params
+$return is a kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets_Output
+KButil_Logical_Slice_Two_FeatureSets_Params is a reference to a hash where the following keys are defined:
+	workspace_name has a value which is a kb_SetUtilities.workspace_name
+	input_featureSet_ref_A has a value which is a kb_SetUtilities.data_obj_ref
+	input_featureSet_ref_B has a value which is a kb_SetUtilities.data_obj_ref
+	operator has a value which is a string
+	desc has a value which is a string
+	output_name has a value which is a kb_SetUtilities.data_obj_name
+workspace_name is a string
+data_obj_ref is a string
+data_obj_name is a string
+KButil_Logical_Slice_Two_FeatureSets_Output is a reference to a hash where the following keys are defined:
+	report_name has a value which is a kb_SetUtilities.data_obj_name
+	report_ref has a value which is a kb_SetUtilities.data_obj_ref
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets_Params
+$return is a kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets_Output
+KButil_Logical_Slice_Two_FeatureSets_Params is a reference to a hash where the following keys are defined:
+	workspace_name has a value which is a kb_SetUtilities.workspace_name
+	input_featureSet_ref_A has a value which is a kb_SetUtilities.data_obj_ref
+	input_featureSet_ref_B has a value which is a kb_SetUtilities.data_obj_ref
+	operator has a value which is a string
+	desc has a value which is a string
+	output_name has a value which is a kb_SetUtilities.data_obj_name
+workspace_name is a string
+data_obj_ref is a string
+data_obj_name is a string
+KButil_Logical_Slice_Two_FeatureSets_Output is a reference to a hash where the following keys are defined:
+	report_name has a value which is a kb_SetUtilities.data_obj_name
+	report_ref has a value which is a kb_SetUtilities.data_obj_ref
+
+
+=end text
+
+=item Description
+
+
+
+=back
+
+=cut
+
+ sub KButil_Logical_Slice_Two_FeatureSets
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function KButil_Logical_Slice_Two_FeatureSets (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to KButil_Logical_Slice_Two_FeatureSets:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'KButil_Logical_Slice_Two_FeatureSets');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'KButil_Logical_Slice_Two_FeatureSets',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method KButil_Logical_Slice_Two_FeatureSets",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'KButil_Logical_Slice_Two_FeatureSets',
+				       );
+    }
+}
+ 
+
+
 =head2 KButil_Merge_GenomeSets
 
   $return = $obj->KButil_Merge_GenomeSets($params)
@@ -1401,6 +1509,85 @@ desc has a value which is a string
 
 
 =head2 KButil_Slice_FeatureSets_by_Genomes_Output
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+report_name has a value which is a kb_SetUtilities.data_obj_name
+report_ref has a value which is a kb_SetUtilities.data_obj_ref
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+report_name has a value which is a kb_SetUtilities.data_obj_name
+report_ref has a value which is a kb_SetUtilities.data_obj_ref
+
+
+=end text
+
+=back
+
+
+
+=head2 KButil_Logical_Slice_Two_FeatureSets_Params
+
+=over 4
+
+
+
+=item Description
+
+KButil_Logical_Slice_Two_FeatureSets()
+**
+**  Method for Slicing Two FeatureSets by Venn overlap
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+workspace_name has a value which is a kb_SetUtilities.workspace_name
+input_featureSet_ref_A has a value which is a kb_SetUtilities.data_obj_ref
+input_featureSet_ref_B has a value which is a kb_SetUtilities.data_obj_ref
+operator has a value which is a string
+desc has a value which is a string
+output_name has a value which is a kb_SetUtilities.data_obj_name
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+workspace_name has a value which is a kb_SetUtilities.workspace_name
+input_featureSet_ref_A has a value which is a kb_SetUtilities.data_obj_ref
+input_featureSet_ref_B has a value which is a kb_SetUtilities.data_obj_ref
+operator has a value which is a string
+desc has a value which is a string
+output_name has a value which is a kb_SetUtilities.data_obj_name
+
+
+=end text
+
+=back
+
+
+
+=head2 KButil_Logical_Slice_Two_FeatureSets_Output
 
 =over 4
 

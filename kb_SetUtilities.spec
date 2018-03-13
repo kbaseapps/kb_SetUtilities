@@ -63,6 +63,27 @@ module kb_SetUtilities {
     funcdef KButil_Slice_FeatureSets_by_Genomes (KButil_Slice_FeatureSets_by_Genomes_Params params)  returns (KButil_Slice_FeatureSets_by_Genomes_Output) authentication required;
 
 
+    /* KButil_Logical_Slice_Two_FeatureSets()
+    **
+    **  Method for Slicing Two FeatureSets by Venn overlap
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	data_obj_ref   input_featureSet_ref_A;
+	data_obj_ref   input_featureSet_ref_B;
+	string         operator;
+	string         desc;
+        data_obj_name  output_name;
+    } KButil_Logical_Slice_Two_FeatureSets_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Logical_Slice_Two_FeatureSets_Output;
+
+    funcdef KButil_Logical_Slice_Two_FeatureSets (KButil_Logical_Slice_Two_FeatureSets_Params params)  returns (KButil_Logical_Slice_Two_FeatureSets_Output) authentication required;
+
+
     /* KButil_Merge_GenomeSets()
     **
     **  Method for merging GenomeSets

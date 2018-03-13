@@ -42,7 +42,7 @@ class kb_SetUtilities:
     ######################################### noqa
     VERSION = "1.1.0"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "bbeeb52aba8a150df689ec5bae12a3e182c57342"
+    GIT_COMMIT_HASH = "bb552b0728e7ae371f60d343576a8165a26c2bb0"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -376,6 +376,7 @@ class kb_SetUtilities:
         #
         featureSet_seen = dict()
         featureSet_genome_ref_to_standardized = dict()  # have to map genome refs in featureSets also because might be mixed WS_ID-WS_NAME/OBJID-OBJNAME and not exactly correspond with input genome refs
+        feature_list_lens = []
         objects_created = []
 
         for featureSet_ref in params['input_featureSet_refs']:
@@ -433,12 +434,12 @@ class kb_SetUtilities:
             element_ordering = []
             elements = {}
             for fId in this_element_ordering:
-                self.log (console, 'checking feature {}'.format(fId))  # DEBUG
+                #self.log (console, 'checking feature {}'.format(fId))  # DEBUG
                 feature_hit = False
                 genomes_retained = []
                 for this_genome_ref in this_featureSet['elements'][fId]:
                     genome_hit = False
-                    self.log (console, "\t"+'checking genome {}'.format(this_genome_ref))  # DEBUG
+                    #self.log (console, "\t"+'checking genome {}'.format(this_genome_ref))  # DEBUG
 
                     #if this_genome_ref in params['input_genome_refs']:   # The KEY line 
                     if this_genome_ref in genome_ref_to_standardized:
@@ -468,7 +469,7 @@ class kb_SetUtilities:
                             genome_hit = True
 
                     if genome_hit:
-                        self.log (console, "\t"+'GENOME HIT')  # DEBUG
+                        #self.log (console, "\t"+'GENOME HIT')  # DEBUG
                         feature_hit = True
                         genomes_retained.append(standardized_genome_ref)
                    
@@ -479,48 +480,60 @@ class kb_SetUtilities:
             self.log(console, logMsg)
 
 
-            # load the method provenance from the context object
-            self.log(console, "SETTING PROVENANCE")  # DEBUG
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
-            # add additional info to provenance here, in this case the input data object reference
-            provenance[0]['input_ws_objects'] = []
-            provenance[0]['input_ws_objects'].append(featureSet_ref)
-            for genome_ref in params['input_genome_refs']:
-                provenance[0]['input_ws_objects'].append(genome_ref)
-            provenance[0]['service'] = 'kb_SetUtilities'
-            provenance[0]['method'] = 'KButil_Slice_FeatureSets_by_Genome'
+            # Save output FeatureSet
+            #
+            if len(element_ordering) == 0:
+                report += 'no features for requested genomes in FeatureSet '+str(featureSet_ref)
+                feature_list_lens.append(0)
+            else:
+                # load the method provenance from the context object
+                self.log(console, "SETTING PROVENANCE")  # DEBUG
+                provenance = [{}]
+                if 'provenance' in ctx:
+                    provenance = ctx['provenance']
+                # add additional info to provenance here, in this case the input data object reference
+                provenance[0]['input_ws_objects'] = []
+                provenance[0]['input_ws_objects'].append(featureSet_ref)
+                for genome_ref in params['input_genome_refs']:
+                    provenance[0]['input_ws_objects'].append(genome_ref)
+                provenance[0]['service'] = 'kb_SetUtilities'
+                provenance[0]['method'] = 'KButil_Slice_FeatureSets_by_Genome'
 
-            # Store output object
-            if len(invalid_msgs) == 0:
-                self.log(console, "SAVING FEATURESET")  # DEBUG
-                output_FeatureSet = {'description': params['desc'],
-                                     'element_ordering': element_ordering,
-                                     'elements': elements}
+                # Store output object
+                if len(invalid_msgs) == 0:
+                    self.log(console, "SAVING FEATURESET")  # DEBUG
+                    output_FeatureSet = {'description': params['desc'],
+                                         'element_ordering': element_ordering,
+                                         'elements': elements}
 
-                output_name = params['output_name']
-                if len(params['input_featureSet_refs']) > 1:
-                    output_name += '-' + this_featureSet_obj_name
+                    output_name = params['output_name']
+                    if len(params['input_featureSet_refs']) > 1:
+                        output_name += '-' + this_featureSet_obj_name
 
-                new_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
-                                                      'objects': [{
-                                                          'type': 'KBaseCollections.FeatureSet',
-                                                          'data': output_FeatureSet,
-                                                          'name': output_name,
-                                                          'meta': {},
-                                                          'provenance': provenance}]})
+                    new_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
+                                                          'objects': [{
+                                                              'type': 'KBaseCollections.FeatureSet',
+                                                              'data': output_FeatureSet,
+                                                              'name': output_name,
+                                                              'meta': {},
+                                                              'provenance': provenance}]})
                 
-                objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
-                                        'description': params['desc']})
+                    feature_list_lens.append(len(element_ordering))
+                    objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
+                                            'description': params['desc']})
+
 
         # build output report object
         self.log(console, "BUILDING REPORT")  # DEBUG
         if len(invalid_msgs) == 0:
-            self.log(console, "features in output set " + params['output_name'] + ": "
-                     + str(len(element_ordering)))
-            report += 'features in output set ' + params['output_name'] + ': '
-            report += str(len(element_ordering)) + "\n"
+            obj_i = -1
+            for output_i,list_len in enumerate(feature_list_lens):
+                if feature_list_lens[output_i] == 0:
+                    report += 'No features for requested genomes in featureSet '+str(params['input_featureSet_refs'][output_i])+"\n"
+                else:
+                    obj_i += 1
+                    report += 'features in output set ' + objects_created[obj_i]['ref'] + ': '
+                    report += str(feature_list_lens[output_i]) + "\n"
             reportObj = {
                 'objects_created': objects_created,
                 'text_message': report
@@ -531,6 +544,18 @@ class kb_SetUtilities:
                 'objects_created': [],
                 'text_message': report
             }
+
+        provenance = [{}]
+        if 'provenance' in ctx:
+            provenance = ctx['provenance']
+        # add additional info to provenance here, in this case the input data object reference
+        provenance[0]['input_ws_objects'] = []
+        for featureSet_ref in params['input_featureSet_refs']:
+            provenance[0]['input_ws_objects'].append(featureSet_ref)
+        for genome_ref in params['input_genome_refs']:
+            provenance[0]['input_ws_objects'].append(genome_ref)
+        provenance[0]['service'] = 'kb_SetUtilities'
+        provenance[0]['method'] = 'KButil_Slice_FeatureSets_by_Genome'
 
         reportName = 'kb_SetUtilities_slice_featureset_by_genomes_report_' + str(uuid.uuid4())
         ws = workspaceService(self.workspaceURL, token=ctx['token'])
@@ -553,6 +578,258 @@ class kb_SetUtilities:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method KButil_Slice_FeatureSets_by_Genomes return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def KButil_Logical_Slice_Two_FeatureSets(self, ctx, params):
+        """
+        :param params: instance of type
+           "KButil_Logical_Slice_Two_FeatureSets_Params"
+           (KButil_Logical_Slice_Two_FeatureSets() ** **  Method for Slicing
+           Two FeatureSets by Venn overlap) -> structure: parameter
+           "workspace_name" of type "workspace_name" (** The workspace object
+           refs are of form: ** **    objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_featureSet_ref_A" of type "data_obj_ref",
+           parameter "input_featureSet_ref_B" of type "data_obj_ref",
+           parameter "operator" of String, parameter "desc" of String,
+           parameter "output_name" of type "data_obj_name"
+        :returns: instance of type
+           "KButil_Logical_Slice_Two_FeatureSets_Output" -> structure:
+           parameter "report_name" of type "data_obj_name", parameter
+           "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Logical_Slice_Two_FeatureSets
+        console = []
+        invalid_msgs = []
+        self.log(console, 'Running Logical_Slice_Two_FeatureSets with params=')
+        self.log(console, "\n" + pformat(params))
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        logMsg = ''
+        report = ''
+        genome_id_feature_id_delim = ".f:"
+        
+
+        #### do some basic checks
+        #
+        if 'workspace_name' not in params:
+            raise ValueError('workspace_name parameter is required')
+        if 'desc' not in params:
+            raise ValueError('desc parameter is required')
+        if 'operator' not in params:
+            raise ValueError('operator parameter is required')
+        if 'input_featureSet_ref_A' not in params:
+            raise ValueError('input_featureSet_ref_A parameter is required')
+        if 'input_featureSet_ref_B' not in params:
+            raise ValueError('input_featureSet_ref_B parameter is required')
+        if 'output_name' not in params:
+            raise ValueError('output_name parameter is required')
+
+        # establish workspace client
+        try:
+            wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
+        except Exception as e:
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+
+
+        # Get FeatureSets
+        #
+        FeatureSet = dict()
+        FeatureSet['A'] = dict()
+        FeatureSet['B'] = dict()
+        input_featureSet_refs = dict()
+        input_featureSet_refs['A'] = params['input_featureSet_ref_A']
+        input_featureSet_refs['B'] = params['input_featureSet_ref_B']
+        for set_id in ['A','B']:
+            try:
+                #objects = wsClient.get_objects([{'ref': featureSet_ref}])
+                objects = wsClient.get_objects2({'objects': [{'ref': input_featureSet_refs[set_id]}]})['data']
+                data = objects[0]['data']
+                info = objects[0]['info']
+                this_featureSet = data
+                this_featureSet_obj_name = info[NAME_I]
+                type_name = info[TYPE_I].split('.')[1].split('-')[0]
+            except Exception as e:
+                raise ValueError('Unable to fetch input_featureSet_ref '+str(input_featureSet_refs[set_id])+' object from workspace: ' + str(e))
+                #to get the full stack trace: traceback.format_exc()
+            if type_name != 'FeatureSet':
+                raise ValueError("Bad Type:  Should be FeatureSet instead of '" + type_name + "'")
+
+            FeatureSet[set_id] = this_featureSet
+            if 'element_ordering' not in this_featureSet.keys():
+                FeatureSet[set_id]['element_ordering'] = sorted(this_featureSet['elements'].keys())
+            logMsg = 'features in input set {}: {}'.format(input_featureSet_refs[set_id],
+                                                           len(FeatureSet[set_id]['element_ordering']))
+            self.log(console, logMsg)
+
+
+        # Store A and B genome + fid hits
+        #
+        genome_feature_present = dict()
+        genome_feature_present['A'] = dict()
+        genome_feature_present['B'] = dict()
+        featureSet_genome_ref_to_standardized = dict()  # must use standardized genome_refs
+
+        for set_id in ['A','B']:
+            for fId in FeatureSet[set_id]['element_ordering']:
+                feature_standardized_genome_refs = []
+                for this_genome_ref in FeatureSet[set_id]['elements'][fId]:
+                
+                    if this_genome_ref in featureSet_genome_ref_to_standardized:
+                        standardized_genome_ref = featureSet_genome_ref_to_standardized[this_genome_ref]
+                    else:  # get standardized genome_ref
+                        try:
+                            genome_obj_info = wsClient.get_object_info_new ({'objects':[{'ref':this_genome_ref}]})[0]
+                            genome_obj_type = re.sub ('-[0-9]+\.[0-9]+$', "", genome_obj_info[TYPE_I])  # remove trailing version
+                        except Exception as e:
+                            raise ValueError('Unable to get genome object info from workspace: (' + str(this_genome_ref) +')' + str(e))
+
+                        acceptable_types = ["KBaseGenomes.Genome", "KBaseGenomeAnnotations.GenomeAnnotation"]
+                        if genome_obj_type not in acceptable_types:
+                            raise ValueError("Input Genome of type: '" + genome_obj_type +
+                                             "'.  Must be one of " + ", ".join(acceptable_types))
+            
+                        standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
+                                                                    genome_obj_info[OBJID_I],
+                                                                    genome_obj_info[VERSION_I])
+                        featureSet_genome_ref_to_standardized[this_genome_ref] = standardized_genome_ref
+                    feature_standardized_genome_refs.append(standardized_genome_ref)  # standardize list
+                    combo_id = standardized_genome_ref + genome_id_feature_id_delim + fId
+                    genome_feature_present[set_id][combo_id] = True
+                FeatureSet[set_id]['elements'][fId] = feature_standardized_genome_refs
+
+
+        # Build sliced FeatureSet
+        #
+        self.log (console, "BUILDING SLICED FEATURESET\n")  # DEBUG
+        output_element_ordering = []
+        output_elements = dict()
+        if params['operator'] == 'yesA_yesB' or params['operator'] == 'yesA_noB':
+            input_element_ordering = FeatureSet['A']['element_ordering']
+            fwd_set_id = 'A'
+            rev_set_id = 'B'
+        else:
+            input_element_ordering = FeatureSet['B']['element_ordering']
+            fwd_set_id = 'B'
+            rev_set_id = 'A'
+
+        for fId in input_element_ordering:
+            #self.log (console, 'checking feature {}'.format(fId))  # DEBUG
+            feature_hit = False
+            genomes_retained = []
+            for this_genome_ref in FeatureSet[fwd_set_id]['elements'][fId]:
+                combo_id = this_genome_ref + genome_id_feature_id_delim + fId
+                #self.log (console, "\t"+'checking genome {}'.format(this_genome_ref))  # DEBUG
+
+                if params['operator'] == 'yesA_yesB':
+                    try:
+                        seen = genome_feature_present[rev_set_id][combo_id]
+                        feature_hit = True
+                        genomes_retained.append(this_genome_ref)
+                    except:
+                        pass
+                else:
+                    try:
+                        seen = genome_feature_present[rev_set_id][combo_id]
+                        pass
+                    except:
+                        feature_hit = True
+                        genomes_retained.append(this_genome_ref)
+                   
+            if feature_hit:
+                output_element_ordering.append(fId)
+                output_elements[fId] = genomes_retained
+        logMsg = 'features in sliced output set: {}'.format(len(output_element_ordering))
+        self.log(console, logMsg)
+
+
+        # Save output FeatureSet
+        #
+        objects_created = []
+
+        # load the method provenance from the context object
+        self.log(console, "SETTING PROVENANCE")  # DEBUG
+        provenance = [{}]
+        if 'provenance' in ctx:
+            provenance = ctx['provenance']
+        # add additional info to provenance here, in this case the input data object reference
+        provenance[0]['input_ws_objects'] = []
+        provenance[0]['input_ws_objects'].append(input_featureSet_refs['A'])
+        provenance[0]['input_ws_objects'].append(input_featureSet_refs['B'])
+        provenance[0]['service'] = 'kb_SetUtilities'
+        provenance[0]['method'] = 'KButil_Logical_Slice_Two_FeatureSets'
+
+        if len(output_element_ordering) == 0:
+            report += 'no features to output under operator '+params['operator']+"\n"
+
+        else:
+
+            # Store output object
+            if len(invalid_msgs) == 0:
+                self.log(console, "SAVING FEATURESET")  # DEBUG
+                output_FeatureSet = {'description': params['desc'],
+                                     'element_ordering': output_element_ordering,
+                                     'elements': output_elements}
+
+                output_name = params['output_name']
+
+                new_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
+                                                      'objects': [{
+                                                          'type': 'KBaseCollections.FeatureSet',
+                                                          'data': output_FeatureSet,
+                                                          'name': output_name,
+                                                          'meta': {},
+                                                          'provenance': provenance}]})
+                
+                objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
+                                        'description': params['desc']})
+
+        # build output report object
+        self.log(console, "BUILDING REPORT")  # DEBUG
+        if len(invalid_msgs) == 0:
+            self.log(console, "features in output set " + params['output_name'] + ": "
+                     + str(len(output_element_ordering)))
+            report += 'features in output set ' + params['output_name'] + ': '
+            report += str(len(output_element_ordering)) + "\n"
+            reportObj = {
+                'objects_created': objects_created,
+                'text_message': report
+            }
+        else:
+            report += "FAILURE:\n\n" + "\n".join(invalid_msgs) + "\n"
+            reportObj = {
+                'objects_created': [],
+                'text_message': report
+            }
+
+        reportName = 'kb_SetUtilities_logical_slice_two_featuresets_report_' + str(uuid.uuid4())
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
+                                                 'objects': [{'type': 'KBaseReport.Report',
+                                                              'data': reportObj,
+                                                              'name': reportName,
+                                                              'meta': {},
+                                                              'hidden': 1,
+                                                              'provenance': provenance}]})[0]
+        
+        # Build report and return
+        self.log(console, "BUILDING RETURN OBJECT")
+        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
+        returnVal = {'report_name': reportName,
+                     'report_ref': report_ref}
+        self.log(console, "KButil_Logical_Slice_Two_FeatureSets DONE")
+        #END KButil_Logical_Slice_Two_FeatureSets
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Logical_Slice_Two_FeatureSets return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]

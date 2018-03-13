@@ -341,6 +341,10 @@ class Application(object):
                              name='kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Slice_FeatureSets_by_Genomes'] = 'required'  # noqa
+        self.rpc_service.add(impl_kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets,
+                             name='kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets',
+                             types=[dict])
+        self.method_authentication['kb_SetUtilities.KButil_Logical_Slice_Two_FeatureSets'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Merge_GenomeSets,
                              name='kb_SetUtilities.KButil_Merge_GenomeSets',
                              types=[dict])
