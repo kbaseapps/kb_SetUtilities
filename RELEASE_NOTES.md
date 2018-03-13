@@ -1,7 +1,7 @@
 ### Version 1.1.0
 __Changes__
 - added "Slice FeatureSets by Genomes" App
-- added "Logial Slice Two FeatureSets" App
+- added "Logical Slice Two FeatureSets" App
 
 ### Version 1.0.1
 __Changes__
