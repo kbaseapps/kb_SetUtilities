@@ -74,12 +74,12 @@
                 {
                     "input_parameter": "input_featureSet_refs",
                     "target_property": "input_featureSet_refs",
-		    "target_type_transform": "resolved-ref"
+		    "target_type_transform": "list<resolved-ref>"
                 },
                 {
                     "input_parameter": "input_genome_refs",
                     "target_property": "input_genome_refs",
-		    "target_type_transform": "resolved-ref"
+		    "target_type_transform": "list<resolved-ref>"
                 },
                 {
                     "input_parameter": "output_name",
