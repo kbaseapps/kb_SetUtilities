@@ -98,8 +98,8 @@ class kb_SetUtilities(object):
            of a workspace or object.  This is received from Narrative.),
            parameter "input_featureSet_ref_A" of type "data_obj_ref",
            parameter "input_featureSet_ref_B" of type "data_obj_ref",
-           parameter "output_name" of type "data_obj_name", parameter "desc"
-           of String
+           parameter "operator" of String, parameter "desc" of String,
+           parameter "output_name" of type "data_obj_name"
         :returns: instance of type
            "KButil_Logical_Slice_Two_FeatureSets_Output" -> structure:
            parameter "report_name" of type "data_obj_name", parameter

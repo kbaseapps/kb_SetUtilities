@@ -71,8 +71,9 @@ module kb_SetUtilities {
         workspace_name workspace_name;
 	data_obj_ref   input_featureSet_ref_A;
 	data_obj_ref   input_featureSet_ref_B;
-        data_obj_name  output_name;
+	string         operator;
 	string         desc;
+        data_obj_name  output_name;
     } KButil_Logical_Slice_Two_FeatureSets_Params;
 
     typedef structure {

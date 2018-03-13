@@ -339,8 +339,9 @@ KButil_Logical_Slice_Two_FeatureSets_Params is a reference to a hash where the f
 	workspace_name has a value which is a kb_SetUtilities.workspace_name
 	input_featureSet_ref_A has a value which is a kb_SetUtilities.data_obj_ref
 	input_featureSet_ref_B has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
+	operator has a value which is a string
 	desc has a value which is a string
+	output_name has a value which is a kb_SetUtilities.data_obj_name
 workspace_name is a string
 data_obj_ref is a string
 data_obj_name is a string
@@ -360,8 +361,9 @@ KButil_Logical_Slice_Two_FeatureSets_Params is a reference to a hash where the f
 	workspace_name has a value which is a kb_SetUtilities.workspace_name
 	input_featureSet_ref_A has a value which is a kb_SetUtilities.data_obj_ref
 	input_featureSet_ref_B has a value which is a kb_SetUtilities.data_obj_ref
-	output_name has a value which is a kb_SetUtilities.data_obj_name
+	operator has a value which is a string
 	desc has a value which is a string
+	output_name has a value which is a kb_SetUtilities.data_obj_name
 workspace_name is a string
 data_obj_ref is a string
 data_obj_name is a string
@@ -1560,8 +1562,9 @@ a reference to a hash where the following keys are defined:
 workspace_name has a value which is a kb_SetUtilities.workspace_name
 input_featureSet_ref_A has a value which is a kb_SetUtilities.data_obj_ref
 input_featureSet_ref_B has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
+operator has a value which is a string
 desc has a value which is a string
+output_name has a value which is a kb_SetUtilities.data_obj_name
 
 </pre>
 
@@ -1573,8 +1576,9 @@ a reference to a hash where the following keys are defined:
 workspace_name has a value which is a kb_SetUtilities.workspace_name
 input_featureSet_ref_A has a value which is a kb_SetUtilities.data_obj_ref
 input_featureSet_ref_B has a value which is a kb_SetUtilities.data_obj_ref
-output_name has a value which is a kb_SetUtilities.data_obj_name
+operator has a value which is a string
 desc has a value which is a string
+output_name has a value which is a kb_SetUtilities.data_obj_name
 
 
 =end text

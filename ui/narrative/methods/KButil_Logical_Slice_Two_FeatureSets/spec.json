@@ -12,6 +12,37 @@
     },
     "parameters": [ 
         {
+            "id": "operator",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                                {
+                                        "value": "yesA_yesB",
+                                        "display": "Features found in both A and B",
+                                        "id": "operator-A_and_B",
+                                        "ui-name": "operator-A_and_B"
+                                },
+                                {
+                                        "value": "yesA_noB",
+                                        "display": "Features found in A but not B",
+                                        "id": "operator-A_and_not_B",
+                                        "ui-name": "operator-A_and_not_B"
+                                },
+                                {
+                                        "value": "noA_yesB",
+                                        "display": "Features found in B but not A",
+                                        "id": "operator-not_A_and_B",
+                                        "ui-name": "operator-not_A_and_B"
+                                }
+
+                ]
+            }
+        },
+        {
             "id": "desc",
             "optional": false,
             "advanced": false,
@@ -26,7 +57,7 @@
             "id": "input_featureSet_ref_A",
             "optional": false,
             "advanced": false,
-            "allow_multiple": true,
+            "allow_multiple": false,
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
@@ -37,7 +68,7 @@
             "id": "input_featureSet_ref_B",
             "optional": false,
             "advanced": false,
-            "allow_multiple": true,
+            "allow_multiple": false,
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
@@ -66,6 +97,10 @@
                 {
                     "narrative_system_variable": "workspace",
                     "target_property": "workspace_name"
+                },
+                {
+                    "input_parameter": "operator",
+                    "target_property": "operator"
                 },
                 {
                     "input_parameter": "desc",

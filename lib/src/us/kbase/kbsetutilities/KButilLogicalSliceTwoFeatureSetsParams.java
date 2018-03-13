@@ -26,8 +26,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "workspace_name",
     "input_featureSet_ref_A",
     "input_featureSet_ref_B",
-    "output_name",
-    "desc"
+    "operator",
+    "desc",
+    "output_name"
 })
 public class KButilLogicalSliceTwoFeatureSetsParams {
 
@@ -37,10 +38,12 @@ public class KButilLogicalSliceTwoFeatureSetsParams {
     private String inputFeatureSetRefA;
     @JsonProperty("input_featureSet_ref_B")
     private String inputFeatureSetRefB;
-    @JsonProperty("output_name")
-    private String outputName;
+    @JsonProperty("operator")
+    private String operator;
     @JsonProperty("desc")
     private String desc;
+    @JsonProperty("output_name")
+    private String outputName;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("workspace_name")
@@ -88,18 +91,18 @@ public class KButilLogicalSliceTwoFeatureSetsParams {
         return this;
     }
 
-    @JsonProperty("output_name")
-    public String getOutputName() {
-        return outputName;
+    @JsonProperty("operator")
+    public String getOperator() {
+        return operator;
     }
 
-    @JsonProperty("output_name")
-    public void setOutputName(String outputName) {
-        this.outputName = outputName;
+    @JsonProperty("operator")
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
-    public KButilLogicalSliceTwoFeatureSetsParams withOutputName(String outputName) {
-        this.outputName = outputName;
+    public KButilLogicalSliceTwoFeatureSetsParams withOperator(String operator) {
+        this.operator = operator;
         return this;
     }
 
@@ -118,6 +121,21 @@ public class KButilLogicalSliceTwoFeatureSetsParams {
         return this;
     }
 
+    @JsonProperty("output_name")
+    public String getOutputName() {
+        return outputName;
+    }
+
+    @JsonProperty("output_name")
+    public void setOutputName(String outputName) {
+        this.outputName = outputName;
+    }
+
+    public KButilLogicalSliceTwoFeatureSetsParams withOutputName(String outputName) {
+        this.outputName = outputName;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -130,7 +148,7 @@ public class KButilLogicalSliceTwoFeatureSetsParams {
 
     @Override
     public String toString() {
-        return ((((((((((((("KButilLogicalSliceTwoFeatureSetsParams"+" [workspaceName=")+ workspaceName)+", inputFeatureSetRefA=")+ inputFeatureSetRefA)+", inputFeatureSetRefB=")+ inputFeatureSetRefB)+", outputName=")+ outputName)+", desc=")+ desc)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((("KButilLogicalSliceTwoFeatureSetsParams"+" [workspaceName=")+ workspaceName)+", inputFeatureSetRefA=")+ inputFeatureSetRefA)+", inputFeatureSetRefB=")+ inputFeatureSetRefB)+", operator=")+ operator)+", desc=")+ desc)+", outputName=")+ outputName)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

@@ -27,13 +27,6 @@ suggestions:
 # Configure the display and description of parameters
 #
 parameters :
-    desc:
-        ui-name : |
-            Description
-        short-hint : |
-            Describe Purpose or Contents of Output FeatureSet(s)
-        placeholder: |
-            Enter Description
     input_featureSet_ref_A:
         ui-name : |
             Input FeatureSet A
@@ -44,6 +37,18 @@ parameters :
             Input FeatureSet B
         short-hint : |
             Add name of FeatureSet B
+    operator:
+        ui-name : |
+            Logical slice
+        short-hint : |
+            Select which slice to perform (A and B, A and not B, not A and B)
+    desc:
+        ui-name : |
+            Description
+        short-hint : |
+            Describe Purpose or Contents of Output FeatureSet(s)
+        placeholder: |
+            Enter Description
     output_name:
         ui-name : |
             Output FeatureSet(s) Basename
