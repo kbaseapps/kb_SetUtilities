@@ -2,6 +2,7 @@
 __Changes__
 - added "Slice FeatureSets by Genomes" App
 - added "Logical Slice Two FeatureSets" App
+- added transformation diagrams to docs pages
 
 ### Version 1.0.1
 __Changes__

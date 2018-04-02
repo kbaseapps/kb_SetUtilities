@@ -4,7 +4,8 @@
 name: Build ReadsSet - v1.0.1
 tooltip: |
     Allows user to create a ReadsSet
-screenshots: []
+screenshots:
+    - Build_ReadsSet.png
 
 icon: kb-pink.png
 
@@ -47,4 +48,11 @@ parameters :
 
 
 description : |
-    <p>This method allows the user to group Reads Libs into a ReadsSet.</p>
+    <p>This App allows the user to group <b><i>Reads Libraries</i></b> into a <b><i>Reads Set</i></b>.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Build Reads Set</b> allows a user to create a set of related Reads Libraries from scratch.  The Reads Libraries should all be either Single End or Paired End, but not both.  Typically, all the Reads Libraries in a given set have followed the same processing.  The input Reads Libraries must already be within the Narrative's data workspace, so if there are reads libraries from other Narratives or public data that the user wishes to include, they must first be imported into the active Narrative.
+    </p>

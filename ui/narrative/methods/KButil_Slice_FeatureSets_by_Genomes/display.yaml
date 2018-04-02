@@ -4,7 +4,8 @@
 name: Slice FeatureSets by Genomes - v1.1.0
 tooltip: |
     Allows user to slice FeatureSets by Genomes
-screenshots: []
+screenshots:
+    - Slice_FeatureSets_by_Genomes.png
 
 icon: kb-purple.png
 
@@ -54,3 +55,12 @@ parameters :
 description : |
     <p>This method allows the user to slice Features from FeatureSets into reduced FeatureSets containing only features that correspond to requested genomes.</p>
 
+description : |
+    <p>This App allows the user to slice Features from <b><i>Feature Sets</i></b> into reduced <b><i>Feature Sets</i></b> containing only features that correspond to the requested genomes.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Slice Feature Sets by Genomes</b> allows a user to subset Feature Set objects to only include features from user-defined genomes.  A feature set is output for each input feature set.  The configuration of the genomes is done using Genome objects that are present in the active Narrative, so those must be imported and used to create the Feature Sets subject to slicing.  A null result will not create an empty Feature Set.
+    </p>
