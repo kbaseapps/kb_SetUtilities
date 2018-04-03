@@ -4,7 +4,8 @@
 name: Build AssemblySet - v1.0.1
 tooltip: |
     Allows user to create an AssemblySet
-screenshots: []
+screenshots:
+    - Build_AssemblySet.png
 
 icon: kb-blue.png
 
@@ -47,4 +48,11 @@ parameters :
 
 
 description : |
-    <p>This method allows the user to group Assemblies into an AssemblySet.</p>
+    <p>This App allows the user to group individual <b><i>Assembly</i></b> objects into an <b><i>Assembly Set</i></b>.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Build Assembly Set</b> allows a user to create a Set of Assemblies (each one of which is a group of contigs or scaffold genome fragments) which can be used in subsequent Apps that operate on Assembly Sets.  Each Assembly object must already be within the Narrative's data workspace, so if there are assemblies from other Narratives or assemblies from public reference genomes that the user wishes to include, they must first be imported into the active Narrative.
+    </p>

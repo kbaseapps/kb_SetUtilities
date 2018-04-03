@@ -4,7 +4,8 @@
 name: Build GenomeSet from FeatureSet - v1.0.1
 tooltip: |
     Allows user to extract GenomeSet from FeatureSet
-screenshots: []
+screenshots:
+    - Build_GenomeSet_from_FeatureSet.png
 
 icon: kb-purple.png
 
@@ -47,4 +48,11 @@ parameters :
 
 
 description : |
-    <p>This method allows the user to extract the Genomes into a GenomeSet object from a FeatureSet object.</p>
+    <p>This App allows the user to extract the <b><i>Genomes</i></b> into a <b><i>Genome Set</i></b> object from a <b><i>Feature Set</i></b> object.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Build Genome Set from Feature Set</b> allows a user to derive a Genome Set from the genomes contained within a given Feature Set object.  The features themselves in a Feature Set object contain the information about which genomes they are associated with, so this information is extracted to form the output Genome Set.
+    </p>

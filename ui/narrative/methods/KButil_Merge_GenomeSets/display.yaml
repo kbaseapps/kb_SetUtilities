@@ -4,7 +4,8 @@
 name: Merge GenomeSets - v1.0.1
 tooltip: |
     Allows user to combine multiple GenomeSets into one GenomeSet
-screenshots: []
+screenshots:
+    - Merge_GenomeSets.png
 
 icon: kb-purple.png
 
@@ -47,4 +48,11 @@ parameters :
 
 
 description : |
-    <p>This method allows the user to combine (union) multiple GenomeSets into one GenomeSet object.</p>
+    <p>This App allows a user to merge (as a logical union) multiple <b><i>Genome Sets</i></b> into one <b><i>Genome Set</i></b> object.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Merge Genome Sets</b> allows a user to collapse multiple Genome Set objects into a single Genome Set object.  This may be useful in scenarios where genomes are identified as being of interest from multiple approaches, and the user wishes to follow up investigation of those genomes together.
+    </p>

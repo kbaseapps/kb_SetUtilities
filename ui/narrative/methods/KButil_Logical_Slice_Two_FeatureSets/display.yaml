@@ -4,7 +4,8 @@
 name: Logical Slice Two FeatureSets - v1.1.0
 tooltip: |
     Allows user to slice Two FeatureSets according to their Venn overlap
-screenshots: []
+screenshots:
+    - Logical_Slice_Two_FeatureSets.png
 
 icon: kb-purple.png
 
@@ -57,5 +58,11 @@ parameters :
 
 
 description : |
-    <p>This method allows the user to slice Features from FeatureSets into reduced FeatureSets containing only features that correspond to present in (A and not B), or (A and B), or (not A and B).</p>
-
+    <p>This App allows the user to slice Features from <b><i>Feature Sets</i></b> into reduced <b><i>Feature Sets</i></b> containing only features that correspond to present in {A and B}, or {A and (not B)}, or {(not A) and B}.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Logical Slice Two Feature Sets</b> allows a user to obtain a Venn slice of two Feature Sets.  The need often arises to ask which collections of genes or features are found only in one set or another, or present in both sets.  This trinary slice is offered by this App and results in a single output Feature Set.
+    </p>

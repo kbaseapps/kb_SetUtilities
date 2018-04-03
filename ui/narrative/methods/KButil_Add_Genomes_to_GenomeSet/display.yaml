@@ -3,8 +3,10 @@
 #
 name: Add Genomes to GenomeSet - v1.0.1
 tooltip: |
-    Allows user to add a Genome to a GenomeSet (or create a new GenomeSet)
-screenshots: []
+    Allows user to add a Genome to a GenomeSet
+
+screenshots: 
+    - Add_Genomes_to_GenomeSet.png
 
 icon: kb-purple.png
 
@@ -52,4 +54,11 @@ parameters :
 
 
 description : |
-    <p>This method allows the user to add a Genome or Genomes to a GenomeSet object.</p>
+    <p>This App allows the user to add <b><i>Genomes</i></b> to a <b><i>Genome Set</i></b> object.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Add Genomes to Genome Set</b> allows a user to expand the membership of a Genome Set.  The Genomes and Genome Set must already be within the Narrative's data workspace, so if there are genomes from other Narratives or public reference genomes that the user wishes to include, they must first be imported into the active Narrative.
+    </p>
