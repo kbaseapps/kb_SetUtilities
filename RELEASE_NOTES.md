@@ -2,6 +2,7 @@
 __Changes__
 - added "Localize GenomeSet" App
 - added "Localize FeatureSet" App
+- updated base docker image to sdkbase2
 
 ### Version 1.1.0
 __Changes__
