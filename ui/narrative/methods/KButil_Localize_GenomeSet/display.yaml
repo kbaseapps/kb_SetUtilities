@@ -1,0 +1,51 @@
+#
+# define display information
+#
+name: Localize GenomeSet - v1.2.0
+tooltip: |
+    Allows user to modify a GenomeSet to be local to active Narrative
+screenshots:
+    - Localize_GenomeSet.png
+
+icon: kb-purple.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    input_ref:
+        ui-name : |
+            GenomeSet
+        short-hint : |
+            The GenomeSet to Localize
+    output_name:
+        ui-name : |
+            Localized Output GenomeSet
+        short-hint : |
+            Name for the Output GenomeSet with localized genome members
+
+
+description : |
+    <p>This App allows the user to adjust a <b><i>Genome Set</i></b> to have local members.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Localize GenomeSet</b> reads a GenomeSet, copies all non-local Genomes into the active workspace, and adjusts the membership of the GenomeSet to refer to the local Genome copies.  If there are no non-local members, no new output GenomeSet is produced.
+    </p>

@@ -1,3 +1,8 @@
+### Version 1.2.0
+__Changes__
+- added "Localize GenomeSet" App
+- added "Localize FeatureSet" App
+
 ### Version 1.1.0
 __Changes__
 - added "Slice FeatureSets by Genomes" App

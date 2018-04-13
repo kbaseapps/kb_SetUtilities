@@ -33,6 +33,50 @@ class kb_SetUtilities(object):
             trust_all_ssl_certificates=trust_all_ssl_certificates,
             auth_svc=auth_svc)
 
+    def KButil_Localize_GenomeSet(self, params, context=None):
+        """
+        :param params: instance of type "KButil_Localize_GenomeSet_Params"
+           (KButil_Localize_GenomeSet() ** **  Method for creating Genome Set
+           with all local Genomes) -> structure: parameter "workspace_name"
+           of type "workspace_name" (** The workspace object refs are of
+           form: ** **    objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_ref" of type "data_obj_ref", parameter
+           "output_name" of type "data_obj_name"
+        :returns: instance of type "KButil_Localize_GenomeSet_Output" ->
+           structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
+        """
+        return self._client.call_method(
+            'kb_SetUtilities.KButil_Localize_GenomeSet',
+            [params], self._service_ver, context)
+
+    def KButil_Localize_FeatureSet(self, params, context=None):
+        """
+        :param params: instance of type "KButil_Localize_FeatureSet_Params"
+           (KButil_Localize_FeatureSet() ** **  Method for creating Feature
+           Set with all local Genomes) -> structure: parameter
+           "workspace_name" of type "workspace_name" (** The workspace object
+           refs are of form: ** **    objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_ref" of type "data_obj_ref", parameter
+           "output_name" of type "data_obj_name"
+        :returns: instance of type "KButil_Localize_FeatureSet_Output" ->
+           structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
+        """
+        return self._client.call_method(
+            'kb_SetUtilities.KButil_Localize_FeatureSet',
+            [params], self._service_ver, context)
+
     def KButil_Merge_FeatureSet_Collection(self, params, context=None):
         """
         :param params: instance of type
