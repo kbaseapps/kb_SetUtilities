@@ -166,8 +166,8 @@ class kb_SetUtilities:
             raise ValueError('workspace_name parameter is required')
         if 'input_ref' not in params:
             raise ValueError('input_ref parameter is required')
-        if 'output_name' not in params:
-            raise ValueError('output_name parameter is required')
+        #if 'output_name' not in params:
+        #    raise ValueError('output_name parameter is required')
 
  
         # establish workspace client
@@ -178,15 +178,17 @@ class kb_SetUtilities:
             raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
 
 
-        # read FeatureSet to get local workspace ID and list of original genome refs
+        # read FeatureSet to get local workspace ID, source object name, and list of original genome refs
         #
         self.log (console, "READING LOCAL WORKSPACE ID")
         src_featureSet_ref = params['input_ref']
+        src_featureSet_name = None
         try:
             #objects = wsClient.get_objects([{'ref': src_featureSet_ref}])
             objects = wsClient.get_objects2({'objects': [{'ref': src_featureSet_ref}]})['data']
             data = objects[0]['data']
             info = objects[0]['info']
+            src_featureSet_name = info[NAME_I]
             type_name = info[TYPE_I].split('.')[1].split('-')[0]
         except Exception as e:
             raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
@@ -196,6 +198,20 @@ class kb_SetUtilities:
             
         # Set local WSID from FeatureSet
         local_WSID = str(info[WSID_I])
+
+        
+        # read workspace to determine which genome objects are already present
+        #
+        genome_obj_type = "KBaseGenomes.Genome"
+        local_genome_refs_by_name = dict()
+        try:
+            genome_obj_info_list = wsClient.list_objects({'ids':[local_WSID],'type':genome_obj_type})
+        except Exception as e:
+            raise ValueError ("Unable to list "+genome_obj_type+" objects from workspace: "+str(local_WSID)+" "+str(e))
+        for info in genome_obj_info_list:
+            genome_obj_ref = str(info[WSID_I])+'/'+str(info[OBJID_I])+'/'+str(info[VERSION_I])
+            genome_obj_name = str(info[NAME_I])
+            local_genome_refs_by_name[genome_obj_name] = genome_obj_ref
 
 
         # set order for features list
@@ -247,13 +263,13 @@ class kb_SetUtilities:
         self.log (console, "COPYING NON-LOCAL GENOMES TO LOCAL WORKSPACE")
         src2dst_genome_refs = dict()
         objects_created = []
+        local_genome_cnt = 0
         non_local_genome_cnt = 0
         for src_genome_ref in standardized_genome_refs:
             this_WSID = str(src_genome_ref.split('/')[0])
             if this_WSID == local_WSID:
                 src2dst_genome_refs[src_genome_ref] = src_genome_ref
             else:
-                non_local_genome_cnt += 1
                 try:
                     #objects = wsClient.get_objects([{'ref': this_genome_ref}])
                     objects = wsClient.get_objects2({'objects': [{'ref': src_genome_ref}]})['data']
@@ -263,6 +279,15 @@ class kb_SetUtilities:
                     raise ValueError('Unable to fetch this_genome_ref '+str(src_genome_ref)+' object from workspace: ' + str(e))
                     #to get the full stack trace: traceback.format_exc()
                 
+                # check if genome obj with that name already in local WS
+                src_genome_obj_name = src_genome_obj_info[NAME_I]
+                if src_genome_obj_name in local_genome_refs_by_name:
+                    
+                    src2dst_genome_refs[src_genome_ref] = local_genome_refs_by_name[src_genome_obj_name]
+                    local_genome_cnt += 1
+                    continue
+                non_local_genome_cnt += 1
+
                 # load the method provenance from the context object
                 provenance = [{}]
                 if 'provenance' in ctx:
@@ -299,8 +324,8 @@ class kb_SetUtilities:
 
         # Build Localized FeatureSet with local genome_refs
         #
-        if non_local_genome_cnt == 0:
-            self.log (console, "NO NON-LOCAL GENOMES FOUND")
+        if non_local_genome_cnt == 0 and local_genome_cnt == 0:
+            self.log (console, "NO NON-LOCAL GENOME REFS FOUND")
         else:
             self.log (console, "BUILDING LOCAL FEATURESET")
             dst_featureSet_data = dict()
@@ -315,9 +340,9 @@ class kb_SetUtilities:
                 dst_featureSet_data['elements'][fId] = dst_genome_refs
 
 
-        # Store output object
-        #
-        if non_local_genome_cnt > 0: 
+            # Overwrite input FeatureSet object with local genome refs
+            dst_featureSet_name = src_featureSet_name
+
             # load the method provenance from the context object
             self.log(console, "SAVING UPDATED FEATURESET")  # DEBUG
             #self.log(console, "SETTING PROVENANCE")  # DEBUG
@@ -336,22 +361,23 @@ class kb_SetUtilities:
                     {
                         'type': 'KBaseCollections.FeatureSet',
                         'data': output_FeatureSet,
-                        'name': params['output_name'],
+                        'name': dst_featureSet_name,
                         'meta': {},
                         'provenance': provenance
                     }
                 ]})[0]
-            objects_created.append({'ref': params['workspace_name']+'/'+params['output_name'],
+            objects_created.append({'ref': params['workspace_name']+'/'+dst_featureSet_name,
                                     'description': 'localized FeatureSet'})
 
 
         # build output report object
         self.log(console, "BUILDING REPORT")  # DEBUG
         total_genomes_cnt = len(standardized_genome_refs)
-        if non_local_genome_cnt > 0:
+        if non_local_genome_cnt > 0 or local_genome_cnt > 0:
             final_msg = []
             final_msg.append("Total genomes in FeatureSet: " + str(total_genome_cnt))
             final_msg.append("Non-local genomes copied over: " + str(non_local_genome_cnt))
+            final_msg.append("Local genomes with remote references: " + str(local_genome_cnt))
             logMsg = "\n".join(final_msg)
             self.log(console, logMsg)
             report += logMsg
@@ -366,8 +392,14 @@ class kb_SetUtilities:
                 'text_message': report
             }
 
+        # Save report
         reportName = 'kb_SetUtilities_localize_featureset_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        provenance = [{}]
+        if 'provenance' in ctx:
+            provenance = ctx['provenance']
+        # add additional info to provenance here
+        provenance[0]['service'] = 'kb_SetUtilities'
+        provenance[0]['method'] = 'KButil_Localize_FeatureSet'
         report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
                                                  'objects': [{'type': 'KBaseReport.Report',
                                                               'data': reportObj,
@@ -376,7 +408,6 @@ class kb_SetUtilities:
                                                               'hidden': 1,
                                                               'provenance': provenance}]})[0]
 
-        # Build report and return
         self.log(console, "BUILDING RETURN OBJECT")
         report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
         returnVal = {'report_name': reportName,

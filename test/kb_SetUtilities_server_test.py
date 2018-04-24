@@ -369,12 +369,17 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  2)
         genomeInfo_3 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic',  3)
 
+        genome_name_0 = 'GCF_000287295.1'
+        genome_name_1 = 'GCF_000287295.1'
+        genome_name_2 = 'GCF_001439985.1'
+        genome_name_3 = 'GCF_000022285.1'
+
         #genome_ref_0 = self.getWsName() + '/' + str(genomeInfo_0[0])
-        genome_ref_0 = public_refseq_WS + '/' + str(genomeInfo_0[0])
+        genome_ref_0 = public_refseq_WS + '/' + genome_name_1
         genome_ref_1 = self.getWsName() + '/' + str(genomeInfo_1[0])
         genome_ref_2 = self.getWsName() + '/' + str(genomeInfo_2[0])
         #genome_ref_3 = self.getWsName() + '/' + str(genomeInfo_3[0])
-        genome_ref_3 = public_refseq_WS + '/' + str(genomeInfo_3[0])
+        genome_ref_3 = public_refseq_WS + '/' + genome_name_3
 
         feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
         feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
@@ -413,26 +418,24 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
         featureSet_ref_1 = str(featureSet_info[WSID_I])+'/'+str(featureSet_info[OBJID_I])+'/'+str(featureSet_info[VERSION_I])
+        featureSet_version_1 = int(featureSet_info[VERSION_I])
 
         # run method
-        base_output_name = method+'_output'
         params = {
             'workspace_name': self.getWsName(),
-            'input_ref': featureSet_ref_1,
-            'output_name': base_output_name
+            'input_ref': featureSet_ref_1
         }
         result = self.getImpl().KButil_Localize_FeatureSet(self.getContext(),params)
         print('RESULT:')
         pprint(result)
 
         # check the output featureSet
-        output_name = base_output_name
+        output_ref = featureSet_ref_1
         output_type = 'KBaseCollections.FeatureSet'
-        output_ref = self.getWsName()+'/'+output_name
         info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':output_ref}]})
         self.assertEqual(len(info_list),1)
         output_info = info_list[0]
-        self.assertEqual(output_info[1],output_name)
+        self.assertEqual(int(output_info[VERSION_I]),featureSet_version_1+1)
         self.assertEqual(output_info[2].split('-')[0],output_type)
         output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
         self.assertEqual(len(output_obj['element_ordering']),num_features)
