@@ -1,0 +1,51 @@
+#
+# define display information
+#
+name: Localize FeatureSet - v1.2.0
+tooltip: |
+    Allows user to modify a FeatureSet to be local to active Narrative
+screenshots:
+    - Localize_FeatureSet.png
+
+icon: kb-purple.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    input_ref:
+        ui-name : |
+            FeatureSet
+        short-hint : |
+            The FeatureSet to Localize
+    output_name:
+        ui-name : |
+            Localized Output FeatureSet
+        short-hint : |
+            Name for the Output FeatureSet with localized genome members
+
+
+description : |
+    <p>This App allows the user to adjust a <b><i>Feature Set</i></b> to have local members.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Localize FeatureSet</b> reads a FeatureSet, copies all non-local Genomes into the active workspace, and adjusts the membership of the FeatureSet to refer to the local Genome copies.  If there are no non-local members, no new output FeatureSet is produced.
+    </p>

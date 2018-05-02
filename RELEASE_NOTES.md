@@ -1,3 +1,8 @@
+### Version 1.1.1
+__Changes__
+- updated base docker image to sdkbase2
+- improved docs pages for Apps
+
 ### Version 1.1.0
 __Changes__
 - added "Slice FeatureSets by Genomes" App

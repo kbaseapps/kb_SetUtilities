@@ -167,6 +167,40 @@ public class KbSetUtilitiesClient {
     }
 
     /**
+     * <p>Original spec-file function name: KButil_Localize_GenomeSet</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbsetutilities.KButilLocalizeGenomeSetParams KButilLocalizeGenomeSetParams} (original type "KButil_Localize_GenomeSet_Params")
+     * @return   instance of type {@link us.kbase.kbsetutilities.KButilLocalizeGenomeSetOutput KButilLocalizeGenomeSetOutput} (original type "KButil_Localize_GenomeSet_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public KButilLocalizeGenomeSetOutput kButilLocalizeGenomeSet(KButilLocalizeGenomeSetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<KButilLocalizeGenomeSetOutput>> retType = new TypeReference<List<KButilLocalizeGenomeSetOutput>>() {};
+        List<KButilLocalizeGenomeSetOutput> res = caller.jsonrpcCall("kb_SetUtilities.KButil_Localize_GenomeSet", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
+     * <p>Original spec-file function name: KButil_Localize_FeatureSet</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbsetutilities.KButilLocalizeFeatureSetParams KButilLocalizeFeatureSetParams} (original type "KButil_Localize_FeatureSet_Params")
+     * @return   instance of type {@link us.kbase.kbsetutilities.KButilLocalizeFeatureSetOutput KButilLocalizeFeatureSetOutput} (original type "KButil_Localize_FeatureSet_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public KButilLocalizeFeatureSetOutput kButilLocalizeFeatureSet(KButilLocalizeFeatureSetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<KButilLocalizeFeatureSetOutput>> retType = new TypeReference<List<KButilLocalizeFeatureSetOutput>>() {};
+        List<KButilLocalizeFeatureSetOutput> res = caller.jsonrpcCall("kb_SetUtilities.KButil_Localize_FeatureSet", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
      * <p>Original spec-file function name: KButil_Merge_FeatureSet_Collection</p>
      * <pre>
      * </pre>

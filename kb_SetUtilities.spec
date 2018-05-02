@@ -24,6 +24,42 @@ module kb_SetUtilities {
     typedef int    bool;
 
 
+    /* KButil_Localize_GenomeSet()
+    **
+    **  Method for creating Genome Set with all local Genomes
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	data_obj_ref   input_ref;
+        data_obj_name  output_name;
+    } KButil_Localize_GenomeSet_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Localize_GenomeSet_Output;
+
+    funcdef KButil_Localize_GenomeSet (KButil_Localize_GenomeSet_Params params)  returns (KButil_Localize_GenomeSet_Output) authentication required;
+
+
+    /* KButil_Localize_FeatureSet()
+    **
+    **  Method for creating Feature Set with all local Genomes
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	data_obj_ref   input_ref;
+        data_obj_name  output_name;
+    } KButil_Localize_FeatureSet_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Localize_FeatureSet_Output;
+
+    funcdef KButil_Localize_FeatureSet (KButil_Localize_FeatureSet_Params params)  returns (KButil_Localize_FeatureSet_Output) authentication required;
+
+
     /* KButil_Merge_FeatureSet_Collection()
     **
     **  Method for merging FeatureSets
