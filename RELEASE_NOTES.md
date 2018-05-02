@@ -1,8 +1,7 @@
-### Version 1.2.0
+### Version 1.1.1
 __Changes__
-- added "Localize GenomeSet" App
-- added "Localize FeatureSet" App
 - updated base docker image to sdkbase2
+- improved docs pages for Apps
 
 ### Version 1.1.0
 __Changes__
