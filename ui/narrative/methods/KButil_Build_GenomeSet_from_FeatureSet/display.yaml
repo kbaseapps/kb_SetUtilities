@@ -56,3 +56,9 @@ description : |
     <h3>Description</h3>
     <b>Build Genome Set from Feature Set</b> allows a user to derive a Genome Set from the genomes contained within a given Feature Set object.  The features themselves in a Feature Set object contain the information about which genomes they are associated with, so this information is extracted to form the output Genome Set.
     </p>
+
+publications :
+    -
+        display-text: |
+            Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
+        link: https://www.nature.com/articles/nbt.4163

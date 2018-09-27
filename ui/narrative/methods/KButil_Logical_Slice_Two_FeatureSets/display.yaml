@@ -66,3 +66,9 @@ description : |
     <h3>Description</h3>
     <b>Logical Slice Two Feature Sets</b> allows a user to obtain a Venn slice of two Feature Sets.  The need often arises to ask which collections of genes or features are found only in one set or another, or present in both sets.  This trinary slice is offered by this App and results in a single output Feature Set.
     </p>
+
+publications :
+    -
+        display-text: |
+            Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
+        link: https://www.nature.com/articles/nbt.4163

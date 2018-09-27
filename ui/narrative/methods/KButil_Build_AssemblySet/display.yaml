@@ -56,3 +56,9 @@ description : |
     <h3>Description</h3>
     <b>Build Assembly Set</b> allows a user to create a Set of Assemblies (each one of which is a group of contigs or scaffold genome fragments) which can be used in subsequent Apps that operate on Assembly Sets.  Each Assembly object must already be within the Narrative's data workspace, so if there are assemblies from other Narratives or assemblies from public reference genomes that the user wishes to include, they must first be imported into the active Narrative.
     </p>
+
+publications :
+    -
+        display-text: |
+            Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
+        link: https://www.nature.com/articles/nbt.4163
