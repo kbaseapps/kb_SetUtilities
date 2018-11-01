@@ -1,3 +1,7 @@
+### Version 1.1.3
+__Changes__
+- added unit test data
+
 ### Version 1.1.2
 __Changes__
 - added KBase paper citation in PLOS format 

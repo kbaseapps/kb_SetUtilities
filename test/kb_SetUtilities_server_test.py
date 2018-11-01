@@ -1475,7 +1475,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_ReadsSet_01()
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Build_ReadsSet_01()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Build_ReadsSet_01()")  # uncomment to skip
     def test_KButil_Build_ReadsSet_01 (self):
         method = 'KButil_Build_ReadsSet_01'
         msg = "RUNNING: "+method+"()"
@@ -1522,7 +1522,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_MultipleReadsSets_to_OneReadsSet_01()
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Merge_MultipleReadsSets_to_OneReadsSet_01()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Merge_MultipleReadsSets_to_OneReadsSet_01()")  # uncomment to skip
     def test_KButil_Merge_MultipleReadsSets_to_OneReadsSet_01 (self):
         method = 'KButil_Merge_MultipleReadsSets_to_OneReadsSet_01'
         msg = "RUNNING: "+method+"()"
@@ -1626,7 +1626,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_AssemblySet_01()
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Build_AssemblySet_01()")  # uncomment to skip
+    @unittest.skip("skipped test_KButil_Build_AssemblySet_01()")  # uncomment to skip
     def test_KButil_Build_AssemblySet_01 (self):
         method = 'KButil_Build_AssemblySet_01'
         msg = "RUNNING: "+method+"()"
