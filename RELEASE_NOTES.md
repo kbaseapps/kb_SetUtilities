@@ -1,7 +1,3 @@
-### Version 1.1.2
-__Changes__
-- fixed unit test data
-
 ### Version 1.1.1
 __Changes__
 - updated base docker image to sdkbase2
