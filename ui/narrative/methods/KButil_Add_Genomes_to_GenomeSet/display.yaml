@@ -5,7 +5,7 @@ name: Add Genomes to GenomeSet - v1.0.1
 tooltip: |
     Allows user to add a Genome to a GenomeSet
 
-screenshots: 
+screenshots:
     - Add_Genomes_to_GenomeSet.png
 
 icon: kb-purple.png
@@ -62,3 +62,9 @@ description : |
     <h3>Description</h3>
     <b>Add Genomes to Genome Set</b> allows a user to expand the membership of a Genome Set.  The Genomes and Genome Set must already be within the Narrative's data workspace, so if there are genomes from other Narratives or public reference genomes that the user wishes to include, they must first be imported into the active Narrative.
     </p>
+
+publications :
+    -
+        display-text: |
+            Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
+        link: https://www.nature.com/articles/nbt.4163
