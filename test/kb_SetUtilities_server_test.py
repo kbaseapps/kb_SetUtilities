@@ -15,9 +15,9 @@ from pprint import pprint
 
 from Workspace.WorkspaceClient import Workspace as workspaceService
 from kb_SetUtilities.kb_SetUtilitiesImpl import kb_SetUtilities
-from GenomeFileUtil.GenomeFileUtilClient import GenomeFileUtil
-from ReadsUtils.ReadsUtilsClient import ReadsUtils
-from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
+from installed_clients.GenomeFileUtilClient import GenomeFileUtil
+from installed_clients.ReadsUtilsClient import ReadsUtils
+from installed_clients.AssemblyUtilClient import AssemblyUtil
 
 class kb_SetUtilitiesTest(unittest.TestCase):
 

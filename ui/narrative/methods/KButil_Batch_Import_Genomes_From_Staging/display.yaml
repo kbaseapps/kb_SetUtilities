@@ -1,0 +1,69 @@
+#
+# define display information
+#
+name: Batch Import Genomes from Staging - v1.2.0
+tooltip: |
+    Allows user to Batch Import Genomes from Staging and creates a GenomeSet
+
+screenshots: []
+
+icon: data-red.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    desc:
+        ui-name : |
+            Description
+        short-hint : |
+            Describe Purpose or Contents of Output GenomeSet
+        placeholder: |
+            Enter Description
+    staging_folder_path:
+        ui-name : |
+            Staging subfolder
+        short-hint : |
+            Subfolder with Genomes (uses top-level if empty)
+    genome_type:
+        ui-name : |
+            Genome type
+        short-hint : |
+            Genome type, such as Isolate, MAG, SAG, plasmid, virus, etc.
+    output_name:
+        ui-name : |
+            Output GenomeSet
+        short-hint : |
+            Name for the GenomeSet that captures the Batch Import members
+
+
+description : |
+    <p>This App allows the user to batch import <b><i>Genomes</i></b> from the KBase staging area and creates a <b><i>Genome Set</i></b> object.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Batch Import Genomes from Staging</b> allows a user to import genomes from the users staging area as a group without specifying them one-by-one.  The user can bring in genomes from a subfolder or from the top level of staging.  All genomes will be detetected by the file extension and named automatically.  A GenomeSet will be created with the imported genomes which can then be used by subsequent Apps for additional batch processing.
+    </p>
+
+publications :
+    -
+        display-text: |
+            Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
+        link: https://www.nature.com/articles/nbt.4163

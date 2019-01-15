@@ -10,9 +10,10 @@ import uuid
 
 # SDK Utils
 from Workspace.WorkspaceClient import Workspace as workspaceService
-from ReadsUtils.ReadsUtilsClient import ReadsUtils
-from SetAPI.SetAPIServiceClient import SetAPI
-from KBaseReport.KBaseReportClient import KBaseReport
+from installed_clients.ReadsUtilsClient import ReadsUtils
+from installed_clients.SetAPIServiceClient import SetAPI
+from installed_clients.KBaseReportClient import KBaseReport
+from installed_clients.kb_uploadmethodsClient import kb_uploadmethods
 
 # silence whining
 #import requests
@@ -40,9 +41,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.1.3"
-    GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "a1f43b9d06ddcffc3fe8c7500da56c61d3b38630"
+    VERSION = "1.2.0"
+    GIT_URL = "https://github.com/dcchivian/kb_SetUtilities"
+    GIT_COMMIT_HASH = "ea56f5a8b855532399264136abc67b369c49d3ec"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -2383,6 +2384,40 @@ class kb_SetUtilities:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method KButil_Build_AssemblySet return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def KButil_Batch_Import_Genomes_From_Staging(self, ctx, params):
+        """
+        :param params: instance of type
+           "KButil_Batch_Import_Genomes_From_Staging_Params"
+           (KButil_Batch_Import_Genomes_From_Staging() ** **  Method for
+           importing genomes from staging without explicit naming, creates a
+           GenomeSet) -> structure: parameter "workspace_name" of type
+           "workspace_name" (** The workspace object refs are of form: ** ** 
+           objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "desc" of String, parameter "staging_folder_path" of
+           String, parameter "genome_type" of String, parameter "output_name"
+           of type "data_obj_name"
+        :returns: instance of type
+           "KButil_Batch_Import_Genomes_From_Staging_Output" -> structure:
+           parameter "report_name" of type "data_obj_name", parameter
+           "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Batch_Import_Genomes_From_Staging
+        #END KButil_Batch_Import_Genomes_From_Staging
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Batch_Import_Genomes_From_Staging return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]

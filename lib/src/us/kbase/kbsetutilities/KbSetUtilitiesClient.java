@@ -370,6 +370,23 @@ public class KbSetUtilitiesClient {
         return res.get(0);
     }
 
+    /**
+     * <p>Original spec-file function name: KButil_Batch_Import_Genomes_From_Staging</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbsetutilities.KButilBatchImportGenomesFromStagingParams KButilBatchImportGenomesFromStagingParams} (original type "KButil_Batch_Import_Genomes_From_Staging_Params")
+     * @return   instance of type {@link us.kbase.kbsetutilities.KButilBatchImportGenomesFromStagingOutput KButilBatchImportGenomesFromStagingOutput} (original type "KButil_Batch_Import_Genomes_From_Staging_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public KButilBatchImportGenomesFromStagingOutput kButilBatchImportGenomesFromStaging(KButilBatchImportGenomesFromStagingParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<KButilBatchImportGenomesFromStagingOutput>> retType = new TypeReference<List<KButilBatchImportGenomesFromStagingOutput>>() {};
+        List<KButilBatchImportGenomesFromStagingOutput> res = caller.jsonrpcCall("kb_SetUtilities.KButil_Batch_Import_Genomes_From_Staging", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
     public Map<String, Object> status(RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         TypeReference<List<Map<String, Object>>> retType = new TypeReference<List<Map<String, Object>>>() {};
