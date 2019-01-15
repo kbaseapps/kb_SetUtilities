@@ -40,9 +40,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.1.1"
+    VERSION = "1.1.3"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "24a74342442f916b524b07f3db2ddebab8b8e5e2"
+    GIT_COMMIT_HASH = "a1f43b9d06ddcffc3fe8c7500da56c61d3b38630"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
