@@ -2413,6 +2413,19 @@ class kb_SetUtilities:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN KButil_Batch_Import_Genomes_From_Staging
+        self.log (console, "In KButil_Batch_Import_Genomes_From_Staging")
+        from os import walk
+        mypath = '/data/bulk/dylan/SAGs'
+        f = []
+        d = []
+        for (dirpath, dirnames, filenames) in walk(mypath):
+            f.extend(filenames)
+            d.extend(dirnames)
+            break        
+        self.log(console, 'files: '+"\n".join(f)+"\n")
+        self.log(console, 'dirs: '+"\n".join(d)+"\n")
+
+        returnVal = { 'report_name': 'foo', 'report_ref': 'bar' }
         #END KButil_Batch_Import_Genomes_From_Staging
 
         # At some point might do deeper type checking...
