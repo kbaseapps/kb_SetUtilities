@@ -11,6 +11,18 @@
   "type" : "sdk",
   "version_tag" : "release"
 }, {
+  "module_name" : "kb_uploadmethods",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
+  "module_name" : "KBaseReport",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
+  "module_name" : "ReadsUtils",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
   "module_name" : "SetAPI",
   "type" : "sdk",
   "version_tag" : "release"

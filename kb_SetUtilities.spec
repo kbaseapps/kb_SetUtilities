@@ -253,5 +253,25 @@ module kb_SetUtilities {
 
     funcdef KButil_Build_AssemblySet (KButil_Build_AssemblySet_Params params)  returns (KButil_Build_AssemblySet_Output) authentication required;
 
+
+    /* KButil_Batch_Import_Genomes_From_Staging()
+    **
+    **  Method for importing genomes from staging without explicit naming, creates a GenomeSet
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	string         desc;
+	string         staging_folder_path;
+	string         genome_type;
+	data_obj_name  output_name;
+    } KButil_Batch_Import_Genomes_From_Staging_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Batch_Import_Genomes_From_Staging_Output;
+
+    funcdef KButil_Batch_Import_Genomes_From_Staging (KButil_Batch_Import_Genomes_From_Staging_Params params)  returns (KButil_Batch_Import_Genomes_From_Staging_Output) authentication required;
+
 };
 
