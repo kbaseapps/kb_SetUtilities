@@ -2413,6 +2413,7 @@ class kb_SetUtilities:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN KButil_Batch_Import_Genomes_From_Staging
+        console = []
         self.log (console, "In KButil_Batch_Import_Genomes_From_Staging")
         from os import walk
         mypath = '/data/bulk/dylan/SAGs'
