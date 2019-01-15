@@ -50,7 +50,7 @@
 			"ui_name": "genome_type-isolate"
 		    },
 		    {
-			"value": "isolate",
+			"value": "mag",
 			"display": "Metagenome Assembled Genomes (MAG)",
 			"id": "genome_type-mag",
 			"ui_name": "genome_type-mag"
