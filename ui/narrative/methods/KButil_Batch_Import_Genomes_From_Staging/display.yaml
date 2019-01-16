@@ -51,6 +51,53 @@ parameters :
         short-hint : |
             Name for the GenomeSet that captures the Batch Import members
 
+    source :
+        ui-name : Source of the GenBank File
+        short-hint : |
+            Identify the source of the GenBank File. (If Ensembl, the "gene" feature types will use the "gene" field as the ID; otherwise the "locus_tag" field is used.)
+        long-hint : |
+            Identify the source of the GenBank File. (If Ensembl, the "gene" feature types will use the "gene" field as the ID; otherwise the "locus_tag" field is used.)
+
+    release :
+        ui-name : Release or Version of the Source Data
+        short-hint : |
+            Release or version of the source data (for example: Release31, V4)
+        long-hint : |
+            Release or version of the source data (for example: Release31, V4)
+
+    taxon_wsname:
+        ui-name: Taxon Workspace Name
+        short-hint: Where the reference taxons are. Defaults to ReferenceTaxons
+        long-hint: Where the reference taxons are. Defaults to ReferenceTaxons
+
+    taxon_reference:
+        ui-name: Taxonomy Object Reference
+        short-hint: Link the Genome to the specified taxonomy object
+        long-hint: Link the Genome to the specified taxonomy object
+
+    genetic_code :
+        ui-name : |
+            Genetic Code for the Organism
+        short-hint : |
+            Valid genetic code (see http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi)
+        long-hint : |
+            Valid genetic code integer for translation purposes (see http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi)
+
+    type:
+        ui-name: Type
+        short-hint: one of 'Reference', 'User upload', 'Representative'
+        long-hint: one of 'Reference', 'User upload', 'Representative'
+
+    generate_missing_genes :
+        ui-name : |
+            Spoof Genes for parentless CDS
+        short-hint : |
+            Generate gene feature for CDSs that do not have a parent in file
+        long-hint : |
+            Some files may contain only coding sequences but KBase genomes are
+            expected to contain a parent gene for these CDS. This option
+            generates spoof genes based on the CDS location.
+
 
 description : |
     <p>This App allows the user to batch import <b><i>Genomes</i></b> from the KBase staging area and creates a <b><i>Genome Set</i></b> object.</p>

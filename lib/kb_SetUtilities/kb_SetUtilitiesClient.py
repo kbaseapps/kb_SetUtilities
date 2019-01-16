@@ -318,7 +318,10 @@ class kb_SetUtilities(object):
            of a workspace or object.  This is received from Narrative.),
            parameter "desc" of String, parameter "staging_folder_path" of
            String, parameter "genome_type" of String, parameter "output_name"
-           of type "data_obj_name"
+           of type "data_obj_name", parameter "source" of String, parameter
+           "taxon_wsname" of String, parameter "taxon_reference" of String,
+           parameter "release" of String, parameter "genetic_code" of Long,
+           parameter "generate_missing_genes" of type "bool"
         :returns: instance of type
            "KButil_Batch_Import_Genomes_From_Staging_Output" -> structure:
            parameter "report_name" of type "data_obj_name", parameter

@@ -264,6 +264,12 @@ module kb_SetUtilities {
 	string         staging_folder_path;
 	string         genome_type;
 	data_obj_name  output_name;
+	string         source;
+	string         taxon_wsname;
+	string         taxon_reference;
+	string         release;
+	int            genetic_code;
+	bool           generate_missing_genes;
     } KButil_Batch_Import_Genomes_From_Staging_Params;
 
     typedef structure {
