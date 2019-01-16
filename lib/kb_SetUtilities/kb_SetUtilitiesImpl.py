@@ -2419,7 +2419,7 @@ class kb_SetUtilities:
         console = []
         self.log (console, "In KButil_Batch_Import_Genomes_From_Staging")
         from os import walk
-        mypath = '/data/bulk/dylan/SAGs'
+        mypath = os.path.join (os.path.sep,'data', 'bulk', 'dylan')
         f = []
         d = []
         for (dirpath, dirnames, filenames) in walk(mypath):
