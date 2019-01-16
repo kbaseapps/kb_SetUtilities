@@ -2430,7 +2430,7 @@ class kb_SetUtilities:
         self.log(console, 'files: '+"\n".join(f)+"\n")
         self.log(console, 'dirs: '+"\n".join(d)+"\n")
 
-        returnVal = { 'report_name': 'foo', 'report_ref': 'bar' }
+        returnVal = { 'report_name': 'foo', 'report_ref': '1/2/3' }
         #END KButil_Batch_Import_Genomes_From_Staging
 
         # At some point might do deeper type checking...
