@@ -1383,8 +1383,15 @@ KButil_Batch_Import_Genomes_From_Staging_Params is a reference to a hash where t
 	staging_folder_path has a value which is a string
 	genome_type has a value which is a string
 	output_name has a value which is a kb_SetUtilities.data_obj_name
+	source has a value which is a string
+	taxon_wsname has a value which is a string
+	taxon_reference has a value which is a string
+	release has a value which is a string
+	genetic_code has a value which is an int
+	generate_missing_genes has a value which is a kb_SetUtilities.bool
 workspace_name is a string
 data_obj_name is a string
+bool is an int
 KButil_Batch_Import_Genomes_From_Staging_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a kb_SetUtilities.data_obj_name
 	report_ref has a value which is a kb_SetUtilities.data_obj_ref
@@ -1404,8 +1411,15 @@ KButil_Batch_Import_Genomes_From_Staging_Params is a reference to a hash where t
 	staging_folder_path has a value which is a string
 	genome_type has a value which is a string
 	output_name has a value which is a kb_SetUtilities.data_obj_name
+	source has a value which is a string
+	taxon_wsname has a value which is a string
+	taxon_reference has a value which is a string
+	release has a value which is a string
+	genetic_code has a value which is an int
+	generate_missing_genes has a value which is a kb_SetUtilities.bool
 workspace_name is a string
 data_obj_name is a string
+bool is an int
 KButil_Batch_Import_Genomes_From_Staging_Output is a reference to a hash where the following keys are defined:
 	report_name has a value which is a kb_SetUtilities.data_obj_name
 	report_ref has a value which is a kb_SetUtilities.data_obj_ref
@@ -2626,6 +2640,12 @@ desc has a value which is a string
 staging_folder_path has a value which is a string
 genome_type has a value which is a string
 output_name has a value which is a kb_SetUtilities.data_obj_name
+source has a value which is a string
+taxon_wsname has a value which is a string
+taxon_reference has a value which is a string
+release has a value which is a string
+genetic_code has a value which is an int
+generate_missing_genes has a value which is a kb_SetUtilities.bool
 
 </pre>
 
@@ -2639,6 +2659,12 @@ desc has a value which is a string
 staging_folder_path has a value which is a string
 genome_type has a value which is a string
 output_name has a value which is a kb_SetUtilities.data_obj_name
+source has a value which is a string
+taxon_wsname has a value which is a string
+taxon_reference has a value which is a string
+release has a value which is a string
+genetic_code has a value which is an int
+generate_missing_genes has a value which is a kb_SetUtilities.bool
 
 
 =end text

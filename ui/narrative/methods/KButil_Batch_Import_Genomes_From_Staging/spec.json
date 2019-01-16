@@ -50,7 +50,7 @@
 			"ui_name": "genome_type-isolate"
 		    },
 		    {
-			"value": "isolate",
+			"value": "mag",
 			"display": "Metagenome Assembled Genomes (MAG)",
 			"id": "genome_type-mag",
 			"ui_name": "genome_type-mag"
@@ -93,7 +93,68 @@
                 "valid_ws_types": [ "KBaseSearch.GenomeSet" ],
 		"is_output_name": true
             }
-        }
+        },
+	{
+	    "id" : "source",
+	    "optional" : false,
+	    "advanced" : true,
+	    "allow_multiple" : false,
+	    "default_values" : [ "User Upload" ],
+            "field_type": "text",
+            "text_options": {
+		"is_output_name": false
+            }
+        },
+	{
+	    "id" : "taxon_wsname",
+	    "optional" : true,
+	    "advanced" : true,
+	    "allow_multiple" : false,
+	    "default_values" : [ "" ],
+	    "field_type" : "text",
+	    "text_options" : {}
+	},
+	{
+	    "id" : "taxon_reference",
+	    "optional" : true,
+	    "advanced" : true,
+	    "allow_multiple" : false,
+	    "default_values" : [ "" ],
+	    "field_type" : "text",
+	    "text_options" : {}
+	},
+	{  
+	    "id": "release",
+	    "optional": true,
+	    "advanced": true,
+	    "allow_multiple": false,
+	    "default_values": [ "" ],
+	    "field_type" : "text" 
+	},
+	{  
+	    "id": "genetic_code",
+	    "optional": true,
+	    "advanced": true,
+	    "allow_multiple": false,
+	    "default_values": [ "11" ],
+	    "field_type" : "text",
+	    "text_options" : {
+		"validate_as": "int"
+	    }
+	},
+	{
+	    "id": "generate_missing_genes",
+	    "optional":true,
+	    "advanced":true,
+	    "allow_multiple":false,
+	    "default_values":["1"],
+	    "field_type" : "checkbox",
+	    "checkbox_options":{
+		"checked_value": 1,
+		"unchecked_value": 0
+	    }
+	}
+
     ],
     "behavior": {
         "service-mapping": {
@@ -120,13 +181,41 @@
                 {
                     "input_parameter": "output_name",
                     "target_property": "output_name"
-                }
+                },
+		{
+		    "input_parameter": "source",
+		    "target_property": "source"
+		},
+		{
+		    "input_parameter": "taxon_wsname",
+		    "target_property": "taxon_wsname"
+		},
+		{
+		    "input_parameter": "taxon_reference",
+		    "target_property": "taxon_reference"
+		},
+		{
+		    "input_parameter": "release",
+		    "target_property": "release"
+		},
+		{
+		    "input_parameter": "genetic_code",
+		    "target_property": "genetic_code"
+		},
+		{
+		    "input_parameter": "generate_missing_genes",
+		    "target_property": "generate_missing_genes"
+		}
             ],
             "output_mapping": [
                 {
                     "narrative_system_variable": "workspace",
                     "target_property": "workspace_name"
                 },
+		{
+		    "constant_value": "KBaseGenomes.Genome",
+		    "target_property": "type"
+		},
                 {
                     "service_method_output_path": [0, "report_name"],
                     "target_property": "report_name"

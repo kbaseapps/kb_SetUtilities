@@ -43,7 +43,7 @@ class kb_SetUtilities:
     ######################################### noqa
     VERSION = "1.2.0"
     GIT_URL = "https://github.com/dcchivian/kb_SetUtilities"
-    GIT_COMMIT_HASH = "ea56f5a8b855532399264136abc67b369c49d3ec"
+    GIT_COMMIT_HASH = "340eb240599a06ec1a69d0ab90658c39ee636d8c"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -2404,7 +2404,10 @@ class kb_SetUtilities:
            of a workspace or object.  This is received from Narrative.),
            parameter "desc" of String, parameter "staging_folder_path" of
            String, parameter "genome_type" of String, parameter "output_name"
-           of type "data_obj_name"
+           of type "data_obj_name", parameter "source" of String, parameter
+           "taxon_wsname" of String, parameter "taxon_reference" of String,
+           parameter "release" of String, parameter "genetic_code" of Long,
+           parameter "generate_missing_genes" of type "bool"
         :returns: instance of type
            "KButil_Batch_Import_Genomes_From_Staging_Output" -> structure:
            parameter "report_name" of type "data_obj_name", parameter
@@ -2416,7 +2419,7 @@ class kb_SetUtilities:
         console = []
         self.log (console, "In KButil_Batch_Import_Genomes_From_Staging")
         from os import walk
-        mypath = '/data/bulk/dylan/SAGs'
+        mypath = os.path.join (os.path.sep,'data', 'bulk', 'dylan')
         f = []
         d = []
         for (dirpath, dirnames, filenames) in walk(mypath):
