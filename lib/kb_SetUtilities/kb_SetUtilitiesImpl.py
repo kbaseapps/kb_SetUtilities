@@ -2420,12 +2420,13 @@ class kb_SetUtilities:
         self.log (console, "In KButil_Batch_Import_Genomes_From_Staging")
         from os import walk
         mypath = os.path.join (os.path.sep,'data', 'bulk', 'dylan')
+        self.log(console, 'mypath: "'+mypath+'"')
         f = []
         d = []
         for (dirpath, dirnames, filenames) in walk(mypath):
             f.extend(filenames)
             d.extend(dirnames)
-            break        
+            #break        
         self.log(console, 'files: '+"\n".join(f)+"\n")
         self.log(console, 'dirs: '+"\n".join(d)+"\n")
 
