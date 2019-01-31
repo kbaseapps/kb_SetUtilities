@@ -371,19 +371,36 @@ public class KbSetUtilitiesClient {
     }
 
     /**
-     * <p>Original spec-file function name: KButil_Batch_Import_Genomes_From_Staging</p>
+     * <p>Original spec-file function name: KButil_Batch_Create_AssemblySet</p>
      * <pre>
      * </pre>
-     * @param   params   instance of type {@link us.kbase.kbsetutilities.KButilBatchImportGenomesFromStagingParams KButilBatchImportGenomesFromStagingParams} (original type "KButil_Batch_Import_Genomes_From_Staging_Params")
-     * @return   instance of type {@link us.kbase.kbsetutilities.KButilBatchImportGenomesFromStagingOutput KButilBatchImportGenomesFromStagingOutput} (original type "KButil_Batch_Import_Genomes_From_Staging_Output")
+     * @param   params   instance of type {@link us.kbase.kbsetutilities.KButilBatchCreateAssemblySetParams KButilBatchCreateAssemblySetParams} (original type "KButil_Batch_Create_AssemblySet_Params")
+     * @return   instance of type {@link us.kbase.kbsetutilities.KButilBatchCreateAssemblySetOutput KButilBatchCreateAssemblySetOutput} (original type "KButil_Batch_Create_AssemblySet_Output")
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
-    public KButilBatchImportGenomesFromStagingOutput kButilBatchImportGenomesFromStaging(KButilBatchImportGenomesFromStagingParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+    public KButilBatchCreateAssemblySetOutput kButilBatchCreateAssemblySet(KButilBatchCreateAssemblySetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         args.add(params);
-        TypeReference<List<KButilBatchImportGenomesFromStagingOutput>> retType = new TypeReference<List<KButilBatchImportGenomesFromStagingOutput>>() {};
-        List<KButilBatchImportGenomesFromStagingOutput> res = caller.jsonrpcCall("kb_SetUtilities.KButil_Batch_Import_Genomes_From_Staging", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        TypeReference<List<KButilBatchCreateAssemblySetOutput>> retType = new TypeReference<List<KButilBatchCreateAssemblySetOutput>>() {};
+        List<KButilBatchCreateAssemblySetOutput> res = caller.jsonrpcCall("kb_SetUtilities.KButil_Batch_Create_AssemblySet", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
+     * <p>Original spec-file function name: KButil_Batch_Create_GenomeSet</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbsetutilities.KButilBatchCreateGenomeSetParams KButilBatchCreateGenomeSetParams} (original type "KButil_Batch_Create_GenomeSet_Params")
+     * @return   instance of type {@link us.kbase.kbsetutilities.KButilBatchCreateGenomeSetOutput KButilBatchCreateGenomeSetOutput} (original type "KButil_Batch_Create_GenomeSet_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public KButilBatchCreateGenomeSetOutput kButilBatchCreateGenomeSet(KButilBatchCreateGenomeSetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<KButilBatchCreateGenomeSetOutput>> retType = new TypeReference<List<KButilBatchCreateGenomeSetOutput>>() {};
+        List<KButilBatchCreateGenomeSetOutput> res = caller.jsonrpcCall("kb_SetUtilities.KButil_Batch_Create_GenomeSet", args, retType, true, true, jsonRpcContext, this.serviceVersion);
         return res.get(0);
     }
 

@@ -302,32 +302,50 @@ class kb_SetUtilities(object):
         return self._client.call_method('kb_SetUtilities.KButil_Build_AssemblySet',
                                         [params], self._service_ver, context)
 
-    def KButil_Batch_Import_Genomes_From_Staging(self, params, context=None):
+    def KButil_Batch_Create_AssemblySet(self, params, context=None):
         """
         :param params: instance of type
-           "KButil_Batch_Import_Genomes_From_Staging_Params"
-           (KButil_Batch_Import_Genomes_From_Staging() ** **  Method for
-           importing genomes from staging without explicit naming, creates a
-           GenomeSet) -> structure: parameter "workspace_name" of type
-           "workspace_name" (** The workspace object refs are of form: ** ** 
-           objects = ws.get_objects([{'ref':
+           "KButil_Batch_Create_AssemblySet_Params"
+           (KButil_Batch_Create_AssemblySet() ** **  Method for creating an
+           AssemblySet without specifying individual objects) -> structure:
+           parameter "workspace_name" of type "workspace_name" (** The
+           workspace object refs are of form: ** **    objects =
+           ws.get_objects([{'ref':
            params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
            the entire name combining the workspace id and the object name **
            "id" is a numerical identifier of the workspace or object, and
            should just be used for workspace ** "name" is a string identifier
            of a workspace or object.  This is received from Narrative.),
-           parameter "desc" of String, parameter "staging_folder_path" of
-           String, parameter "genome_type" of String, parameter "output_name"
-           of type "data_obj_name", parameter "source" of String, parameter
-           "taxon_wsname" of String, parameter "taxon_reference" of String,
-           parameter "release" of String, parameter "genetic_code" of Long,
-           parameter "generate_missing_genes" of type "bool"
-        :returns: instance of type
-           "KButil_Batch_Import_Genomes_From_Staging_Output" -> structure:
-           parameter "report_name" of type "data_obj_name", parameter
-           "report_ref" of type "data_obj_ref"
+           parameter "name_pattern" of String, parameter "output_name" of
+           type "data_obj_name", parameter "desc" of String
+        :returns: instance of type "KButil_Batch_Create_AssemblySet_Output"
+           -> structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
         """
-        return self._client.call_method('kb_SetUtilities.KButil_Batch_Import_Genomes_From_Staging',
+        return self._client.call_method('kb_SetUtilities.KButil_Batch_Create_AssemblySet',
+                                        [params], self._service_ver, context)
+
+    def KButil_Batch_Create_GenomeSet(self, params, context=None):
+        """
+        :param params: instance of type
+           "KButil_Batch_Create_GenomeSet_Params"
+           (KButil_Batch_Create_GenomeSet() ** **  Method for creating a
+           GenomeSet without specifying individual objects) -> structure:
+           parameter "workspace_name" of type "workspace_name" (** The
+           workspace object refs are of form: ** **    objects =
+           ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "name_pattern" of String, parameter "output_name" of
+           type "data_obj_name", parameter "desc" of String
+        :returns: instance of type "KButil_Batch_Create_GenomeSet_Output" ->
+           structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
+        """
+        return self._client.call_method('kb_SetUtilities.KButil_Batch_Create_GenomeSet',
                                         [params], self._service_ver, context)
 
     def status(self, context=None):

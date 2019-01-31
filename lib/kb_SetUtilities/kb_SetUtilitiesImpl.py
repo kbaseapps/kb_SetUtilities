@@ -43,7 +43,7 @@ class kb_SetUtilities:
     ######################################### noqa
     VERSION = "1.2.0"
     GIT_URL = "https://github.com/dcchivian/kb_SetUtilities"
-    GIT_COMMIT_HASH = "340eb240599a06ec1a69d0ab90658c39ee636d8c"
+    GIT_COMMIT_HASH = "122bed18965da861013cf28e32053bd3ad836e11"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -2388,54 +2388,66 @@ class kb_SetUtilities:
         # return the results
         return [returnVal]
 
-    def KButil_Batch_Import_Genomes_From_Staging(self, ctx, params):
+    def KButil_Batch_Create_AssemblySet(self, ctx, params):
         """
         :param params: instance of type
-           "KButil_Batch_Import_Genomes_From_Staging_Params"
-           (KButil_Batch_Import_Genomes_From_Staging() ** **  Method for
-           importing genomes from staging without explicit naming, creates a
-           GenomeSet) -> structure: parameter "workspace_name" of type
-           "workspace_name" (** The workspace object refs are of form: ** ** 
-           objects = ws.get_objects([{'ref':
+           "KButil_Batch_Create_AssemblySet_Params"
+           (KButil_Batch_Create_AssemblySet() ** **  Method for creating an
+           AssemblySet without specifying individual objects) -> structure:
+           parameter "workspace_name" of type "workspace_name" (** The
+           workspace object refs are of form: ** **    objects =
+           ws.get_objects([{'ref':
            params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
            the entire name combining the workspace id and the object name **
            "id" is a numerical identifier of the workspace or object, and
            should just be used for workspace ** "name" is a string identifier
            of a workspace or object.  This is received from Narrative.),
-           parameter "desc" of String, parameter "staging_folder_path" of
-           String, parameter "genome_type" of String, parameter "output_name"
-           of type "data_obj_name", parameter "source" of String, parameter
-           "taxon_wsname" of String, parameter "taxon_reference" of String,
-           parameter "release" of String, parameter "genetic_code" of Long,
-           parameter "generate_missing_genes" of type "bool"
-        :returns: instance of type
-           "KButil_Batch_Import_Genomes_From_Staging_Output" -> structure:
-           parameter "report_name" of type "data_obj_name", parameter
-           "report_ref" of type "data_obj_ref"
+           parameter "name_pattern" of String, parameter "output_name" of
+           type "data_obj_name", parameter "desc" of String
+        :returns: instance of type "KButil_Batch_Create_AssemblySet_Output"
+           -> structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
         """
         # ctx is the context object
         # return variables are: returnVal
-        #BEGIN KButil_Batch_Import_Genomes_From_Staging
-        console = []
-        self.log (console, "In KButil_Batch_Import_Genomes_From_Staging")
-        from os import walk
-        mypath = os.path.join (os.path.sep,'data', 'bulk', 'dylan')
-        self.log(console, 'mypath: "'+mypath+'"')
-        f = []
-        d = []
-        for (dirpath, dirnames, filenames) in walk(mypath):
-            f.extend(filenames)
-            d.extend(dirnames)
-            #break        
-        self.log(console, 'files: '+"\n".join(f)+"\n")
-        self.log(console, 'dirs: '+"\n".join(d)+"\n")
-
-        returnVal = { 'report_name': 'foo', 'report_ref': '1/2/3' }
-        #END KButil_Batch_Import_Genomes_From_Staging
+        #BEGIN KButil_Batch_Create_AssemblySet
+        #END KButil_Batch_Create_AssemblySet
 
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
-            raise ValueError('Method KButil_Batch_Import_Genomes_From_Staging return value ' +
+            raise ValueError('Method KButil_Batch_Create_AssemblySet return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def KButil_Batch_Create_GenomeSet(self, ctx, params):
+        """
+        :param params: instance of type
+           "KButil_Batch_Create_GenomeSet_Params"
+           (KButil_Batch_Create_GenomeSet() ** **  Method for creating a
+           GenomeSet without specifying individual objects) -> structure:
+           parameter "workspace_name" of type "workspace_name" (** The
+           workspace object refs are of form: ** **    objects =
+           ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "name_pattern" of String, parameter "output_name" of
+           type "data_obj_name", parameter "desc" of String
+        :returns: instance of type "KButil_Batch_Create_GenomeSet_Output" ->
+           structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Batch_Create_GenomeSet
+        #END KButil_Batch_Create_GenomeSet
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Batch_Create_GenomeSet return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]
