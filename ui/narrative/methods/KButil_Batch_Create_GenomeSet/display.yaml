@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Batch Create Genome Set - v1.3.0
+name: Batch Create Genome Set - v1.2.0
 tooltip: |
     Allows user to create a GenomeSet without specifying names
 screenshots: []
