@@ -10,10 +10,10 @@ import uuid
 
 # SDK Utils
 from Workspace.WorkspaceClient import Workspace as workspaceService
+#from installed_clients.WorkspaceClient import WorkspaceClient as workspaceService
 from installed_clients.ReadsUtilsClient import ReadsUtils
 from installed_clients.SetAPIServiceClient import SetAPI
 from installed_clients.KBaseReportClient import KBaseReport
-from installed_clients.kb_uploadmethodsClient import kb_uploadmethods
 
 # silence whining
 #import requests
@@ -43,7 +43,7 @@ class kb_SetUtilities:
     ######################################### noqa
     VERSION = "1.2.0"
     GIT_URL = "https://github.com/dcchivian/kb_SetUtilities"
-    GIT_COMMIT_HASH = "340eb240599a06ec1a69d0ab90658c39ee636d8c"
+    GIT_COMMIT_HASH = "2cea1b31ee111c3f1cbe23abcbee6b5f07962e9b"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -53,9 +53,15 @@ class kb_SetUtilities:
     callbackURL = None
     scratch = None
 
-    # target is a list for collecting log messages
+    def now_ISO(self):
+        now_timestamp = datetime.now()
+        now_secs_from_epoch = (now_timestamp - datetime(1970,1,1)).total_seconds()
+        now_timestamp_in_iso = datetime.fromtimestamp(int(now_secs_from_epoch)).strftime('%Y-%m-%d_%T')
+        return now_timestamp_in_iso
+
     def log(self, target, message):
-        # we should do something better here...
+        # target is a list for collecting log messages
+        message = '['+self.now_ISO()+'] '+message
         if target is not None:
             target.append(message)
         print(message)
@@ -2388,54 +2394,237 @@ class kb_SetUtilities:
         # return the results
         return [returnVal]
 
-    def KButil_Batch_Import_Genomes_From_Staging(self, ctx, params):
+    def KButil_Batch_Create_AssemblySet(self, ctx, params):
         """
         :param params: instance of type
-           "KButil_Batch_Import_Genomes_From_Staging_Params"
-           (KButil_Batch_Import_Genomes_From_Staging() ** **  Method for
-           importing genomes from staging without explicit naming, creates a
-           GenomeSet) -> structure: parameter "workspace_name" of type
-           "workspace_name" (** The workspace object refs are of form: ** ** 
-           objects = ws.get_objects([{'ref':
+           "KButil_Batch_Create_AssemblySet_Params"
+           (KButil_Batch_Create_AssemblySet() ** **  Method for creating an
+           AssemblySet without specifying individual objects) -> structure:
+           parameter "workspace_name" of type "workspace_name" (** The
+           workspace object refs are of form: ** **    objects =
+           ws.get_objects([{'ref':
            params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
            the entire name combining the workspace id and the object name **
            "id" is a numerical identifier of the workspace or object, and
            should just be used for workspace ** "name" is a string identifier
            of a workspace or object.  This is received from Narrative.),
-           parameter "desc" of String, parameter "staging_folder_path" of
-           String, parameter "genome_type" of String, parameter "output_name"
-           of type "data_obj_name", parameter "source" of String, parameter
-           "taxon_wsname" of String, parameter "taxon_reference" of String,
-           parameter "release" of String, parameter "genetic_code" of Long,
-           parameter "generate_missing_genes" of type "bool"
-        :returns: instance of type
-           "KButil_Batch_Import_Genomes_From_Staging_Output" -> structure:
-           parameter "report_name" of type "data_obj_name", parameter
-           "report_ref" of type "data_obj_ref"
+           parameter "name_pattern" of String, parameter "output_name" of
+           type "data_obj_name", parameter "desc" of String
+        :returns: instance of type "KButil_Batch_Create_AssemblySet_Output"
+           -> structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
         """
         # ctx is the context object
         # return variables are: returnVal
-        #BEGIN KButil_Batch_Import_Genomes_From_Staging
-        console = []
-        self.log (console, "In KButil_Batch_Import_Genomes_From_Staging")
-        from os import walk
-        mypath = os.path.join (os.path.sep,'data', 'bulk', 'dylan')
-        self.log(console, 'mypath: "'+mypath+'"')
-        f = []
-        d = []
-        for (dirpath, dirnames, filenames) in walk(mypath):
-            f.extend(filenames)
-            d.extend(dirnames)
-            #break        
-        self.log(console, 'files: '+"\n".join(f)+"\n")
-        self.log(console, 'dirs: '+"\n".join(d)+"\n")
+        #BEGIN KButil_Batch_Create_AssemblySet
 
-        returnVal = { 'report_name': 'foo', 'report_ref': '1/2/3' }
-        #END KButil_Batch_Import_Genomes_From_Staging
+        #### STEP 0: standard method init
+        ##
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        console = []
+        invalid_msgs = []
+        self.log(console,'Running KButil_Batch_Create_AssemblySet with params=')
+        self.log(console, "\n"+pformat(params))
+        report = ''
+#        report = 'Running KButil_Batch_Create_AssemblySet with params='
+#        report += "\n"+pformat(params)
+
+
+        #### STEP 1: instantiate clients
+        ##
+        self.log (console, "GETTING WORKSPACE CLIENT")
+        try:
+            wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
+        except Exception as e:
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+        self.log (console, "GETTING SetAPI CLIENT")
+        try:
+            setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
+        except Exception as e:
+            raise ValueError('ERROR: unable to instantiate SetAPI' + str(e))
+
+
+        #### STEP 2: do some basic checks
+        ##
+        if 'workspace_name' not in params:
+            raise ValueError('workspace_name parameter is required')
+        if 'desc' not in params:
+            raise ValueError('desc parameter is required')
+        if 'output_name' not in params:
+            raise ValueError('output_name parameter is required')
+
+            
+        #### STEP 3: refine name_pattern
+        ##
+        name_pattern = params.get('name_pattern')
+        if name_pattern:
+            name_pattern = name_pattern.strip()
+            name_pattern = name_pattern.strip('*')
+            name_pattern = name_pattern.replace('.','\.')
+            name_pattern = name_pattern.replace('*','.*')
+
+            regexp_name_pattern = re.compile ('^.*'+name_pattern+'.*$')
+
+
+        #### STEP 4: read ws for assembly objects
+        ##
+        assembly_obj_ref_by_name = dict()
+        try:
+            assembly_obj_info_list = wsClient.list_objects(
+                #{'ids': [ws_id], 'type': "KBaseGenomeAnnotations.Assembly"})
+                {'workspaces': [params['workspace_name']], 'type': "KBaseGenomeAnnotations.Assembly"})
+        except Exception as e:
+            raise ValueError("Unable to list Assembly objects from workspace: " + params['workspace_name'] + " " + str(e))
+
+        for info in assembly_obj_info_list:
+            assembly_ref = str(info[WSID_I]) + '/' + str(info[OBJID_I]) +'/' + str(info[VERSION_I])
+            assembly_name = info[NAME_I]
+
+            if name_pattern:
+                self.log(console, "NAME_PATTERN: '"+name_pattern+"' ASSEMBLY_NAME: '"+assembly_name+"'")  # DEBUG
+
+            if not name_pattern or regexp_name_pattern.match(assembly_name):
+                self.log(console, "ADDING "+assembly_name+" ("+assembly_ref+")")  # DEBUG
+                assembly_obj_ref_by_name[assembly_name] = assembly_ref
+
+        if len(assembly_obj_ref_by_name.keys()) == 0:
+            if not name_pattern:
+                self.log(invalid_msgs, "No Assembly objects found")
+            else:
+                self.log(invalid_msgs, "No Assembly objects passing name_pattern filter: '"+name_pattern+"'")
+            provenance = [{}]
+            if 'provenance' in ctx:
+                provenance = ctx['provenance']
+
+
+        #### STEP 5: Build AssemblySet
+        ##
+        if len(invalid_msgs) == 0:
+            items = []
+            assembly_ref_list = []
+            for ass_name in sorted (assembly_obj_ref_by_name.keys()):
+                # add assembly
+                ass_ref = assembly_obj_ref_by_name[ass_name]
+                assembly_ref_list.append (ass_ref)
+
+                self.log(console,"adding assembly "+ass_name+" : "+ass_ref)  # DEBUG
+                items.append ({'ref': ass_ref,
+                               'label': ass_name
+                               #'data_attachment': ,
+                               #'info'
+                           })
+
+
+        #### STEP 6: Store output object
+        ##
+        if len(invalid_msgs) == 0:
+            self.log(console,"SAVING ASSEMBLY_SET")  # DEBUG
+
+            # set provenance
+            self.log(console,"SETTING PROVENANCE")  # DEBUG
+            provenance = [{}]
+            if 'provenance' in ctx:
+                provenance = ctx['provenance']
+            # add additional info to provenance here, in this case the input data object reference
+            provenance[0]['input_ws_objects'] = []
+            for ass_ref in assembly_ref_list:
+                provenance[0]['input_ws_objects'].append(ass_ref)
+            provenance[0]['service'] = 'kb_SetUtilities'
+            provenance[0]['method'] = 'KButil_Batch_Create_AssemblySet'
+
+            # object def
+            output_assemblySet_obj = { 'description': params['desc'],
+                                       'items': items
+                                   }
+            output_assemblySet_name = params['output_name']
+            # object save
+            try:
+                output_assemblySet_ref = setAPI_Client.save_assembly_set_v1 ({'workspace_name': params['workspace_name'],
+                                                                              'output_object_name': output_assemblySet_name,
+                                                                              'data': output_assemblySet_obj
+                                                                          })['set_ref']
+            except Exception as e:
+                raise ValueError('SetAPI FAILURE: Unable to save assembly set object to workspace: (' + params['workspace_name']+")\n" + str(e))
+
+
+        #### STEP 7: build output report object
+        ##
+        self.log(console,"SAVING REPORT")  # DEBUG
+        if len(invalid_msgs) != 0:
+            report += "\n".join(invalid_msgs)
+            reportObj = {
+                'objects_created':[],
+                'text_message':report
+            }
+        else:
+            self.log(console,"assembly objs in output set "+params['output_name']+": "+str(len(items)))
+            report += 'assembly objs in output set '+params['output_name']+': '+str(len(items))
+            reportObj = {
+                'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':'KButil_Build_AssemblySet'}],
+                'text_message':report
+            }
+        reportName = 'kb_SetUtilities_batch_create_assemblyset_report_'+str(uuid.uuid4())
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        report_obj_info = ws.save_objects({
+            #'id':info[6],
+            'workspace':params['workspace_name'],
+            'objects':[
+                {
+                    'type':'KBaseReport.Report',
+                    'data':reportObj,
+                    'name':reportName,
+                    'meta':{},
+                    'hidden':1,
+                    'provenance':provenance
+                }
+            ]
+        })[0]
+
+
+        #### STEP 8: return
+        ##
+        self.log(console,"BUILDING RETURN OBJECT")
+        returnVal = { 'report_name': reportName,
+                      'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
+                      }
+        self.log(console,"KButil_Batch_Create_AssemblySet DONE")
+        #END KButil_Batch_Create_AssemblySet
 
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
-            raise ValueError('Method KButil_Batch_Import_Genomes_From_Staging return value ' +
+            raise ValueError('Method KButil_Batch_Create_AssemblySet return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def KButil_Batch_Create_GenomeSet(self, ctx, params):
+        """
+        :param params: instance of type
+           "KButil_Batch_Create_GenomeSet_Params"
+           (KButil_Batch_Create_GenomeSet() ** **  Method for creating a
+           GenomeSet without specifying individual objects) -> structure:
+           parameter "workspace_name" of type "workspace_name" (** The
+           workspace object refs are of form: ** **    objects =
+           ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "name_pattern" of String, parameter "output_name" of
+           type "data_obj_name", parameter "desc" of String
+        :returns: instance of type "KButil_Batch_Create_GenomeSet_Output" ->
+           structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Batch_Create_GenomeSet
+        #END KButil_Batch_Create_GenomeSet
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Batch_Create_GenomeSet return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]

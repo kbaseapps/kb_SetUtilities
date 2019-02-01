@@ -386,10 +386,14 @@ class Application(object):
                              name='kb_SetUtilities.KButil_Build_AssemblySet',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Build_AssemblySet'] = 'required'  # noqa
-        self.rpc_service.add(impl_kb_SetUtilities.KButil_Batch_Import_Genomes_From_Staging,
-                             name='kb_SetUtilities.KButil_Batch_Import_Genomes_From_Staging',
+        self.rpc_service.add(impl_kb_SetUtilities.KButil_Batch_Create_AssemblySet,
+                             name='kb_SetUtilities.KButil_Batch_Create_AssemblySet',
                              types=[dict])
-        self.method_authentication['kb_SetUtilities.KButil_Batch_Import_Genomes_From_Staging'] = 'required'  # noqa
+        self.method_authentication['kb_SetUtilities.KButil_Batch_Create_AssemblySet'] = 'required'  # noqa
+        self.rpc_service.add(impl_kb_SetUtilities.KButil_Batch_Create_GenomeSet,
+                             name='kb_SetUtilities.KButil_Batch_Create_GenomeSet',
+                             types=[dict])
+        self.method_authentication['kb_SetUtilities.KButil_Batch_Create_GenomeSet'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.status,
                              name='kb_SetUtilities.status',
                              types=[dict])

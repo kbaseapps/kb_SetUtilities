@@ -1,14 +1,14 @@
 {
-    "ver": "1.0.1",
+    "ver": "1.2.0",
     "authors": [
         "dylan"
     ],
-    "contact": "http://kbase.us/contact-us",
+    "contact": "http://kbase.us/contact-us/",
     "visible": true,
-    "categories": ["active","util","comparative_genomics"],
+    "categories": ["active","util","annotation"],
     "widgets": {
         "input": null,
-        "output": "kbaseReportView"
+        "output": "no-display"
     },
     "parameters": [ 
         {
@@ -23,26 +23,13 @@
             }
         },
         {
-            "id": "input_genome_refs",
-            "optional": false,
-            "advanced": false,
-            "allow_multiple": true,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ "KBaseGenomes.Genome","KBaseGenomeAnnotations.GenomeAnnotation" ],
-		"is_output_name": false
-            }
-        },
-        {
-            "id": "input_genomeset_ref",
-            "optional": false,
+            "id": "name_pattern",
+            "optional": true,
             "advanced": false,
             "allow_multiple": false,
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": [ "KBaseSearch.GenomeSet", "KBaseSets.GenomeSet" ],
 		"is_output_name": false
             }
         },
@@ -63,7 +50,7 @@
         "service-mapping": {
             "url": "",
             "name": "kb_SetUtilities",
-            "method": "KButil_Add_Genomes_to_GenomeSet",
+            "method": "KButil_Batch_Create_GenomeSet",
             "input_mapping": [
                 {
                     "narrative_system_variable": "workspace",
@@ -74,14 +61,8 @@
                     "target_property": "desc"
                 },
                 {
-                    "input_parameter": "input_genome_refs",
-                    "target_property": "input_genome_refs",
-		    "target_type_transform": "list<resolved-ref>"
-                },
-                {
-                    "input_parameter": "input_genomeset_ref",
-                    "target_property": "input_genomeset_ref",
-		    "target_type_transform": "resolved-ref"
+                    "input_parameter": "name_pattern",
+                    "target_property": "name_pattern"
                 },
                 {
                     "input_parameter": "output_name",

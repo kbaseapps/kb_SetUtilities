@@ -1,0 +1,63 @@
+#
+# define display information
+#
+name: Batch Create Genome Set - v1.2.0
+tooltip: |
+    Allows user to create a GenomeSet without specifying names
+screenshots: []
+
+icon: kb-blue.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    desc:
+        ui-name : |
+            Description
+        short-hint : |
+            Describe Purpose or Contents of Output GenomeSet
+        placeholder: |
+            Enter Description
+    name_pattern:
+        ui-name : |
+            Name Pattern
+        short-hint : |
+            Optionally define a pattern to match in the object names
+    output_name:
+        ui-name : |
+            Output GenomeSet Name
+        short-hint : |
+            Name for the Output GenomeSet Collection
+
+
+description : |
+    <p>This App allows the user to group individual <b><i>Genome</i></b> objects into a <b><i>Genome Set</i></b>.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Batch Create Genome Set</b> allows a user to create a Set of Genomes which can be used in subsequent Apps that operate on Genome Sets.  Each Genome object must already be within the Narrative's data workspace, so if there are genomes from other Narratives or genomes from the public reference genome library that the user wishes to include, they must first be imported into the active Narrative.  All Genomes that match the <i>Name Pattern</i> will be included in the Set.  If the <i>Name Pattern</i> is left blank, all genome objects in the current Narrative will be included.
+    </p>
+
+publications :
+    -
+        display-text: |
+            Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
+        link: https://www.nature.com/articles/nbt.4163
