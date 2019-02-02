@@ -564,7 +564,7 @@ class kb_SetUtilities:
                                                 'data': output_FeatureSet,
                                                 'name': params['output_name'],
                                                 'meta': {},
-                                                'provenance': provenance}]})
+                                                'provenance': provenance}]})[0]
 
         # build output report object
         self.log(console, "BUILDING REPORT")  # DEBUG
@@ -845,7 +845,7 @@ class kb_SetUtilities:
                                                               'data': output_FeatureSet,
                                                               'name': output_name,
                                                               'meta': {},
-                                                              'provenance': provenance}]})
+                                                              'provenance': provenance}]})[0]
                 
                     feature_list_lens.append(len(element_ordering))
                     objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
@@ -1115,7 +1115,7 @@ class kb_SetUtilities:
                                                           'data': output_FeatureSet,
                                                           'name': output_name,
                                                           'meta': {},
-                                                          'provenance': provenance}]})
+                                                          'provenance': provenance}]})[0]
                 
                 objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
                                         'description': params['desc']})
@@ -1274,7 +1274,7 @@ class kb_SetUtilities:
                                                          'meta': {},
                                                          'provenance': provenance
                                                          }]
-                                            })
+                                            })[0]
 
         # build output report object
         self.log(console, "BUILDING REPORT")  # DEBUG
@@ -1437,7 +1437,7 @@ class kb_SetUtilities:
                                                          'data': output_GenomeSet,
                                                          'name': params['output_name'],
                                                          'meta': {},
-                                                         'provenance': provenance}]})
+                                                         'provenance': provenance}]})[0]
 
         # build output report object
         #
@@ -1622,7 +1622,7 @@ class kb_SetUtilities:
                                                          'data': output_GenomeSet,
                                                          'name': params['output_name'],
                                                          'meta': {},
-                                                         'provenance': provenance}]})
+                                                         'provenance': provenance}]})[0]
 
         # build output report object
         #
@@ -1800,7 +1800,7 @@ class kb_SetUtilities:
                                                 'data': output_GenomeSet,
                                                 'name': params['output_name'],
                                                 'meta': {},
-                                                'provenance': provenance}]})
+                                                'provenance': provenance}]})[0]
 
         # build output report object
         self.log(console, "BUILDING REPORT")  # DEBUG
@@ -2643,11 +2643,11 @@ class kb_SetUtilities:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
             raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
-        self.log (console, "GETTING SetAPI CLIENT")
-        try:
-            setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
-        except Exception as e:
-            raise ValueError('ERROR: unable to instantiate SetAPI' + str(e))
+#        self.log (console, "GETTING SetAPI CLIENT")
+#        try:
+#            setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
+#        except Exception as e:
+#            raise ValueError('ERROR: unable to instantiate SetAPI' + str(e))
 
 
         #### STEP 2: do some basic checks
@@ -2678,7 +2678,7 @@ class kb_SetUtilities:
         try:
             genome_obj_info_list = wsClient.list_objects(
                 #{'ids': [ws_id], 'type': "KBaseGenomeAnnotations.Genome"})
-                {'workspaces': [params['workspace_name']], 'type': "KBaseSearch.Genome"})
+                {'workspaces': [params['workspace_name']], 'type': "KBaseGenomes.Genome"})
         except Exception as e:
             raise ValueError("Unable to list Genome objects from workspace: " + params['workspace_name'] + " " + str(e))
 
@@ -2706,19 +2706,22 @@ class kb_SetUtilities:
         #### STEP 5: Build GenomeSet
         ##
         if len(invalid_msgs) == 0:
-            items = []
+            #items = []
+            elements = dict()
             genome_ref_list = []
-            for ass_name in sorted (genome_obj_ref_by_name.keys()):
+            for gen_name in sorted (genome_obj_ref_by_name.keys()):
                 # add genome
-                ass_ref = genome_obj_ref_by_name[ass_name]
-                genome_ref_list.append (ass_ref)
+                gen_ref = genome_obj_ref_by_name[gen_name]
+                genome_ref_list.append (gen_ref)
 
-                self.log(console,"adding genome "+ass_name+" : "+ass_ref)  # DEBUG
-                items.append ({'ref': ass_ref,
-                               'label': ass_name
-                               #'data_attachment': ,
-                               #'info'
-                           })
+                self.log(console,"adding genome "+gen_name+" : "+gen_ref)  # DEBUG
+                #items.append ({'ref': gen_ref,
+                #               'label': gen_name
+                #               #'data_attachment': ,
+                #               #'info'
+                #           })
+                elements[gen_name] = dict()
+                elements[gen_name]['ref'] = gen_ref
 
 
         #### STEP 6: Store output object
@@ -2740,15 +2743,24 @@ class kb_SetUtilities:
 
             # object def
             output_genomeSet_obj = { 'description': params['desc'],
-                                       'items': items
+                                     #'items': items
+                                     'elements': elements
                                    }
             output_genomeSet_name = params['output_name']
             # object save
             try:
-                output_genomeSet_ref = setAPI_Client.save_genome_set_v1 ({'workspace_name': params['workspace_name'],
-                                                                          'output_object_name': output_genomeSet_name,
-                                                                          'data': output_genomeSet_obj
-                                                                      })['set_ref']
+                #output_genomeSet_ref = setAPI_Client.save_genome_set_v1 ({'workspace_name': params['workspace_name'],
+                #                                                          'output_object_name': output_genomeSet_name,
+                #                                                          'data': output_genomeSet_obj
+                #                                                      })['set_ref']
+                new_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
+                                                      'objects': [{'type': 'KBaseSearch.GenomeSet',
+                                                                   'data': output_genomeSet_obj,
+                                                                   'name': output_genomeSet_name,
+                                                                   'meta': {},
+                                                                   'provenance': provenance
+                                                               }]
+                                                  })[0]
             except Exception as e:
                 raise ValueError('SetAPI FAILURE: Unable to save genome set object to workspace: (' + params['workspace_name']+")\n" + str(e))
 
@@ -2763,8 +2775,8 @@ class kb_SetUtilities:
                 'text_message':report
             }
         else:
-            self.log(console,"genome objs in output set "+params['output_name']+": "+str(len(items)))
-            report += 'genome objs in output set '+params['output_name']+': '+str(len(items))
+            self.log(console,"genome objs in output set "+params['output_name']+": "+str(len(elements.keys())))
+            report += 'genome objs in output set '+params['output_name']+': '+str(len(elements.keys()))
             desc = 'KButil_Batch_Create_GenomeSet'
             if name_pattern:
                 desc += ' with name_pattern: '+name_pattern

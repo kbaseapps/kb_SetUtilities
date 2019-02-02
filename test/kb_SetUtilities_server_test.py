@@ -444,7 +444,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_FeatureSet_Collection_01():
     ##
-    @unittest.skip("skipped test_KButil_Merge_FeatureSet_Collection_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Merge_FeatureSet_Collection_01()")  # uncomment to skip
     def test_KButil_Merge_FeatureSet_Collection_01 (self):
         method = 'KButil_Merge_FeatureSet_Collection_01'
         msg = "RUNNING: "+method+"()"
@@ -550,7 +550,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Slice_FeatureSets_by_Genomes_01():
     ##
-    @unittest.skip("skipped test_KButil_Slice_FeatureSets_by_Genomes_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Slice_FeatureSets_by_Genomes_01()")  # uncomment to skip
     def test_KButil_Slice_FeatureSets_by_Genomes_01 (self):
         method = 'KButil_Slice_FeatureSets_by_Genomes_01'
         msg = "RUNNING: "+method+"()"
@@ -634,7 +634,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Slice_FeatureSets_by_Genomes_NULL_RESULT():
     ##
-    @unittest.skip("skipped test_KButil_Slice_FeatureSets_by_Genomes_NULL_RESULT()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Slice_FeatureSets_by_Genomes_NULL_RESULT()")  # uncomment to skip
     def test_KButil_Slice_FeatureSets_by_Genomes_NULL_RESULT (self):
         method = 'KButil_Slice_FeatureSets_by_Genomes_NULL_RESULT'
         msg = "RUNNING: "+method+"()"
@@ -716,7 +716,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Logical_Slice_Two_FeatureSets_01():
     ##
-    @unittest.skip("skipped test_KButil_Logical_Slice_Two_FeatureSets_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Logical_Slice_Two_FeatureSets_01()")  # uncomment to skip
     def test_KButil_Logical_Slice_Two_FeatureSets_01 (self):
         method = 'KButil_Logical_Slice_Two_FeatureSets_01'
         msg = "RUNNING: "+method+"()"
@@ -830,7 +830,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Logical_Slice_Two_FeatureSets_02():
     ##
-    @unittest.skip("skipped test_KButil_Logical_Slice_Two_FeatureSets_02()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Logical_Slice_Two_FeatureSets_02()")  # uncomment to skip
     def test_KButil_Logical_Slice_Two_FeatureSets_02 (self):
         method = 'KButil_Logical_Slice_Two_FeatureSets_02'
         msg = "RUNNING: "+method+"()"
@@ -944,7 +944,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Logical_Slice_Two_FeatureSets_03():
     ##
-    @unittest.skip("skipped test_KButil_Logical_Slice_Two_FeatureSets_03()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Logical_Slice_Two_FeatureSets_03()")  # uncomment to skip
     def test_KButil_Logical_Slice_Two_FeatureSets_03 (self):
         method = 'KButil_Logical_Slice_Two_FeatureSets_03'
         msg = "RUNNING: "+method+"()"
@@ -1058,7 +1058,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Logical_Slice_Two_FeatureSets_NULL_RESULT():
     ##
-    @unittest.skip("skipped test_KButil_Logical_Slice_Two_FeatureSets_NULL_RESULT()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Logical_Slice_Two_FeatureSets_NULL_RESULT()")  # uncomment to skip
     def test_KButil_Logical_Slice_Two_FeatureSets_NULL_RESULT (self):
         method = 'KButil_Logical_Slice_Two_FeatureSets_NULL_RESULT'
         msg = "RUNNING: "+method+"()"
@@ -1168,7 +1168,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_GenomeSets_01():
     ##
-    @unittest.skip("skipped test_KButil_Merge_GenomeSets_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Merge_GenomeSets_01()")  # uncomment to skip
     def test_KButil_Merge_GenomeSets_01 (self):
         method = 'KButil_Merge_GenomeSets_01'
         msg = "RUNNING: "+method+"()"
@@ -1265,7 +1265,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_GenomeSet_01():
     ##
-    @unittest.skip("skipped test_KButil_Build_GenomeSet_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Build_GenomeSet_01()")  # uncomment to skip
     def test_KButil_Build_GenomeSet_01 (self):
         method = 'KButil_Build_GenomeSet_01'
         msg = "RUNNING: "+method+"()"
@@ -1317,7 +1317,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_GenomeSet_from_FeatureSet_01():
     ##
-    @unittest.skip("skipped test_KButil_Build_GenomeSet_from_FeatureSet_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Build_GenomeSet_from_FeatureSet_01()")  # uncomment to skip
     def test_KButil_Build_GenomeSet_from_FeatureSet_01 (self):
         method = 'KButil_Build_GenomeSet_from_FeatureSet_01'
         msg = "RUNNING: "+method+"()"
@@ -1400,7 +1400,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Add_Genomes_to_GenomeSet_01():
     ##
-    @unittest.skip("skipped test_KButil_Add_Genomes_to_GenomeSet_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Add_Genomes_to_GenomeSet_01()")  # uncomment to skip
     def test_KButil_Add_Genomes_to_GenomeSet_01 (self):
         method = 'KButil_Add_Genomes_to_GenomeSet_01'
         msg = "RUNNING: "+method+"()"
@@ -1475,7 +1475,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_ReadsSet_01()
     ##
-    @unittest.skip("skipped test_KButil_Build_ReadsSet_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Build_ReadsSet_01()")  # uncomment to skip
     def test_KButil_Build_ReadsSet_01 (self):
         method = 'KButil_Build_ReadsSet_01'
         msg = "RUNNING: "+method+"()"
@@ -1522,7 +1522,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Merge_MultipleReadsSets_to_OneReadsSet_01()
     ##
-    @unittest.skip("skipped test_KButil_Merge_MultipleReadsSets_to_OneReadsSet_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Merge_MultipleReadsSets_to_OneReadsSet_01()")  # uncomment to skip
     def test_KButil_Merge_MultipleReadsSets_to_OneReadsSet_01 (self):
         method = 'KButil_Merge_MultipleReadsSets_to_OneReadsSet_01'
         msg = "RUNNING: "+method+"()"
@@ -1626,7 +1626,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Build_AssemblySet_01()
     ##
-    @unittest.skip("skipped test_KButil_Build_AssemblySet_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Build_AssemblySet_01()")  # uncomment to skip
     def test_KButil_Build_AssemblySet_01 (self):
         method = 'KButil_Build_AssemblySet_01'
         msg = "RUNNING: "+method+"()"
@@ -1684,7 +1684,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Batch_Create_AssemblySet_01()
     ##
-    @unittest.skip("skipped test_KButil_Batch_Create_AssemblySet_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Batch_Create_AssemblySet_01()")  # uncomment to skip
     def test_KButil_Batch_Create_AssemblySet_01 (self):
         method = 'KButil_Batch_Create_AssemblySet_01'
         msg = "RUNNING: "+method+"()"
@@ -1770,10 +1770,10 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         num_genomes = 2
 
         # run method
-        name_pattern = ''
-        expected_genomeSet_length = 2
-        #name_pattern = 'BAR*bly'
-        #expected_genomeSet_length = 1
+        #name_pattern = ''
+        #expected_genomeSet_length = 2
+        name_pattern = '000306*_ASM'
+        expected_genomeSet_length = 1
         base_output_name = method+'_output'
         params = {
             'workspace_name': self.getWsName(),
@@ -1787,7 +1787,8 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
         # check the output
         output_name = base_output_name
-        output_type = 'KBaseSets.GenomeSet'
+        #output_type = 'KBaseSets.GenomeSet'
+        output_type = 'KBaseSearch.GenomeSet'
         output_ref = self.getWsName() + '/' + output_name
         info_list = self.getWsClient().get_object_info_new({'objects':[{'ref':output_ref}]})
         self.assertEqual(len(info_list),1)
@@ -1795,5 +1796,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         self.assertEqual(genomeSet_info[1],output_name)
         self.assertEqual(genomeSet_info[2].split('-')[0],output_type)
         output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
-        self.assertEqual(len(output_obj['items']), expected_genomeSet_length)
+        #self.assertEqual(len(output_obj['items']), expected_genomeSet_length)
+        self.assertEqual(len(output_obj['elements'].keys()), expected_genomeSet_length)
         pass
