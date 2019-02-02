@@ -6,7 +6,7 @@ tooltip: |
     Allows user to create a GenomeSet without specifying names
 screenshots: []
 
-icon: kb-blue.png
+icon: kb-purple.png
 
 #
 # define a set of similar methods that might be useful to the user
