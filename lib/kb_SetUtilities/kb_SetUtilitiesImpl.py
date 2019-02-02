@@ -2559,8 +2559,11 @@ class kb_SetUtilities:
         else:
             self.log(console,"assembly objs in output set "+params['output_name']+": "+str(len(items)))
             report += 'assembly objs in output set '+params['output_name']+': '+str(len(items))
+            desc = 'KButil_Batch_Create_AssemblySet'
+            if name_pattern:
+                desc += ' with name_pattern: '+name_pattern
             reportObj = {
-                'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':'KButil_Build_AssemblySet'}],
+                'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':desc}],
                 'text_message':report
             }
         reportName = 'kb_SetUtilities_batch_create_assemblyset_report_'+str(uuid.uuid4())
@@ -2620,6 +2623,180 @@ class kb_SetUtilities:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN KButil_Batch_Create_GenomeSet
+
+        #### STEP 0: standard method init
+        ##
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        console = []
+        invalid_msgs = []
+        self.log(console,'Running KButil_Batch_Create_GenomeSet with params=')
+        self.log(console, "\n"+pformat(params))
+        report = ''
+#        report = 'Running KButil_Batch_Create_GenomeSet with params='
+#        report += "\n"+pformat(params)
+
+
+        #### STEP 1: instantiate clients
+        ##
+        self.log (console, "GETTING WORKSPACE CLIENT")
+        try:
+            wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
+        except Exception as e:
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+        self.log (console, "GETTING SetAPI CLIENT")
+        try:
+            setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
+        except Exception as e:
+            raise ValueError('ERROR: unable to instantiate SetAPI' + str(e))
+
+
+        #### STEP 2: do some basic checks
+        ##
+        if 'workspace_name' not in params:
+            raise ValueError('workspace_name parameter is required')
+        if 'desc' not in params:
+            raise ValueError('desc parameter is required')
+        if 'output_name' not in params:
+            raise ValueError('output_name parameter is required')
+
+            
+        #### STEP 3: refine name_pattern
+        ##
+        name_pattern = params.get('name_pattern')
+        if name_pattern:
+            name_pattern = name_pattern.strip()
+            name_pattern = name_pattern.strip('*')
+            name_pattern = name_pattern.replace('.','\.')
+            name_pattern = name_pattern.replace('*','.*')
+
+            regexp_name_pattern = re.compile ('^.*'+name_pattern+'.*$')
+
+
+        #### STEP 4: read ws for genome objects
+        ##
+        genome_obj_ref_by_name = dict()
+        try:
+            genome_obj_info_list = wsClient.list_objects(
+                #{'ids': [ws_id], 'type': "KBaseGenomeAnnotations.Genome"})
+                {'workspaces': [params['workspace_name']], 'type': "KBaseSearch.Genome"})
+        except Exception as e:
+            raise ValueError("Unable to list Genome objects from workspace: " + params['workspace_name'] + " " + str(e))
+
+        for info in genome_obj_info_list:
+            genome_ref = str(info[WSID_I]) + '/' + str(info[OBJID_I]) +'/' + str(info[VERSION_I])
+            genome_name = info[NAME_I]
+
+            if name_pattern:
+                self.log(console, "NAME_PATTERN: '"+name_pattern+"' GENOME_NAME: '"+genome_name+"'")  # DEBUG
+
+            if not name_pattern or regexp_name_pattern.match(genome_name):
+                self.log(console, "ADDING "+genome_name+" ("+genome_ref+")")  # DEBUG
+                genome_obj_ref_by_name[genome_name] = genome_ref
+
+        if len(genome_obj_ref_by_name.keys()) == 0:
+            if not name_pattern:
+                self.log(invalid_msgs, "No Genome objects found")
+            else:
+                self.log(invalid_msgs, "No Genome objects passing name_pattern filter: '"+name_pattern+"'")
+            provenance = [{}]
+            if 'provenance' in ctx:
+                provenance = ctx['provenance']
+
+
+        #### STEP 5: Build GenomeSet
+        ##
+        if len(invalid_msgs) == 0:
+            items = []
+            genome_ref_list = []
+            for ass_name in sorted (genome_obj_ref_by_name.keys()):
+                # add genome
+                ass_ref = genome_obj_ref_by_name[ass_name]
+                genome_ref_list.append (ass_ref)
+
+                self.log(console,"adding genome "+ass_name+" : "+ass_ref)  # DEBUG
+                items.append ({'ref': ass_ref,
+                               'label': ass_name
+                               #'data_attachment': ,
+                               #'info'
+                           })
+
+
+        #### STEP 6: Store output object
+        ##
+        if len(invalid_msgs) == 0:
+            self.log(console,"SAVING GENOME_SET")  # DEBUG
+
+            # set provenance
+            self.log(console,"SETTING PROVENANCE")  # DEBUG
+            provenance = [{}]
+            if 'provenance' in ctx:
+                provenance = ctx['provenance']
+            # add additional info to provenance here, in this case the input data object reference
+            provenance[0]['input_ws_objects'] = []
+            for ass_ref in genome_ref_list:
+                provenance[0]['input_ws_objects'].append(ass_ref)
+            provenance[0]['service'] = 'kb_SetUtilities'
+            provenance[0]['method'] = 'KButil_Batch_Create_GenomeSet'
+
+            # object def
+            output_genomeSet_obj = { 'description': params['desc'],
+                                       'items': items
+                                   }
+            output_genomeSet_name = params['output_name']
+            # object save
+            try:
+                output_genomeSet_ref = setAPI_Client.save_genome_set_v1 ({'workspace_name': params['workspace_name'],
+                                                                          'output_object_name': output_genomeSet_name,
+                                                                          'data': output_genomeSet_obj
+                                                                      })['set_ref']
+            except Exception as e:
+                raise ValueError('SetAPI FAILURE: Unable to save genome set object to workspace: (' + params['workspace_name']+")\n" + str(e))
+
+
+        #### STEP 7: build output report object
+        ##
+        self.log(console,"SAVING REPORT")  # DEBUG
+        if len(invalid_msgs) != 0:
+            report += "\n".join(invalid_msgs)
+            reportObj = {
+                'objects_created':[],
+                'text_message':report
+            }
+        else:
+            self.log(console,"genome objs in output set "+params['output_name']+": "+str(len(items)))
+            report += 'genome objs in output set '+params['output_name']+': '+str(len(items))
+            desc = 'KButil_Batch_Create_GenomeSet'
+            if name_pattern:
+                desc += ' with name_pattern: '+name_pattern
+            reportObj = {
+                'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':desc}],
+                'text_message':report
+            }
+        reportName = 'kb_SetUtilities_batch_create_genomeset_report_'+str(uuid.uuid4())
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        report_obj_info = ws.save_objects({
+            #'id':info[6],
+            'workspace':params['workspace_name'],
+            'objects':[
+                {
+                    'type':'KBaseReport.Report',
+                    'data':reportObj,
+                    'name':reportName,
+                    'meta':{},
+                    'hidden':1,
+                    'provenance':provenance
+                }
+            ]
+        })[0]
+
+
+        #### STEP 8: return
+        ##
+        self.log(console,"BUILDING RETURN OBJECT")
+        returnVal = { 'report_name': reportName,
+                      'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
+                      }
+        self.log(console,"KButil_Batch_Create_GenomeSet DONE")
         #END KButil_Batch_Create_GenomeSet
 
         # At some point might do deeper type checking...
