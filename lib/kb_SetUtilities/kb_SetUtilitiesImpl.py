@@ -1,24 +1,15 @@
 # -*- coding: utf-8 -*-
 #BEGIN_HEADER
 import os
-import sys
-import requests
 import re
+import sys
+import uuid
 from datetime import datetime
 from pprint import pformat  # ,pprint
-import uuid
 
-# SDK Utils
-from Workspace.WorkspaceClient import Workspace as workspaceService
-#from installed_clients.WorkspaceClient import WorkspaceClient as workspaceService
-from installed_clients.ReadsUtilsClient import ReadsUtils
-from installed_clients.SetAPIServiceClient import SetAPI
 from installed_clients.KBaseReportClient import KBaseReport
-
-# silence whining
-#import requests
-#requests.packages.urllib3.disable_warnings()
-
+from installed_clients.SetAPIServiceClient import SetAPI
+from installed_clients.WorkspaceClient import Workspace as workspaceService
 #END_HEADER
 
 
@@ -42,8 +33,8 @@ class kb_SetUtilities:
     # the latter method is running.
     ######################################### noqa
     VERSION = "1.2.0"
-    GIT_URL = "https://github.com/dcchivian/kb_SetUtilities"
-    GIT_COMMIT_HASH = "2cea1b31ee111c3f1cbe23abcbee6b5f07962e9b"
+    GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities.git"
+    GIT_COMMIT_HASH = "58465dca743945224c85a8d25b5c481c7db039ee"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -128,6 +119,7 @@ class kb_SetUtilities:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN KButil_Localize_GenomeSet
+        raise NotImplementedError
         #END KButil_Localize_GenomeSet
 
         # At some point might do deeper type checking...
@@ -158,7 +150,7 @@ class kb_SetUtilities:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN KButil_Localize_FeatureSet
-        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
         console = []
         invalid_msgs = []
         self.log(console, 'Running KButil_Localize_FeatureSet with params=')
@@ -176,7 +168,7 @@ class kb_SetUtilities:
         #if 'output_name' not in params:
         #    raise ValueError('output_name parameter is required')
 
- 
+
         # establish workspace client
         self.log (console, "GETTING WORKSPACE CLIENT")
         try:
@@ -202,11 +194,11 @@ class kb_SetUtilities:
             #to get the full stack trace: traceback.format_exc()
         if type_name != 'FeatureSet':
             raise ValueError("Bad Type:  Should be FeatureSet instead of '" + type_name + "'")
-            
+
         # Set local WSID from FeatureSet
         local_WSID = str(info[WSID_I])
 
-        
+
         # read workspace to determine which genome objects are already present
         #
         genome_obj_type = "KBaseGenomes.Genome"
@@ -226,7 +218,7 @@ class kb_SetUtilities:
         self.log (console, "GETTING FEATURES ORDERING")
         src_featureSet = data
         src_element_ordering = []
-        if 'element_ordering' in src_featureSet.keys():
+        if 'element_ordering' in list(src_featureSet.keys()):
             src_element_ordering = src_featureSet['element_ordering']
         else:
             src_element_ordering = sorted(src_featureSet['elements'].keys())
@@ -257,7 +249,7 @@ class kb_SetUtilities:
                     if src_genome_obj_type not in acceptable_types:
                         raise ValueError("Input Genome of type: '" + src_genome_obj_type +
                                          "'.  Must be one of " + ", ".join(acceptable_types))
-            
+
                     standardized_src_genome_ref = '{}/{}/{}'.format(src_genome_obj_info[WSID_I],
                                                                     src_genome_obj_info[OBJID_I],
                                                                     src_genome_obj_info[VERSION_I])
@@ -285,11 +277,11 @@ class kb_SetUtilities:
                 except Exception as e:
                     raise ValueError('Unable to fetch this_genome_ref '+str(src_genome_ref)+' object from workspace: ' + str(e))
                     #to get the full stack trace: traceback.format_exc()
-                
+
                 # check if genome obj with that name already in local WS
                 src_genome_obj_name = src_genome_obj_info[NAME_I]
                 if src_genome_obj_name in local_genome_refs_by_name:
-                    
+
                     src2dst_genome_refs[src_genome_ref] = local_genome_refs_by_name[src_genome_obj_name]
                     local_genome_cnt += 1
                     continue
@@ -305,7 +297,7 @@ class kb_SetUtilities:
                 provenance[0]['input_ws_objects'].append(src_genome_ref)
                 provenance[0]['service'] = 'kb_SetUtilities'
                 provenance[0]['method'] = 'KButil_Localize_FeatureSet'
-            
+
                 # Save object
                 self.log(console, "SAVING GENOME "+str(src_genome_obj_info[NAME_I])+" "+str(src_genome_ref)+" to workspace "+str(params['workspace_name'])+" (ws."+str(local_WSID)+")")  # DEBUG
                 dst_genome_obj_data = src_genome_obj_data
@@ -435,7 +427,7 @@ class kb_SetUtilities:
            "KButil_Merge_FeatureSet_Collection_Params"
            (KButil_Merge_FeatureSet_Collection() ** **  Method for merging
            FeatureSets) -> structure: parameter "workspace_name" of type
-           "workspace_name" (** The workspace object refs are of form: ** ** 
+           "workspace_name" (** The workspace object refs are of form: ** **
            objects = ws.get_objects([{'ref':
            params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
            the entire name combining the workspace id and the object name **
@@ -487,7 +479,7 @@ class kb_SetUtilities:
         elements = {}
         featureSet_seen = dict()
         for featureSet_ref in params['input_refs']:
-            if featureSet_ref not in featureSet_seen.keys():
+            if featureSet_ref not in list(featureSet_seen.keys()):
                 featureSet_seen[featureSet_ref] = 1
             else:
                 self.log("repeat featureSet_ref: '" + featureSet_ref + "'")
@@ -524,7 +516,7 @@ class kb_SetUtilities:
 
             this_featureSet = data
             this_element_ordering = []
-            if 'element_ordering' in this_featureSet.keys():
+            if 'element_ordering' in list(this_featureSet.keys()):
                 this_element_ordering = this_featureSet['element_ordering']
             else:
                 this_element_ordering = sorted(this_featureSet['elements'].keys())
@@ -535,7 +527,7 @@ class kb_SetUtilities:
             report += 'features in input set ' + featureSet_ref + ': ' + str(
                 len(this_element_ordering)) + "\n"
 
-            for fId in this_featureSet['elements'].keys():
+            for fId in list(this_featureSet['elements'].keys()):
                 elements[fId] = this_featureSet['elements'][fId]
 
         # load the method provenance from the context object
@@ -639,7 +631,7 @@ class kb_SetUtilities:
         invalid_msgs = []
         self.log(console, 'Running Slice_FeatureSets_by_Genomes with params=')
         self.log(console, "\n" + pformat(params))
-        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
         logMsg = ''
         report = ''
 
@@ -693,7 +685,7 @@ class kb_SetUtilities:
             if genome_obj_type not in acceptable_types:
                 raise ValueError("Input Genome of type: '" + genome_obj_type +
                                  "'.  Must be one of " + ", ".join(acceptable_types))
-            
+
             this_standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
                                                              genome_obj_info[OBJID_I],
                                                              genome_obj_info[VERSION_I])
@@ -709,7 +701,7 @@ class kb_SetUtilities:
         objects_created = []
 
         for featureSet_ref in params['input_featureSet_refs']:
-            if featureSet_ref not in featureSet_seen.keys():
+            if featureSet_ref not in list(featureSet_seen.keys()):
                 featureSet_seen[featureSet_ref] = 1
             else:
                 self.log("repeat featureSet_ref: '" + featureSet_ref + "'")
@@ -743,11 +735,11 @@ class kb_SetUtilities:
 
             if type_name != 'FeatureSet':
                 raise ValueError("Bad Type:  Should be FeatureSet instead of '" + type_name + "'")
-                
+
             this_featureSet = data
 
             this_element_ordering = []
-            if 'element_ordering' in this_featureSet.keys():
+            if 'element_ordering' in list(this_featureSet.keys()):
                 this_element_ordering = this_featureSet['element_ordering']
             else:
                 this_element_ordering = sorted(this_featureSet['elements'].keys())
@@ -770,7 +762,7 @@ class kb_SetUtilities:
                     genome_hit = False
                     #self.log (console, "\t"+'checking genome {}'.format(this_genome_ref))  # DEBUG
 
-                    #if this_genome_ref in params['input_genome_refs']:   # The KEY line 
+                    #if this_genome_ref in params['input_genome_refs']:   # The KEY line
                     if this_genome_ref in genome_ref_to_standardized:
                         genome_hit = True
                         standardized_genome_ref = genome_ref_to_standardized[this_genome_ref]
@@ -789,7 +781,7 @@ class kb_SetUtilities:
                         if genome_obj_type not in acceptable_types:
                             raise ValueError("Input Genome of type: '" + genome_obj_type +
                                              "'.  Must be one of " + ", ".join(acceptable_types))
-            
+
                         standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
                                                                     genome_obj_info[OBJID_I],
                                                                     genome_obj_info[VERSION_I])
@@ -801,7 +793,7 @@ class kb_SetUtilities:
                         #self.log (console, "\t"+'GENOME HIT')  # DEBUG
                         feature_hit = True
                         genomes_retained.append(standardized_genome_ref)
-                   
+
                 if feature_hit:
                     element_ordering.append(fId)
                     elements[fId] = genomes_retained
@@ -846,7 +838,7 @@ class kb_SetUtilities:
                                                               'name': output_name,
                                                               'meta': {},
                                                               'provenance': provenance}]})[0]
-                
+
                     feature_list_lens.append(len(element_ordering))
                     objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
                                             'description': params['desc']})
@@ -895,7 +887,7 @@ class kb_SetUtilities:
                                                               'meta': {},
                                                               'hidden': 1,
                                                               'provenance': provenance}]})[0]
-        
+
         # Build report and return
         self.log(console, "BUILDING RETURN OBJECT")
         report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
@@ -940,11 +932,11 @@ class kb_SetUtilities:
         invalid_msgs = []
         self.log(console, 'Running Logical_Slice_Two_FeatureSets with params=')
         self.log(console, "\n" + pformat(params))
-        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
         logMsg = ''
         report = ''
         genome_id_feature_id_delim = ".f:"
-        
+
 
         #### do some basic checks
         #
@@ -992,7 +984,7 @@ class kb_SetUtilities:
                 raise ValueError("Bad Type:  Should be FeatureSet instead of '" + type_name + "'")
 
             FeatureSet[set_id] = this_featureSet
-            if 'element_ordering' not in this_featureSet.keys():
+            if 'element_ordering' not in list(this_featureSet.keys()):
                 FeatureSet[set_id]['element_ordering'] = sorted(this_featureSet['elements'].keys())
             logMsg = 'features in input set {}: {}'.format(input_featureSet_refs[set_id],
                                                            len(FeatureSet[set_id]['element_ordering']))
@@ -1010,7 +1002,7 @@ class kb_SetUtilities:
             for fId in FeatureSet[set_id]['element_ordering']:
                 feature_standardized_genome_refs = []
                 for this_genome_ref in FeatureSet[set_id]['elements'][fId]:
-                
+
                     if this_genome_ref in featureSet_genome_ref_to_standardized:
                         standardized_genome_ref = featureSet_genome_ref_to_standardized[this_genome_ref]
                     else:  # get standardized genome_ref
@@ -1024,7 +1016,7 @@ class kb_SetUtilities:
                         if genome_obj_type not in acceptable_types:
                             raise ValueError("Input Genome of type: '" + genome_obj_type +
                                              "'.  Must be one of " + ", ".join(acceptable_types))
-            
+
                         standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
                                                                     genome_obj_info[OBJID_I],
                                                                     genome_obj_info[VERSION_I])
@@ -1071,7 +1063,7 @@ class kb_SetUtilities:
                     except:
                         feature_hit = True
                         genomes_retained.append(this_genome_ref)
-                   
+
             if feature_hit:
                 output_element_ordering.append(fId)
                 output_elements[fId] = genomes_retained
@@ -1116,7 +1108,7 @@ class kb_SetUtilities:
                                                           'name': output_name,
                                                           'meta': {},
                                                           'provenance': provenance}]})[0]
-                
+
                 objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
                                         'description': params['desc']})
 
@@ -1147,7 +1139,7 @@ class kb_SetUtilities:
                                                               'meta': {},
                                                               'hidden': 1,
                                                               'provenance': provenance}]})[0]
-        
+
         # Build report and return
         self.log(console, "BUILDING RETURN OBJECT")
         report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
@@ -1242,7 +1234,7 @@ class kb_SetUtilities:
                 objects = ws.get_objects2({'objects': [{'ref': input_genomeset_ref}]})['data']
                 genomeSet = objects[0]['data']
                 info = objects[0]['info']
-               
+
                 type_name = info[2].split('.')[1].split('-')[0]
                 if type_name != 'GenomeSet':
                     raise ValueError("Bad Type: Should be GenomeSet instead of '" + type_name + "'")
@@ -1250,7 +1242,7 @@ class kb_SetUtilities:
                 raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
 
-            for gId in genomeSet['elements'].keys():
+            for gId in list(genomeSet['elements'].keys()):
                 genomeRef = genomeSet['elements'][gId]['ref']
                 try:
                     already_included = elements[gId]
@@ -1280,9 +1272,9 @@ class kb_SetUtilities:
         self.log(console, "BUILDING REPORT")  # DEBUG
         if len(invalid_msgs) == 0:
             self.log(console, "genomes in output set " + params['output_name'] + ": " +
-                              str(len(elements.keys())))
+                              str(len(list(elements.keys()))))
             report += 'genomes in output set ' + params['output_name'] + ': '
-            report += str(len(elements.keys())) + "\n"
+            report += str(len(list(elements.keys()))) + "\n"
             ref = params['workspace_name'] + '/' + params['output_name']
             reportObj = {'objects_created': [{'ref': ref,
                                               'description': 'KButil_Merge_GenomeSets'}],
@@ -1406,7 +1398,7 @@ class kb_SetUtilities:
                 #if not genome_id in elements.keys():
                 #    elements[genome_id] = dict()
                 #elements[genome_id]['ref'] = genomeRef  # the key line
-                if genomeRef not in elements.keys(): 
+                if genomeRef not in list(elements.keys()):
                     elements[genomeRef] = dict()
                 elements[genomeRef]['ref'] = genomeRef  # the key line
                 self.log(console, "adding element {} ({}) aka ({}): {}".format(obj_name,
@@ -1444,9 +1436,9 @@ class kb_SetUtilities:
         self.log(console, "BUILDING REPORT")  # DEBUG
         if len(invalid_msgs) == 0:
             self.log(console, "genomes in output set " + params['output_name'] +
-                              ": " + str(len(elements.keys())))
+                              ": " + str(len(list(elements.keys()))))
             report += 'genomes in output set ' + params['output_name'] + ': '
-            report += str(len(elements.keys())) + "\n"
+            report += str(len(list(elements.keys()))) + "\n"
             reportObj = {
                 'objects_created': [{'ref': params['workspace_name'] + '/' + params['output_name'],
                                      'description':'KButil_Build_GenomeSet'}],
@@ -1556,7 +1548,7 @@ class kb_SetUtilities:
         elements = {}
         genome_seen = dict()
 
-        for fId in featureSet['elements'].keys():
+        for fId in list(featureSet['elements'].keys()):
             for genomeRef in featureSet['elements'][fId]:
 
                 try:
@@ -1590,7 +1582,7 @@ class kb_SetUtilities:
                     #if not genome_id in elements.keys():
                     #    elements[genome_id] = dict()
                     #elements[genome_id]['ref'] = genomeRef  # the key line
-                    if genomeRef not in elements.keys(): 
+                    if genomeRef not in list(elements.keys()):
                         elements[genomeRef] = dict()
                     elements[genomeRef]['ref'] = genomeRef  # the key line
                     self.log(console, "adding element {} ({}/{}) : {}".format(obj_name,
@@ -1629,9 +1621,9 @@ class kb_SetUtilities:
         self.log(console, "BUILDING REPORT")  # DEBUG
         if len(invalid_msgs) == 0:
             self.log(console, "genomes in output set " + params['output_name'] + ": " +
-                     str(len(elements.keys())))
+                     str(len(list(elements.keys()))))
             report += 'genomes in output set {}:{}\n'.format(params['output_name'],
-                                                             len(elements.keys()))
+                                                             len(list(elements.keys())))
             ref = "{}/{}".format(params['workspace_name'], params['output_name'])
             reportObj = {'objects_created': [{'ref': ref,
                          'description': 'KButil_Build_GenomeSet_from_FeatureSet'}],
@@ -1733,7 +1725,7 @@ class kb_SetUtilities:
                 raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
 
-            for gId in genomeSet['elements'].keys():
+            for gId in list(genomeSet['elements'].keys()):
                 genomeRef = genomeSet['elements'][gId]['ref']
                 try:
                     already_included = elements[gId]
@@ -1741,7 +1733,7 @@ class kb_SetUtilities:
                     elements[gId] = dict()
                     elements[gId]['ref'] = genomeRef  # the key line
                     self.log(console, "adding element " + gId + " : " + genomeRef)  # DEBUG
-            
+
         # add new genome
         for genomeRef in params['input_genome_refs']:
 
@@ -1806,9 +1798,9 @@ class kb_SetUtilities:
         self.log(console, "BUILDING REPORT")  # DEBUG
         if len(invalid_msgs) == 0:
             self.log(console, "genomes in output set " + params['output_name'] + ": " +
-                     str(len(elements.keys())))
+                     str(len(list(elements.keys()))))
             report += 'genomes in output set ' + params['output_name'] + ': '
-            report += str(len(elements.keys())) + "\n"
+            report += str(len(list(elements.keys()))) + "\n"
             reportObj = {
                 'objects_created': [{'ref': params['workspace_name'] + '/' + params['output_name'],
                                      'description':'KButil_Add_Genomes_to_GenomeSet'}],
@@ -2063,7 +2055,7 @@ class kb_SetUtilities:
 
         # param checks
         required_params = ['workspace_name',
-                           'input_refs', 
+                           'input_refs',
                            'output_name'
                            ]
         for required_param in required_params:
@@ -2081,7 +2073,7 @@ class kb_SetUtilities:
             self.log(console,"Must provide at least two ReadsSets")
             self.log(invalid_msgs,"Must provide at least two ReadsSets")
 
-            
+
         # load provenance
         provenance = [{}]
         if 'provenance' in ctx:
@@ -2111,8 +2103,8 @@ class kb_SetUtilities:
             repeat_libs.append([])
             try:
                 # object_info tuple
-                [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)
-                
+                [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))
+
                 input_reads_obj_info = wsClient.get_object_info_new ({'objects':[{'ref':this_readsSet_ref}]})[0]
                 input_reads_obj_type = input_reads_obj_info[TYPE_I]
                 input_reads_obj_type = re.sub ('-[0-9]+\.[0-9]+$', "", input_reads_obj_type)  # remove trailing version
@@ -2182,13 +2174,13 @@ class kb_SetUtilities:
 
         # build report
         #
-        self.log (console, "SAVING REPORT")  # DEBUG        
+        self.log (console, "SAVING REPORT")  # DEBUG
         report += "TOTAL READS LIBRARIES COMBINED INTO ONE READS SET: "+ str(len(combined_readsSet_ref_list))+"\n"
         for set_i,this_readsLib_ref in enumerate(params['input_refs']):
             report += "READS LIBRARIES ACCEPTED FROM ReadsSet "+str(set_i)+": "+str(len(accepted_libs[set_i]))+"\n"
             report += "READS LIBRARIES REPEAT FROM ReadsSet "+str(set_i)+":   "+str(len(repeat_libs[set_i]))+"\n"
             report += "\n"
-        reportObj = {'objects_created':[], 
+        reportObj = {'objects_created':[],
                      'text_message': report}
 
         reportObj['objects_created'].append({'ref':output_readsSet_ref,
@@ -2215,7 +2207,7 @@ class kb_SetUtilities:
         :param params: instance of type "KButil_Build_AssemblySet_Params"
            (KButil_Build_AssemblySet() ** **  Method for creating an
            AssemblySet) -> structure: parameter "workspace_name" of type
-           "workspace_name" (** The workspace object refs are of form: ** ** 
+           "workspace_name" (** The workspace object refs are of form: ** **
            objects = ws.get_objects([{'ref':
            params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
            the entire name combining the workspace id and the object name **
@@ -2262,13 +2254,13 @@ class kb_SetUtilities:
             self.log(console,"Must provide at least one Assembly")
             self.log(invalid_msgs,"Must provide at least one Assembly")
 
-            
+
         # Build AssemblySet
         #
         items = []
         ass_seen = dict()
         set_type = None
-        
+
         # DEBUG
         #params['input_refs'] = ['18858/2/1', '18858/5/1']
 
@@ -2297,7 +2289,7 @@ class kb_SetUtilities:
                         set_type = ass_type
                 except Exception as e:
                     raise ValueError('Unable to fetch input_name object from workspace: ' + str(e))
-                    
+
                 # add assembly
                 self.log(console,"adding assembly "+ass_name+" : "+assRef)  # DEBUG
                 items.append ({'ref': assRef,
@@ -2420,7 +2412,7 @@ class kb_SetUtilities:
 
         #### STEP 0: standard method init
         ##
-        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
         console = []
         invalid_msgs = []
         self.log(console,'Running KButil_Batch_Create_AssemblySet with params=')
@@ -2453,7 +2445,7 @@ class kb_SetUtilities:
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
 
-            
+
         #### STEP 3: refine name_pattern
         ##
         name_pattern = params.get('name_pattern')
@@ -2487,7 +2479,7 @@ class kb_SetUtilities:
                 self.log(console, "ADDING "+assembly_name+" ("+assembly_ref+")")  # DEBUG
                 assembly_obj_ref_by_name[assembly_name] = assembly_ref
 
-        if len(assembly_obj_ref_by_name.keys()) == 0:
+        if len(list(assembly_obj_ref_by_name.keys())) == 0:
             if not name_pattern:
                 self.log(invalid_msgs, "No Assembly objects found")
             else:
@@ -2626,7 +2618,7 @@ class kb_SetUtilities:
 
         #### STEP 0: standard method init
         ##
-        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
         console = []
         invalid_msgs = []
         self.log(console,'Running KButil_Batch_Create_GenomeSet with params=')
@@ -2659,7 +2651,7 @@ class kb_SetUtilities:
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
 
-            
+
         #### STEP 3: refine name_pattern
         ##
         name_pattern = params.get('name_pattern')
@@ -2693,7 +2685,7 @@ class kb_SetUtilities:
                 self.log(console, "ADDING "+genome_name+" ("+genome_ref+")")  # DEBUG
                 genome_obj_ref_by_name[genome_name] = genome_ref
 
-        if len(genome_obj_ref_by_name.keys()) == 0:
+        if len(list(genome_obj_ref_by_name.keys())) == 0:
             if not name_pattern:
                 self.log(invalid_msgs, "No Genome objects found")
             else:
@@ -2775,8 +2767,8 @@ class kb_SetUtilities:
                 'text_message':report
             }
         else:
-            self.log(console,"genome objs in output set "+params['output_name']+": "+str(len(elements.keys())))
-            report += 'genome objs in output set '+params['output_name']+': '+str(len(elements.keys()))
+            self.log(console,"genome objs in output set "+params['output_name']+": "+str(len(list(elements.keys()))))
+            report += 'genome objs in output set '+params['output_name']+': '+str(len(list(elements.keys())))
             desc = 'KButil_Batch_Create_GenomeSet'
             if name_pattern:
                 desc += ' with name_pattern: '+name_pattern
@@ -2819,7 +2811,7 @@ class kb_SetUtilities:
         return [returnVal]
     def status(self, ctx):
         #BEGIN_STATUS
-        returnVal = {'state': "OK", 'message': "", 'version': self.VERSION, 
+        returnVal = {'state': "OK", 'message': "", 'version': self.VERSION,
                      'git_url': self.GIT_URL, 'git_commit_hash': self.GIT_COMMIT_HASH}
         #END_STATUS
         return [returnVal]
