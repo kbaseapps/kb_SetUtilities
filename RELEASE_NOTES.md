@@ -1,3 +1,7 @@
+### Version 1.3.0
+__Changes__
+- update to python3
+
 ### Version 1.2.0
 __Changes__
 - added KButil_Batch_Create_GenomeSet()
