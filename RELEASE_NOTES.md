@@ -1,3 +1,16 @@
+### Version 1.3.0
+__Changes__
+- update to python3
+
+### Version 1.2.0
+__Changes__
+- added KButil_Batch_Create_GenomeSet()
+- added KButil_Batch_Create_AssemblySet()
+
+### Version 1.1.3
+__Changes__
+- added unit test data
+
 ### Version 1.1.2
 __Changes__
 - added KBase paper citation in PLOS format 

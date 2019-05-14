@@ -253,5 +253,45 @@ module kb_SetUtilities {
 
     funcdef KButil_Build_AssemblySet (KButil_Build_AssemblySet_Params params)  returns (KButil_Build_AssemblySet_Output) authentication required;
 
+
+    /* KButil_Batch_Create_AssemblySet()
+    **
+    **  Method for creating an AssemblySet without specifying individual objects
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	string         name_pattern;
+        data_obj_name  output_name;
+	string         desc;
+    } KButil_Batch_Create_AssemblySet_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Batch_Create_AssemblySet_Output;
+
+    funcdef KButil_Batch_Create_AssemblySet (KButil_Batch_Create_AssemblySet_Params params)  returns (KButil_Batch_Create_AssemblySet_Output) authentication required;
+
+
+    /* KButil_Batch_Create_GenomeSet()
+    **
+    **  Method for creating a GenomeSet without specifying individual objects
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	string         name_pattern;
+        data_obj_name  output_name;
+	string         desc;
+    } KButil_Batch_Create_GenomeSet_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Batch_Create_GenomeSet_Output;
+
+    funcdef KButil_Batch_Create_GenomeSet (KButil_Batch_Create_GenomeSet_Params params)  returns (KButil_Batch_Create_GenomeSet_Output) authentication required;
+
+
+
 };
 
