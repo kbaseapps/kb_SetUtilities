@@ -3,7 +3,7 @@
 #
 name: Build GenomeSet from FeatureSet - v1.0.1
 tooltip: |
-    Allows user to extract GenomeSet from FeatureSet
+    Allows users to extract a GenomeSet from a FeatureSet.
 screenshots:
     - Build_GenomeSet_from_FeatureSet.png
 
@@ -30,32 +30,27 @@ suggestions:
 parameters :
     desc:
         ui-name : |
-            Description
+            Description<font color=red>*</font>
         short-hint : |
-            Describe Purpose or Contents of Output GenomeSet
+            Describe the purpose or contents of the output GenomeSet object.
         placeholder: |
             Enter Description
     input_ref:
         ui-name : |
-            Input FeatureSet Name
+            Input FeatureSet Name<font color=red>*</font>
         short-hint : |
-            Add a FeatureSet Name here
+            Add a FeatureSet name here.
     output_name:
         ui-name : |
-            Output GenomeSet Name
+            Output GenomeSet Name<font color=red>*</font>
         short-hint : |
-            Name for the Output GenomeSet Collection
+            The name for the output GenomeSet.
 
 
 description : |
-    <p>This App allows the user to extract the <b><i>Genomes</i></b> into a <b><i>Genome Set</i></b> object from a <b><i>Feature Set</i></b> object.</p>
-    <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
-    <p>
-    <h3>Description</h3>
-    <b>Build Genome Set from Feature Set</b> allows a user to derive a Genome Set from the genomes contained within a given Feature Set object.  The features themselves in a Feature Set object contain the information about which genomes they are associated with, so this information is extracted to form the output Genome Set.
-    </p>
+    <p><b>Build Genome Set from Feature Set</b> allows a user to extract Genomes from a FeatureSet and make a GenomeSet object from them. The features themselves in a FeatureSet object contain the information about which genomes they are associated with, so this information is extracted to form the output GenomeSet.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 
 publications :
     -

@@ -1,9 +1,9 @@
 #
 # define display information
 #
-name: Merge Multiple ReadsSets to One ReadsSet - v1.0.1
+name: Merge Multiple ReadsSets into One ReadsSet - v1.0.1
 tooltip: |
-    Merge a Multiple ReadsSets into One ReadsSet
+    Use this App to merge multiple ReadsSets into one consolidated ReadsSet.
 screenshots:
     - Merge_Multiple_ReadsSets_to_One_ReadsSet.png
 
@@ -17,7 +17,7 @@ suggestions:
         related:
             []
         next:
-            []
+            [run_trimmomatic]
     methods:
         related:
             []
@@ -32,29 +32,24 @@ parameters :
         ui-name : |
             Description
         short-hint : |
-            Describe Purpose or Contents of Output ReadsSet
+            Describe the purpose or contents of the output ReadsSet.
         placeholder: |
             Enter Description
     input_refs:
         ui-name : |
-            Input reads sets
+            Input ReadsSets
         short-hint : |
-            Reads Set Names here (SingleEndLibrary or PairedEndLibrary, but not both)
+            Add the ReadsSets names here. Each set can contain either SingleEndLibraries or PairedEndLibraries, but you cannot merge both types into a single set.
     output_name:
         ui-name : |
-            Output reads set name
+            Output ReadsSet name
         short-hint : |
-            Name for the Output Reads Set
+            The name for the output ReadsSet.
 
 description : |
-    <p>This App allows a user to merge (as a logical union) multiple <b><i>Reads Sets</i></b> into one <b><i>Reads Set</i></b> object.</p>
-    <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
-    <p>
-    <h3>Description</h3>
-    <b>Merge Reads Sets</b> allows a user to collapse multiple Reads Set objects into a single Reads Set object.  This greatly aids the batch processing of data.  Reads Sets to be merged should all contain either Paired End Libraries or Single End Libraries, but not both.
-    </p>
+    <p><b>Merge ReadsSets</b> allows a user to combine multiple ReadsSet into a single ReadsSet. This facilitates batch processing of data. For example, all the reads in the resulting large ReadsSet can be trimmed at once by running the "Trim Reads with Trimmomatic" App on it.  ReadsSets to be merged should all contain either Paired End Libraries or Single End Libraries, but you cannot mix both types of libraries into a single ReadsSet.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 
 publications :
     -

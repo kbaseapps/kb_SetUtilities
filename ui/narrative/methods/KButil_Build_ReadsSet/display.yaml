@@ -3,7 +3,7 @@
 #
 name: Build ReadsSet - v1.0.1
 tooltip: |
-    Allows user to create a ReadsSet
+    Allows users to create a ReadsSet object.
 screenshots:
     - Build_ReadsSet.png
 
@@ -17,7 +17,7 @@ suggestions:
         related:
             []
         next:
-            []
+            [align_reads_using_hisat2,run_kaiju,run_gottcha2,run_trimmomatic]
     methods:
         related:
             []
@@ -32,31 +32,38 @@ parameters :
         ui-name : |
             Description
         short-hint : |
-            Describe Purpose or Contents of Output ReadsSet
+            Describe the purpose or contents of output ReadsSet object.
         placeholder: |
             Enter Description
     input_refs:
         ui-name : |
-            Reads Lib Names
+            Reads Libraries
         short-hint : |
-            Add a list of Reads Lib Names here
+            Add a list of Reads Libraries here.
     output_name:
         ui-name : |
             Output ReadsSet Name
         short-hint : |
-            Name for the Output ReadsSet Collection
+            The name for the output ReadsSet.
 
 
 description : |
-    <p>This App allows the user to group <b><i>Reads Libraries</i></b> into a <b><i>Reads Set</i></b>.</p>
-    <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
-    <p>
-    <h3>Description</h3>
-    <b>Build Reads Set</b> allows a user to create a set of related Reads Libraries from scratch.  The Reads Libraries should all be either Single End or Paired End, but not both.  Typically, all the Reads Libraries in a given set have followed the same processing.  The input Reads Libraries must already be within the Narrative's data workspace, so if there are reads libraries from other Narratives or public data that the user wishes to include, they must first be imported into the active Narrative.
-    </p>
+    <p><b>Build Reads Set</b> allows a user to create a set of related Reads Libraries (each of which is a set inferred sequence of base pairs corresponding to all or part of a single DNA fragment). These <b>Reads Library</b> objects are typically created when importing FASTQ or FASTA format sequences. This greatly eases further processing within KBase. The ReadsSet can be used in subsequent Apps that operate on ReadsSets, thus allowing for bulk operations on the ReadsSet objects sparing the user from the need to specify and track individual libraries through a workflow pipeline.</p>
 
+    <p>Typically, all the Reads Libraries in a given set that have followed the same processing will undergo the same analysis within KBase, and are generally part of the same (or a similar) study.</p>
+
+    <p>The Reads Libraries should all be either Single-End (it starts at one read, finishes this direction at the specified read length, and then starts another round of reading from the opposite end of the fragment) or Paired-End (the sequencer starts at one read, finishes this direction at the specified read length, and then starts another round of reading from the opposite end of the fragment), but not both.</p>
+
+    <p>The input Reads Libraries must already exist within the Narrative's data workspace. If there are reads libraries from other Narratives or public data that the user wishes to include, they must first be imported into the active Narrative.</p>
+
+    <p><b>Running the App:</b> Simply click the <b>”+”<b> plus icon to add each Reads Library object to the set. Once the plus icon for each input library object is hit, a dropdown list will appear that is populated with all the Reads Library objects in the Narrative. Select one at a time.</p>
+
+    <p>Two other text inputs are mandatory: a meaningful description and the name of the <b>ReadsSet<b> object to be created.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+
+result : |
+    <p>The result tab of this App displays the name of the created ReadsSet object. It also displays the number of the Reads Library objects in the set. To see the component Assembly object names, go to the “View Configure” tab within the App.</p>
 publications :
     -
         display-text: |
