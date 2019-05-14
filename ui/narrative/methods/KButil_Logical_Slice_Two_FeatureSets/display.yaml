@@ -1,9 +1,9 @@
 #
 # define display information
 #
-name: Logical Slice Two FeatureSets - v1.1.0
+name: Venn Slice Two FeatureSets - v1.1.0
 tooltip: |
-    Allows user to slice Two FeatureSets according to their Venn overlap
+    Allows users to slice two FeatureSets according to their Venn overlap.
 screenshots:
     - Logical_Slice_Two_FeatureSets.png
 
@@ -30,42 +30,49 @@ suggestions:
 parameters :
     input_featureSet_ref_A:
         ui-name : |
-            Input FeatureSet A
+            Input FeatureSet A<font color=red>*</font>
         short-hint : |
-            Add name of FeatureSet A
+            Add name of FeatureSet A.
     input_featureSet_ref_B:
         ui-name : |
-            Input FeatureSet B
+            Input FeatureSet B<font color=red>*</font>
         short-hint : |
-            Add name of FeatureSet B
+            Add name of FeatureSet B.
     operator:
         ui-name : |
-            Logical slice
+            Logical slice<font color=red>*</font>
         short-hint : |
-            Select which slice to perform (A and B, A and not B, not A and B)
+            Select which logical operation to perform (A and B, A and not B, not A and B).
     desc:
         ui-name : |
-            Description
+            Description<font color=red>*</font>
         short-hint : |
-            Describe Purpose or Contents of Output FeatureSet(s)
+            Describe the purpose or contents of the output FeatureSet(s).
         placeholder: |
             Enter Description
     output_name:
         ui-name : |
-            Output FeatureSet(s) Basename
+            Output FeatureSet(s) Basename<font color=red>*</font>
         short-hint : |
-            Basename for the Output FeatureSet(s)
+            Basename for the sliced output FeatureSet(s).
 
 
 description : |
-    <p>This App allows the user to slice Features from <b><i>Feature Sets</i></b> into reduced <b><i>Feature Sets</i></b> containing only features that correspond to present in {A and B}, or {A and (not B)}, or {(not A) and B}.</p>
-    <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
+    <p>This App allows users to create an intersection set or difference set from two <b><i>Feature Sets</i></b>, A and B, ie, a new <b><i>FeatureSet</i></b> containing only features that correspond to present in {A and B}, or {A and (not B)}, or {(not A) and B}.</p>
+
+    <p><b>Running the App:</b> <i>Note that in this App, all inputs are required or mandatory.</i> The first two inputs are sets of genome features (FeatureSets), which may have been created by any of several Apps in KBase, such as Build Feature Set from Genome, BLASTp prot-prot Search, Merge FeatureSets, Slice FeatureSets by Genomes, among others.</p>
+
+    <p>This is followed by a pull-down menu for “Logical slice” which indicates which set (Venn diagram) operation to perform:
+      <ul>
+        <li>Features found in both A and B (set intersection)</li>
+        <li>Features found in A but not B  (set difference, A - B)</li>
+        <li>Features found in B but not A  (set difference, B - A)</li>
+      </ul>
     <p>
-    <h3>Description</h3>
-    <b>Logical Slice Two Feature Sets</b> allows a user to obtain a Venn slice of two Feature Sets.  The need often arises to ask which collections of genes or features are found only in one set or another, or present in both sets.  This trinary slice is offered by this App and results in a single output Feature Set.
-    </p>
+
+    <p>Below that is a text entry field for a meaningful description of the resultant set, followed by the name to be given to the resultant <b>FeatureSet</b> object. Upon successful completion, a new <b>FeatureSet</b> object with the given name will appear in the Data Pane, and a short report listing the description and number of features in this set will appear below the App cell window in the Narrative.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 
 publications :
     -

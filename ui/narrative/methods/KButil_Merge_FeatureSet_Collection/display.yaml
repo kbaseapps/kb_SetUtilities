@@ -3,7 +3,7 @@
 #
 name: Merge FeatureSets - v1.0.1
 tooltip: |
-    Allows user to merge multiple FeatureSets
+    Use this App to combine multiple FeatureSets into a single consolidated set.
 screenshots:
     - Merge_FeatureSets.png
 
@@ -32,30 +32,25 @@ parameters :
         ui-name : |
             Description
         short-hint : |
-            Describe Purpose or Contents of Output FeatureSet
+            Describe the purpose or contents of the output combined FeatureSet.
         placeholder: |
             Enter Description
     input_refs:
         ui-name : |
-            Input FeatureSet Names
+            FeatureSets to Combine
         short-hint : |
-            Add a list of FeatureSet Names here
+            Select the FeatureSets to be combined.
     output_name:
         ui-name : |
             Output FeatureSet Name
         short-hint : |
-            Name for the Output FeatureSet Collection
+            The name for the new combined FeatureSet.
 
 
 description : |
-    <p>This App allows a user to merge (as a logical union) multiple <b><i>Feature Sets</i></b> into one <b><i>Feature Set</i></b> object.</p>
-    <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
-    <p>
-    <h3>Description</h3>
-    <b>Merge Feature Sets</b> allows a user to collapse multiple Feature Set objects into a single Feature Set object.  This may be useful in scenarios where features are identified as being of interest from multiple approaches, and the user wishes to follow up investigation of those features together.
-    </p>
+    <p><b>Merge Feature Sets</b> allows a user to combine multiple input FeatureSets into a single FeatureSet object. This may be useful in scenarios where features are identified as being of interest from multiple approaches, and the user wishes to perform follow up investigation of all the features together. For example, if running the <i>Find Candidate Genes for a Reaction</i> App to generate multiple sets of gene candidates, these sets can be combined for analysis in the <i>Homolog Genome Context</i>.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 
 publications :
     -
