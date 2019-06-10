@@ -56,9 +56,9 @@ description : |
 
     <p>The input Reads Libraries must already exist within the Narrative's data workspace. If there are reads libraries from other Narratives or public data that the user wishes to include, they must first be imported into the active Narrative.</p>
 
-    <p><b>Running the App:</b> Simply click the <b>”+”<b> plus icon to add each Reads Library object to the set. Once the plus icon for each input library object is hit, a dropdown list will appear that is populated with all the Reads Library objects in the Narrative. Select one at a time.</p>
+    <p><b>Running the App:</b> Simply click the <b>”+”</b> plus icon to add each Reads Library object to the set. Once the plus icon for each input library object is hit, a dropdown list will appear that is populated with all the Reads Library objects in the Narrative. Select one at a time.</p>
 
-    <p>Two other text inputs are mandatory: a meaningful description and the name of the <b>ReadsSet<b> object to be created.</p>
+    <p>Two other text inputs are mandatory: a meaningful description and the name of the <b>ReadsSet</b> object to be created.</p>
 
     <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 

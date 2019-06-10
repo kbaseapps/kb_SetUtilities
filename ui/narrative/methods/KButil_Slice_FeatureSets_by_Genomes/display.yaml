@@ -49,7 +49,7 @@ parameters :
         ui-name : |
             Output FeatureSet(s) Name
         short-hint : |
-            The name for the output FeatureSets(s).
+            The name for the output FeatureSet(s).
 
 
 description : |

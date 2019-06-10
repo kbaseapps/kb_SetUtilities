@@ -50,7 +50,7 @@ parameters :
 description : |
     <p><b>Merge Genome Sets</b> allows a user to combine multiple GenomeSet objects into a single GenomeSet object. This may be useful in scenarios where genomes are identified as being of interest from multiple approaches, and the user wishes to perform follow up investigation of all the genomes together.</p>
 
-    <p><strong>Team members who developed &amp; deployed App in KBase:</strong>Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 
     <hr>
 

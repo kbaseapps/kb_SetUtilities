@@ -30,29 +30,29 @@ suggestions:
 parameters :
     input_featureSet_ref_A:
         ui-name : |
-            Input FeatureSet A<font color=red>*</font>
+            Input FeatureSet A
         short-hint : |
             Add name of FeatureSet A.
     input_featureSet_ref_B:
         ui-name : |
-            Input FeatureSet B<font color=red>*</font>
+            Input FeatureSet B
         short-hint : |
             Add name of FeatureSet B.
     operator:
         ui-name : |
-            Logical slice<font color=red>*</font>
+            Logical slice
         short-hint : |
             Select which logical operation to perform (A and B, A and not B, not A and B).
     desc:
         ui-name : |
-            Description<font color=red>*</font>
+            Description
         short-hint : |
             Describe the purpose or contents of the output FeatureSet(s).
         placeholder: |
             Enter Description
     output_name:
         ui-name : |
-            Output FeatureSet(s) Basename<font color=red>*</font>
+            Output FeatureSet(s) Basename
         short-hint : |
             Basename for the sliced output FeatureSet(s).
 

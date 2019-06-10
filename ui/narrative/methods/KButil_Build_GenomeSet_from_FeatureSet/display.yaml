@@ -30,19 +30,19 @@ suggestions:
 parameters :
     desc:
         ui-name : |
-            Description<font color=red>*</font>
+            Description
         short-hint : |
             Describe the purpose or contents of the output GenomeSet object.
         placeholder: |
             Enter Description
     input_ref:
         ui-name : |
-            Input FeatureSet Name<font color=red>*</font>
+            Input FeatureSet Name
         short-hint : |
             Add a FeatureSet name here.
     output_name:
         ui-name : |
-            Output GenomeSet Name<font color=red>*</font>
+            Output GenomeSet Name
         short-hint : |
             The name for the output GenomeSet.
 
