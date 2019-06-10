@@ -48,7 +48,7 @@ parameters :
 
 
 description : |
-    <p><b>Build Assembly Set</b> allows a user to create a Set of Assemblies (each of which is a group of contigs or scaffold genome fragments) which can be used in subsequent Apps that operate on AssemblySets, thus allowing for bulk operations on Assembly objects. Each Assembly object must already be within the Narrative's data workspace, so if there are Assemblies from other Narratives or from public reference genomes that the user wishes to include, they must first be imported into the active Narrative. Simply click the <b>”+”<b> plus icon to add an Assembly object to the set. Once the plus icon is hit, a dropdown list will appear that is populated with all the Assembly objects in this narrative.</p>
+    <p><b>Build Assembly Set</b> allows a user to create a Set of Assemblies (each of which is a group of contigs or scaffold genome fragments) which can be used in subsequent Apps that operate on AssemblySets, thus allowing for bulk operations on Assembly objects. Each Assembly object must already be within the Narrative's data workspace, so if there are Assemblies from other Narratives or from public reference genomes that the user wishes to include, they must first be imported into the active Narrative. Simply click the <b>”+”</b> plus icon to add an Assembly object to the set. Once the plus icon is hit, a dropdown list will appear that is populated with all the Assembly objects in this narrative.</p>
 
     <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 
