@@ -3,7 +3,7 @@
 #
 name: Build GenomeSet - v1.0.1
 tooltip: |
-    Allows user to create a GenomeSet
+    Allows users to create a GenomeSet object.
 screenshots:
     - Build_GenomeSet.png
 
@@ -17,7 +17,7 @@ suggestions:
         related:
             []
         next:
-            []
+            [RAST_SDK.reannotate_microbial_genomes,ProkkaAnnotation.annotate,kb_Msuite.run_checkm_lineage_wf,kb_phylogenomics.run_DomainAnnotation_Sets,PangenomeOrthomcl.build_pangenome_with_orthomcl,SpeciesTreeBuilder.insert_genomeset_into_species_tree]
     methods:
         related:
             []
@@ -32,30 +32,28 @@ parameters :
         ui-name : |
             Description
         short-hint : |
-            Describe Purpose or Contents of Output GenomeSet
+            Describe the purpose or contents of the output GenomeSet object.
         placeholder: |
             Enter Description
     input_refs:
         ui-name : |
-            Genome Names
+            Genome Objects
         short-hint : |
-            Add a list of Genome Names here
+            Add a list of Genome objects here.
     output_name:
         ui-name : |
             Output GenomeSet Name
         short-hint : |
-            Name for the Output GenomeSet Collection
+            The name for the output GenomeSet collection.
 
 
 description : |
-    <p>This App allows the user to group <b><i>Genomes</i></b> into a <b><i>Genome Set</i></b>.</p>
-    <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
-    <p>
-    <h3>Description</h3>
-    <b>Build Genome Set</b> allows a user to create a Genome Set from scratch.  The Genomes must already be within the Narrative's data workspace, so if there are genomes from other Narratives or public reference genomes that the user wishes to include, they must first be imported into the active Narrative.
-    </p>
+    <p><b>Build Genome Set</b> allows a user to create a set of Genomes (each consisting of functional and structural annotations for a corresponding assembly). The GenomeSet can be used in subsequent Apps that operate on GenomeSets, thus allowing for bulk operations on Genome objects. Genome objects must already be within the Narrative's data workspace, so if there are genomes from other Narratives or public reference genomes that the user wishes to include, they must first be imported into the active Narrative. Simply click the <b>”+”</b> plus icon to add a genome object to the set. Once the plus icon is hit, a dropdown list will appear that is populated with all the genome objects in this Narrative.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+
+result : |
+    <p>The result tab of this App displays the name of the created GenomeSet object. It also displays the number of the Genome objects in this set. To see the component Assembly object names, go to the “View Configure” tab within the App.</p>
 
 publications :
     -

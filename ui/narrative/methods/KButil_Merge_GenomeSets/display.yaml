@@ -3,7 +3,7 @@
 #
 name: Merge GenomeSets - v1.0.1
 tooltip: |
-    Allows user to combine multiple GenomeSets into one GenomeSet
+    Use this App to combine multiple GenomeSets into a single consolidated set.
 screenshots:
     - Merge_GenomeSets.png
 
@@ -32,29 +32,34 @@ parameters :
         ui-name : |
             Description
         short-hint : |
-            Describe Purpose or Contents of Output GenomeSet
+            Describe the purpose or contents of the output combined GenomeSet.
         placeholder: |
             Enter Description
     input_refs:
         ui-name : |
-            Input GenomeSets
+            GenomeSets to Combine
         short-hint : |
-            GenomeSets to combine
+            Select the GenomeSets to combine.
     output_name:
         ui-name : |
-            Output GenomeSet
+            Output GenomeSet Name
         short-hint : |
-            Name for the Combined GenomeSet
+            The name for the new combined GenomeSet.
 
 
 description : |
-    <p>This App allows a user to merge (as a logical union) multiple <b><i>Genome Sets</i></b> into one <b><i>Genome Set</i></b> object.</p>
+    <p><b>Merge Genome Sets</b> allows a user to combine multiple GenomeSet objects into a single GenomeSet object. This may be useful in scenarios where genomes are identified as being of interest from multiple approaches, and the user wishes to perform follow up investigation of all the genomes together.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+
     <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
+
+    <p><h3>Notes</h3></p>
     <p>
-    <h3>Description</h3>
-    <b>Merge Genome Sets</b> allows a user to collapse multiple Genome Set objects into a single Genome Set object.  This may be useful in scenarios where genomes are identified as being of interest from multiple approaches, and the user wishes to follow up investigation of those genomes together.
+      <ul>
+        <li>If sets have overlapping genomes, the genomes will be duplicated in the resulting set. Use the built-in viewer to edit the set to remove duplicates. This can be done by simply clicking on the Set name in the Data Panel.</li>
+        <li>If you need to add individual genomes to your Genome Set, please use the <a href=”https://narrative.kbase.us/#appcatalog/app/kb_SetUtilities/KButil_Build_GenomeSet/release”>Build GenomeSet</a> App.</li>
+      </ul.
     </p>
 
 publications :

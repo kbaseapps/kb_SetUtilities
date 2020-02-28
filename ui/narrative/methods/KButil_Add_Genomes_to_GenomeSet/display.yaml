@@ -18,7 +18,7 @@ suggestions:
         related:
             []
         next:
-            []
+            [RAST_SDK.reannotate_microbial_genomes,ProkkaAnnotation.annotate,kb_phylogenomics.run_DomainAnnotation_Sets,PangenomeOrthomcl.build_pangenome_with_orthomcl,SpeciesTreeBuilder.insert_genomeset_into_species_tree]
     methods:
         related:
             []
@@ -33,35 +33,34 @@ parameters :
         ui-name : |
             Description
         short-hint : |
-            Describe Purpose or Contents of Output GenomeSet
+            Describe the purpose or contents of the output GenomeSet.
         placeholder: |
             Enter Description
     input_genome_refs:
         ui-name : |
-            Add Genome
+            Add Genome Objects
         short-hint : |
-            Genome to add to GenomeSet
+            Genome(s) to add to the GenomeSet.
     input_genomeset_ref:
         ui-name : |
-            Name for the Base GenomeSet
+            Name for the base GenomeSet.
         short-hint : |
-            GenomeSet to start from
+            The GenomeSet to start from.
     output_name:
         ui-name : |
             Output GenomeSet
         short-hint : |
-            Name for the Combined GenomeSet
+            The name for the Combined GenomeSet.
 
 
 description : |
-    <p>This App allows the user to add <b><i>Genomes</i></b> to a <b><i>Genome Set</i></b> object.</p>
-    <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
-    <p>
-    <h3>Description</h3>
-    <b>Add Genomes to Genome Set</b> allows a user to expand the membership of a Genome Set.  The Genomes and Genome Set must already be within the Narrative's data workspace, so if there are genomes from other Narratives or public reference genomes that the user wishes to include, they must first be imported into the active Narrative.
-    </p>
+    <p><b>Add Genomes to GenomeSet</b> allows a user to expand the membership of a set of genomes (each of which is a set of DNA contigs including structural and functional annotations). The GenomeSet object can be used in subsequent Apps allowing for bulk operations on Genome objects. The Genomes and GenomeSet must already be within the Narrative's data workspace, so if there are genomes from other Narratives or public reference genomes that the user wishes to include, they must first be imported into the active Narrative. Simply click the <b>”+”</b> plus icon to add a Genome object to the set. Once the plus icon is selected, a dropdown list will appear that is populated with all the assembly objects in the narrative.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+
+result : |
+    <p>The result tab of this App displays the name of the created GenomeSet object. It also displays the number of the Genome objects in this set. To see the component assembly object names, go to the “View Configure” tab within the App.</p>
+
 
 publications :
     -
