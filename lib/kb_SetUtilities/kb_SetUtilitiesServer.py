@@ -386,6 +386,10 @@ class Application(object):
                              name='kb_SetUtilities.KButil_Build_AssemblySet',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Build_AssemblySet'] = 'required'  # noqa
+        self.rpc_service.add(impl_kb_SetUtilities.KButil_Batch_Create_ReadsSet,
+                             name='kb_SetUtilities.KButil_Batch_Create_ReadsSet',
+                             types=[dict])
+        self.method_authentication['kb_SetUtilities.KButil_Batch_Create_ReadsSet'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Batch_Create_AssemblySet,
                              name='kb_SetUtilities.KButil_Batch_Create_AssemblySet',
                              types=[dict])
