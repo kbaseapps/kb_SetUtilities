@@ -350,6 +350,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Localize_FeatureSet():
     ##
+    # skipping unittest until method fully debugged and going to be active
     @unittest.skip("skipped test_KButil_Localize_FeatureSet()")  # uncomment to skip
     def test_KButil_Localize_FeatureSet_01(self):
         method = 'KButil_Localize_FeatureSet_01'
@@ -1683,6 +1684,161 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         output_obj = \
         self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
         self.assertEqual(len(output_obj['items']), len(input_refs))
+        pass
+
+    #### test_KButil_Batch_Create_ReadsSet_01()
+    ##
+    # HIDE @unittest.skip("skipped test_KButil_Batch_Create_ReadsSet_01()")  # uncomment to skip
+    def test_KButil_Batch_Create_ReadsSet_01(self):
+        method = 'KButil_Batch_Create_ReadsSet_01'
+        msg = "RUNNING: " + method + "()"
+        print("\n\n" + msg)
+        print("=" * len(msg) + "\n\n")
+
+        # upload test data
+        pe_lib_info_1 = self.getPairedEndLibInfo('test_quick', lib_i=0)
+        pprint(pe_lib_info_1)
+        pe_lib_info_2 = self.getPairedEndLibInfo('small', lib_i=1)
+        pprint(pe_lib_info_2)
+        pe_lib_info_3 = self.getPairedEndLibInfo('small_2', lib_i=2)
+        pprint(pe_lib_info_3)
+
+        # run method
+        # name_pattern = ''
+        # expected_readsSet_length = 3
+        name_pattern = 'test-*'
+        expected_readsSet_length = 3
+        base_output_name = method + '_output'
+        output_name = base_output_name+'-01.ReadsSet'
+        params = {
+            'workspace_name': self.getWsName(),
+            'name_pattern': name_pattern,
+            'output_name': output_name,
+            'desc': 'test batch create readsSet'
+        }
+        result = self.getImpl().KButil_Batch_Create_ReadsSet(self.getContext(), params)
+        print('RESULT:')
+        pprint(result)
+
+        # check the output
+        output_type = 'KBaseSets.ReadsSet'
+        output_ref = self.getWsName() + '/' + output_name
+        info_list = self.getWsClient().get_object_info_new({'objects': [{'ref': output_ref}]})
+        self.assertEqual(len(info_list), 1)
+        readsSet_info = info_list[0]
+        self.assertEqual(readsSet_info[1], output_name)
+        self.assertEqual(readsSet_info[2].split('-')[0], output_type)
+        output_obj = \
+        self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        self.assertEqual(len(output_obj['items']), expected_readsSet_length)
+        pass
+
+    #### test_KButil_Batch_Create_ReadsSet_02()
+    ##
+    # HIDE @unittest.skip("skipped test_KButil_Batch_Create_ReadsSet_02()")  # uncomment to skip
+    def test_KButil_Batch_Create_ReadsSet_02(self):
+        method = 'KButil_Batch_Create_ReadsSet_02'
+        msg = "RUNNING: " + method + "()"
+        print("\n\n" + msg)
+        print("=" * len(msg) + "\n\n")
+
+        # upload test data
+        pe_lib_info_1 = self.getPairedEndLibInfo('test_quick', lib_i=0)
+        pprint(pe_lib_info_1)
+        pe_lib_info_2 = self.getPairedEndLibInfo('small', lib_i=1)
+        pprint(pe_lib_info_2)
+        pe_lib_info_3 = self.getPairedEndLibInfo('small_2', lib_i=2)
+        pprint(pe_lib_info_3)
+
+        se_lib_info_1 = self.getSingleEndLibInfo('test_quick', lib_i=0)
+        pprint(se_lib_info_1)
+        se_lib_info_2 = self.getSingleEndLibInfo('small', lib_i=1)
+        pprint(se_lib_info_2)
+        se_lib_info_3 = self.getSingleEndLibInfo('small_2', lib_i=2)
+        pprint(se_lib_info_3)
+
+        # run method
+        # name_pattern = ''
+        # expected_readsSet_length = 3
+        name_pattern = 'test-*.se.reads'
+        expected_readsSet_length = 3
+        base_output_name = method + '_output'
+        output_name = base_output_name+'-02.ReadsSet'
+        params = {
+            'workspace_name': self.getWsName(),
+            'name_pattern': name_pattern,
+            'output_name': output_name,
+            'desc': 'test batch create readsSet'
+        }
+        result = self.getImpl().KButil_Batch_Create_ReadsSet(self.getContext(), params)
+        print('RESULT:')
+        pprint(result)
+
+        # check the output
+        output_type = 'KBaseSets.ReadsSet'
+        output_ref = self.getWsName() + '/' + output_name
+        info_list = self.getWsClient().get_object_info_new({'objects': [{'ref': output_ref}]})
+        self.assertEqual(len(info_list), 1)
+        readsSet_info = info_list[0]
+        self.assertEqual(readsSet_info[1], output_name)
+        self.assertEqual(readsSet_info[2].split('-')[0], output_type)
+        output_obj = \
+        self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        self.assertEqual(len(output_obj['items']), expected_readsSet_length)
+        pass
+
+    #### test_KButil_Batch_Create_ReadsSet_03()
+    ##
+    # HIDE @unittest.skip("skipped test_KButil_Batch_Create_ReadsSet_03()")  # uncomment to skip
+    def test_KButil_Batch_Create_ReadsSet_03(self):
+        method = 'KButil_Batch_Create_ReadsSet_03'
+        msg = "RUNNING: " + method + "()"
+        print("\n\n" + msg)
+        print("=" * len(msg) + "\n\n")
+
+        # upload test data
+        pe_lib_info_1 = self.getPairedEndLibInfo('test_quick', lib_i=0)
+        pprint(pe_lib_info_1)
+        pe_lib_info_2 = self.getPairedEndLibInfo('small', lib_i=1)
+        pprint(pe_lib_info_2)
+        pe_lib_info_3 = self.getPairedEndLibInfo('small_2', lib_i=2)
+        pprint(pe_lib_info_3)
+
+        se_lib_info_1 = self.getPairedEndLibInfo('test_quick', lib_i=0)
+        pprint(se_lib_info_1)
+        se_lib_info_2 = self.getPairedEndLibInfo('small', lib_i=1)
+        pprint(se_lib_info_2)
+        se_lib_info_3 = self.getPairedEndLibInfo('small_2', lib_i=2)
+        pprint(se_lib_info_3)
+
+        # run method
+        # name_pattern = ''
+        # expected_readsSet_length = 3
+        name_pattern = 'test-*'
+        expected_readsSet_length = 3
+        base_output_name = method + '_output'
+        output_name = base_output_name+'-03.ReadsSet'
+        params = {
+            'workspace_name': self.getWsName(),
+            'name_pattern': name_pattern,
+            'output_name': output_name,
+            'desc': 'test batch create readsSet'
+        }
+        result = self.getImpl().KButil_Batch_Create_ReadsSet(self.getContext(), params)
+        print('RESULT:')
+        pprint(result)
+
+        # check the output
+        output_type = 'KBaseSets.ReadsSet'
+        output_ref = self.getWsName() + '/' + output_name
+        info_list = self.getWsClient().get_object_info_new({'objects': [{'ref': output_ref}]})
+        self.assertEqual(len(info_list), 1)
+        readsSet_info = info_list[0]
+        self.assertEqual(readsSet_info[1], output_name)
+        self.assertEqual(readsSet_info[2].split('-')[0], output_type)
+        output_obj = \
+        self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        self.assertEqual(len(output_obj['items']), expected_readsSet_length)
         pass
 
     #### test_KButil_Batch_Create_AssemblySet_01()

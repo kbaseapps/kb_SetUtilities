@@ -1,0 +1,73 @@
+#
+# define display information
+#
+name: Batch Create Reads Set - v1.4.0
+tooltip: |
+    Allows user to create a ReadsSet without specifying names
+screenshots: []
+
+icon: kb-pink.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    desc:
+        ui-name : |
+            Description
+        short-hint : |
+            Describe Purpose or Contents of Output ReadsSet
+        placeholder: |
+            Enter Description
+    name_pattern:
+        ui-name : |
+            ReadsLibrary Object Name Pattern
+        short-hint : |
+            Optionally define a pattern to match in the object names
+    output_name:
+        ui-name : |
+            Output ReadsSet Name
+        short-hint : |
+            Name for the Output ReadsSet object
+
+
+description : |
+    <p>This App allows the user to group individual <b><i>Reads Library</i></b> objects into an <b><i>Reads Set</i></b>.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Batch Create Reads Set</b> allows a user to create a Set of Reads Libraries which can be used in subsequent Apps that operate on Reads Sets.  Each Reads Library object must already be within the Narrative's data workspace, so if there are Reads Libraries from other Narratives that the user wishes to include, they must first be imported into the active Narrative.  All Reads Libraries that match the <i>Name Pattern</i> will be included in the Set.  If the <i>Name Pattern</i> is left blank, all Reads Library objects in the current Narrative will be included.
+    </p>
+    <p>
+    Note: Reads Sets must contain either <b><i>Paired-End</i></b> or <b><i>Single-End</i></b> reads libraries, but not both.  Therefore, please choose name patterns that only add one or the other to the output <b><i>Reads Set</i></b>.  If you have both Single-End and Paired-End libraries that match the pattern, only the Paired-End libraries will be included in the output <b><i>Reads Set</i></b>.  Similarly, if you have both within your Narrative, and you leave the <i>Name Pattern</i> blank, only the Paired-End reads libraries will be included.
+    </p>
+    <p>Example allowed <i>Name Patterns</i>:<br>
+    <ul>
+    <li> <b>*.PairedEnd</b>
+    <li> <b>Sample_1-*</b>
+    <li> <b>Sample_1-*.PairedEnd</b>
+    </ul>
+    </p>
+
+publications :
+    -
+        display-text: |
+            Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
+        link: https://www.nature.com/articles/nbt.4163
