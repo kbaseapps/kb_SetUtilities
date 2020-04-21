@@ -183,10 +183,10 @@ module kb_SetUtilities {
     */
     typedef structure {
         workspace_name workspace_name;
-	data_obj_ref   input_genome_refs;
-        data_obj_ref   input_genomeset_ref;
-        data_obj_name  output_name;
-	string         desc;
+	list<data_obj_ref>  input_genome_refs;
+        data_obj_ref        input_genomeset_ref;
+        data_obj_name       output_name;
+	string              desc;
     } KButil_Add_Genomes_to_GenomeSet_Params;
 
     typedef structure {
@@ -195,6 +195,27 @@ module kb_SetUtilities {
     } KButil_Add_Genomes_to_GenomeSet_Output;
 
     funcdef KButil_Add_Genomes_to_GenomeSet (KButil_Add_Genomes_to_GenomeSet_Params params)  returns (KButil_Add_Genomes_to_GenomeSet_Output) authentication required;
+
+
+    /* KButil_Remove_Genomes_from_GenomeSet()
+    **
+    **  Method for removing Genomes from a GenomeSet
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	list<data_obj_ref>   input_genome_refs;
+	list<data_obj_name>  nonlocal_genome_names;
+        data_obj_ref         input_genomeset_ref;
+        data_obj_name        output_name;
+	string               desc;
+    } KButil_Remove_Genomes_from_GenomeSet_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Remove_Genomes_from_GenomeSet_Output;
+
+    funcdef KButil_Remove_Genomes_from_GenomeSet (KButil_Remove_Genomes_from_GenomeSet_Params params)  returns (KButil_Remove_Genomes_from_GenomeSet_Output) authentication required;
 
 
     /* KButil_Build_ReadsSet()

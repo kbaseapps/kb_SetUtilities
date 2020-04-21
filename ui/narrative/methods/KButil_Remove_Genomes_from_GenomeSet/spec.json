@@ -1,9 +1,9 @@
 {
-    "ver": "1.1.0",
+    "ver": "1.5.0",
     "authors": [
         "dylan"
     ],
-    "contact": "http://kbase.us/contact-us/",
+    "contact": "http://kbase.us/contact-us",
     "visible": true,
     "categories": ["active","util","comparative_genomics"],
     "widgets": {
@@ -23,25 +23,35 @@
             }
         },
         {
-            "id": "input_featureSet_refs",
-            "optional": false,
+            "id": "input_genome_refs",
+            "optional": true,
             "advanced": false,
             "allow_multiple": true,
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": [ "KBaseCollections.FeatureSet" ]
+                "valid_ws_types": [ "KBaseGenomes.Genome" ],
+		"is_output_name": false
             }
         },
         {
-            "id": "input_genome_refs",
-            "optional": false,
+            "id": "nonlocal_genome_names",
+            "optional": true,
             "advanced": false,
             "allow_multiple": true,
             "default_values": [ "" ],
+            "field_type": "text"
+        },
+        {
+            "id": "input_genomeset_ref",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": [ "KBaseGenomes.Genome" ]
+                "valid_ws_types": [ "KBaseSearch.GenomeSet", "KBaseSets.GenomeSet" ],
+		"is_output_name": false
             }
         },
         {
@@ -52,7 +62,7 @@
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": [ "KBaseCollections.FeatureSet" ],
+                "valid_ws_types": [ "KBaseSearch.GenomeSet", "KBaseSets.GenomeSet" ],
 		"is_output_name": true
             }
         }
@@ -61,7 +71,7 @@
         "service-mapping": {
             "url": "",
             "name": "kb_SetUtilities",
-            "method": "KButil_Slice_FeatureSets_by_Genomes",
+            "method": "KButil_Remove_Genomes_from_GenomeSet",
             "input_mapping": [
                 {
                     "narrative_system_variable": "workspace",
@@ -72,14 +82,18 @@
                     "target_property": "desc"
                 },
                 {
-                    "input_parameter": "input_featureSet_refs",
-                    "target_property": "input_featureSet_refs",
-		    "target_type_transform": "list<resolved-ref>"
-                },
-                {
                     "input_parameter": "input_genome_refs",
                     "target_property": "input_genome_refs",
 		    "target_type_transform": "list<resolved-ref>"
+                },
+                {
+                    "input_parameter": "nonlocal_genome_names",
+                    "target_property": "nonlocal_genome_names"
+                },
+                {
+                    "input_parameter": "input_genomeset_ref",
+                    "target_property": "input_genomeset_ref",
+		    "target_type_transform": "resolved-ref"
                 },
                 {
                     "input_parameter": "output_name",

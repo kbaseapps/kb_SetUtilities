@@ -374,6 +374,10 @@ class Application(object):
                              name='kb_SetUtilities.KButil_Add_Genomes_to_GenomeSet',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Add_Genomes_to_GenomeSet'] = 'required'  # noqa
+        self.rpc_service.add(impl_kb_SetUtilities.KButil_Remove_Genomes_from_GenomeSet,
+                             name='kb_SetUtilities.KButil_Remove_Genomes_from_GenomeSet',
+                             types=[dict])
+        self.method_authentication['kb_SetUtilities.KButil_Remove_Genomes_from_GenomeSet'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Build_ReadsSet,
                              name='kb_SetUtilities.KButil_Build_ReadsSet',
                              types=[dict])

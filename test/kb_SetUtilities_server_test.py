@@ -50,6 +50,9 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         if hasattr(cls, 'wsName'):
             cls.wsClient.delete_workspace({'workspace': cls.wsName})
             print('Test workspace was deleted')
+        if hasattr(cls, 'ws2Name'):
+            cls.wsClient.delete_workspace({'workspace': cls.ws2Name})
+            print('Test workspace2 was deleted')
         if hasattr(cls, 'shock_ids'):
             for shock_id in cls.shock_ids:
                 print('Deleting SHOCK node: ' + str(shock_id))
@@ -73,6 +76,15 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         ret = self.getWsClient().create_workspace({'workspace': wsName})
         self.__class__.wsName = wsName
         return wsName
+
+    def getWs2Name(self):
+        if hasattr(self.__class__, 'ws2Name'):
+            return self.__class__.ws2Name
+        suffix = int(time.time() * 1000)
+        ws2Name = "test_kb_SetUtilities_" + str(suffix)+'-2'
+        ret = self.getWsClient().create_workspace({'workspace': ws2Name})
+        self.__class__.ws2Name = ws2Name
+        return ws2Name
 
     def getImpl(self):
         return self.__class__.serviceImpl
@@ -1469,6 +1481,84 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         output_obj = \
         self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
         self.assertEqual(len(list(output_obj['elements'].keys())), num_merged_genomes)
+        pass
+
+    #### test_KButil_Remove_Genomes_from_GenomeSet_01():
+    ##
+    # HIDE @unittest.skip("skipped test_KButil_Add_Genomes_to_GenomeSet_01()")  # uncomment to skip
+    def test_KButil_Remove_Genomes_from_GenomeSet_01(self):
+        method = 'KButil_Remove_Genomes_from_GenomeSet_01'
+        msg = "RUNNING: " + method + "()"
+        print("\n\n" + msg)
+        print("=" * len(msg) + "\n\n")
+
+        # input_data
+        genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
+        genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
+        genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic', 2)
+        genomeInfo_3 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic', 3)
+
+        genome_ref_0 = self.getWsName() + '/' + str(genomeInfo_0[0]) + '/' + str(genomeInfo_0[4])
+        genome_ref_1 = self.getWsName() + '/' + str(genomeInfo_1[0]) + '/' + str(genomeInfo_1[4])
+        genome_ref_2 = self.getWsName() + '/' + str(genomeInfo_2[0]) + '/' + str(genomeInfo_2[4])
+        genome_ref_3 = self.getWsName() + '/' + str(genomeInfo_3[0]) + '/' + str(genomeInfo_3[4])
+
+        # feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        # feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        # feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        # feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+        num_final_genomes = 1
+
+        # GenomeSet 1
+        genomeSet_obj_1 = {'description': 'test genomeSet 1',
+                           'elements': {'genome_0': {'ref': genome_ref_0},
+                                        'genome_1': {'ref': genome_ref_1},
+                                        'genome_2': {'ref': genome_ref_2},
+                                        'genome_3': {'ref': genome_ref_3},
+                                        }
+                           }
+        provenance = [{}]
+        genomeSet_info = self.getWsClient().save_objects({
+            'workspace': self.getWs2Name(),
+            'objects': [
+                {
+                    'type': 'KBaseSearch.GenomeSet',
+                    'data': genomeSet_obj_1,
+                    'name': 'test_genomeSet_'+method+'.GenomeSet',
+                    'meta': {},
+                    'provenance': provenance
+                }
+            ]})[0]
+
+        genomeSet_ref_1 = str(genomeSet_info[WSID_I]) + '/' + str(
+            genomeSet_info[OBJID_I]) + '/' + str(genomeSet_info[VERSION_I])
+
+        # run method
+        base_output_name = method + '_output'
+        params = {
+            'workspace_name': self.getWsName(),
+            'input_genome_refs': [genome_ref_1, genome_ref_2],
+            'nonlocal_genome_names': ['GCF_000022285.1_ASM2228v1_genomic'],
+            'input_genomeset_ref': genomeSet_ref_1,
+            'output_name': base_output_name,
+            'desc': 'test'
+        }
+        result = self.getImpl().KButil_Remove_Genomes_from_GenomeSet(self.getContext(), params)
+        print('RESULT:')
+        pprint(result)
+
+        # check the output
+        output_name = base_output_name
+        output_type = 'KBaseSearch.GenomeSet'
+        output_ref = self.getWsName() + '/' + output_name
+        info_list = self.getWsClient().get_object_info_new({'objects': [{'ref': output_ref}]})
+        self.assertEqual(len(info_list), 1)
+        output_info = info_list[0]
+        self.assertEqual(output_info[1], output_name)
+        self.assertEqual(output_info[2].split('-')[0], output_type)
+        output_obj = \
+        self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        self.assertEqual(len(list(output_obj['elements'].keys())), num_final_genomes)
         pass
 
     #### test_KButil_Build_ReadsSet_01()
