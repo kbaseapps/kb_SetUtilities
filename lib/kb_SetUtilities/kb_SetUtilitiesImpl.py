@@ -32,9 +32,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.4.0"
+    VERSION = "1.5.0"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "44625777bd76fea3cec6a919c210223eeb986df5"
+    GIT_COMMIT_HASH = "6a5e5e8eb80e45967a7a50d955a781793050260b"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -456,12 +456,12 @@ class kb_SetUtilities:
         #
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'input_refs' not in params:
             raise ValueError('input_refs parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Merged FeatureSet'
 
         # clean input_refs
         clean_input_refs = []
@@ -639,14 +639,14 @@ class kb_SetUtilities:
         #
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'input_featureSet_refs' not in params:
             raise ValueError('input_featureSet_refs parameter is required')
         if 'input_genome_refs' not in params:
             raise ValueError('input_genome_refs parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Sliced FeatureSet'
 
         # establish workspace client
         try:
@@ -942,8 +942,6 @@ class kb_SetUtilities:
         #
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'operator' not in params:
             raise ValueError('operator parameter is required')
         if 'input_featureSet_ref_A' not in params:
@@ -952,6 +950,8 @@ class kb_SetUtilities:
             raise ValueError('input_featureSet_ref_B parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Sliced FeatureSet'
 
         # establish workspace client
         try:
@@ -1187,12 +1187,12 @@ class kb_SetUtilities:
         #### do some basic checks
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'input_refs' not in params:
             raise ValueError('input_refs parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Merged GenomeSet'
 
         # clean input_refs
         clean_input_refs = []
@@ -1344,12 +1344,12 @@ class kb_SetUtilities:
         #
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'input_refs' not in params:
             raise ValueError('input_refs parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Built GenomeSet'
 
         # clean input_refs
         clean_input_refs = []
@@ -1509,12 +1509,12 @@ class kb_SetUtilities:
         #### do some basic checks
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'input_ref' not in params:
             raise ValueError('input_ref parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Built GenomeSet'
 
         # Obtain FeatureSet
         try:
@@ -1671,8 +1671,8 @@ class kb_SetUtilities:
            "id" is a numerical identifier of the workspace or object, and
            should just be used for workspace ** "name" is a string identifier
            of a workspace or object.  This is received from Narrative.),
-           parameter "input_genome_refs" of type "data_obj_ref", parameter
-           "input_genomeset_ref" of type "data_obj_ref", parameter
+           parameter "input_genome_refs" of list of type "data_obj_ref",
+           parameter "input_genomeset_ref" of type "data_obj_ref", parameter
            "output_name" of type "data_obj_name", parameter "desc" of String
         :returns: instance of type "KButil_Add_Genomes_to_GenomeSet_Output"
            -> structure: parameter "report_name" of type "data_obj_name",
@@ -1696,14 +1696,14 @@ class kb_SetUtilities:
         #
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'input_genome_refs' not in params:
             raise ValueError('input_genome_refs parameter is required')
         if 'input_genomeset_ref' not in params:
             raise ValueError('input_genomeset_ref parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Increased GenomeSet'
 
         # Build GenomeSet
         elements = dict()
@@ -1843,6 +1843,195 @@ class kb_SetUtilities:
         # return the results
         return [returnVal]
 
+    def KButil_Remove_Genomes_from_GenomeSet(self, ctx, params):
+        """
+        :param params: instance of type
+           "KButil_Remove_Genomes_from_GenomeSet_Params"
+           (KButil_Remove_Genomes_from_GenomeSet() ** **  Method for removing
+           Genomes from a GenomeSet) -> structure: parameter "workspace_name"
+           of type "workspace_name" (** The workspace object refs are of
+           form: ** **    objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_genome_refs" of list of type "data_obj_ref",
+           parameter "nonlocal_genome_names" of list of type "data_obj_name",
+           parameter "input_genomeset_ref" of type "data_obj_ref", parameter
+           "output_name" of type "data_obj_name", parameter "desc" of String
+        :returns: instance of type
+           "KButil_Remove_Genomes_from_GenomeSet_Output" -> structure:
+           parameter "report_name" of type "data_obj_name", parameter
+           "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Remove_Genomes_from_GenomeSet
+
+        # init
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        console = []
+        invalid_msgs = []
+        self.log(console, 'Running KButil_Remove_Genomes_from_GenomeSet with params=')
+        self.log(console, "\n" + pformat(params))
+        report = ''
+#        report = 'Running KButil_Remove_Genomes_from_GenomeSet with params='
+#        report += "\n"+pformat(params)
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
+
+        #### do some basic checks
+        #
+        if 'workspace_name' not in params:
+            raise ValueError('workspace_name parameter is required')
+        if 'input_genomeset_ref' not in params:
+            raise ValueError('input_genomeset_ref parameter is required')
+        if 'output_name' not in params:
+            raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Reduced GenomeSet'
+        if not params.get('input_genome_refs') and \
+           not params.get('nonlocal_genome_names'):
+            raise ValueError('must define either Local genomes or Non-local genomes to remove')
+
+            
+        # read orig GenomeSet
+        #
+        genomeSet_workspace = None
+        if 'input_genomeset_ref' in params and params['input_genomeset_ref'] is not None:
+            try:
+                #objects = ws.get_objects([{'ref': params['input_genomeset_ref']}])
+                objects = ws.get_objects2(
+                    {'objects': [{'ref': params['input_genomeset_ref']}]})['data']
+                genomeSet = objects[0]['data']
+                info = objects[0]['info']
+                genomeSet_workspace = info[WORKSPACE_I]
+                
+                type_name = info[TYPE_I].split('.')[1].split('-')[0]
+                if type_name != 'GenomeSet':
+                    raise ValueError("Bad Type: Should be GenomeSet instead of '" + type_name + "'")
+            except Exception as e:
+                raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+                #to get the full stack trace: traceback.format_exc()
+
+
+        # Build list of genome refs (without version) to skip.
+        #  Note: standardize to workspace_name and obj_id
+        skip_genomes_by_ref = dict()
+        nonlocal_skip_genome_refs = []
+        if params.get('input_genome_refs'):
+            for genomeRef in params['input_genome_refs']: 
+                this_obj_info = ws.get_object_info_new({'objects':[{'ref':genomeRef}]})[0]
+                standardized_genomeRef = str(this_obj_info[WORKSPACE_I])+'/'+str(this_obj_info[OBJID_I])
+                skip_genomes_by_ref[standardized_genomeRef] = True
+        if params.get('nonlocal_genome_names'):
+            for gId in list(genomeSet['elements'].keys()):
+                genomeRef = genomeSet['elements'][gId]['ref']
+                genome_obj_info = ws.get_object_info_new ({'objects':[{'ref':genomeRef}]})[0]
+                this_genome_workspace = genome_obj_info[WORKSPACE_I]
+                this_genome_objname = genome_obj_info[NAME_I]
+                standardized_genomeRef = str(genome_obj_info[WORKSPACE_I])+'/'+str(genome_obj_info[OBJID_I])
+                if this_genome_workspace != genomeSet_workspace \
+                   and this_genome_objname in params['nonlocal_genome_names']:
+                    skip_genomes_by_ref[standardized_genomeRef] = True
+                    nonlocal_skip_genome_refs.append(standardized_genomeRef)
+                
+        # build new genome set without skip genomes
+        elements = dict()
+        for gId in list(genomeSet['elements'].keys()):
+            genomeRef = genomeSet['elements'][gId]['ref']
+            this_obj_info = ws.get_object_info_new({'objects':[{'ref':genomeRef}]})[0]
+            standardized_genomeRef = str(this_obj_info[WORKSPACE_I])+'/'+str(this_obj_info[OBJID_I])
+
+            # this is where they are removed
+            if not skip_genomes_by_ref.get(standardized_genomeRef):
+                elements[gId] = dict()
+                elements[gId]['ref'] = genomeRef  # the key line
+                self.log(console, "keeping element " + gId + " : " + genomeRef)  # DEBUG
+            else:
+                self.log(console, "removing element " + gId + " : " + genomeRef)  # DEBUG
+
+        # load the method provenance from the context object
+        #
+        self.log(console, "SETTING PROVENANCE")  # DEBUG
+        provenance = [{}]
+        if 'provenance' in ctx:
+            provenance = ctx['provenance']
+        # add additional info to provenance here, in this case the input data object reference
+        try:
+            prov_defined = provenance[0]['input_ws_objects']
+        except:
+            provenance[0]['input_ws_objects'] = []
+        provenance[0]['input_ws_objects'].append(params['input_genomeset_ref'])
+        provenance[0]['input_ws_objects'].extend(params['input_genome_refs'])
+        provenance[0]['input_ws_objects'].extend(nonlocal_skip_genome_refs)
+        provenance[0]['service'] = 'kb_SetUtilities'
+        provenance[0]['method'] = 'KButil_Remove_Genomes_from_GenomeSet'
+
+        # Store output object
+        #
+        if len(invalid_msgs) == 0:
+            self.log(console, "SAVING GENOMESET")  # DEBUG
+            output_GenomeSet = {'description': params['desc'],
+                                'elements': elements}
+
+            new_obj_info = ws.save_objects({'workspace': params['workspace_name'],
+                                            'objects': [{
+                                                'type': 'KBaseSearch.GenomeSet',
+                                                'data': output_GenomeSet,
+                                                'name': params['output_name'],
+                                                'meta': {},
+                                                'provenance': provenance}]})[0]
+
+        # build output report object
+        self.log(console, "BUILDING REPORT")  # DEBUG
+        if len(invalid_msgs) == 0:
+            self.log(console, "genomes in output set " + params['output_name'] + ": " +
+                     str(len(list(elements.keys()))))
+            report += 'genomes in output set ' + params['output_name'] + ': '
+            report += str(len(list(elements.keys()))) + "\n"
+            reportObj = {
+                'objects_created': [{'ref': params['workspace_name'] + '/' + params['output_name'],
+                                     'description':'KButil_Remove_Genomes_from_GenomeSet'}],
+                'text_message': report}
+        else:
+            report += "FAILURE:\n\n" + "\n".join(invalid_msgs) + "\n"
+            reportObj = {'objects_created': [],
+                         'text_message': report}
+
+        reportName = 'kb_SetUtilities_remove_genomes_from_genomeset_report_' + str(uuid.uuid4())
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        report_obj_info = ws.save_objects({
+                'workspace':params['workspace_name'],
+                'objects':[
+                    {
+                        'type':'KBaseReport.Report',
+                        'data':reportObj,
+                        'name':reportName,
+                        'meta':{},
+                        'hidden':1,
+                        'provenance':provenance
+                    }
+                ]
+            })[0]
+
+        # Build report and return
+        #
+        self.log(console,"BUILDING RETURN OBJECT")
+        report_ref = "{}/{}/{}"
+        returnVal = {'report_name': reportName,
+                     'report_ref': report_ref.format(report_obj_info[6], report_obj_info[0],
+                                                     report_obj_info[4])}
+        self.log(console, "KButil_Remove_Genomes_from_GenomeSet DONE")
+        #END KButil_Remove_Genomes_from_GenomeSet
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Remove_Genomes_from_GenomeSet return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
     def KButil_Build_ReadsSet(self, ctx, params):
         """
         :param params: instance of type "KButil_Build_ReadsSet_Params"
@@ -1874,12 +2063,12 @@ class kb_SetUtilities:
         #
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'input_refs' not in params:
             raise ValueError('input_refs parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Built ReadsSet'
 
         # clean input_refs
         clean_input_refs = []
@@ -2236,12 +2425,12 @@ class kb_SetUtilities:
         #
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'input_refs' not in params:
             raise ValueError('input_refs parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Built AssemblySet'
 
         # clean input_refs
         clean_input_refs = []
@@ -2439,10 +2628,10 @@ class kb_SetUtilities:
         ##
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Batch Created ReadsSet'
 
 
         #### STEP 3: refine name_pattern
@@ -2676,10 +2865,10 @@ class kb_SetUtilities:
         ##
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Batch Created AssemblySet'
 
 
         #### STEP 3: refine name_pattern
@@ -2882,10 +3071,10 @@ class kb_SetUtilities:
         ##
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
-        if 'desc' not in params:
-            raise ValueError('desc parameter is required')
         if 'output_name' not in params:
             raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Batch Created GenomeSet'
 
 
         #### STEP 3: refine name_pattern

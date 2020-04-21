@@ -1,12 +1,12 @@
 #
 # define display information
 #
-name: Add Genomes to GenomeSet - v1.5.0
+name: Remove Genomes from GenomeSet - v1.5.0
 tooltip: |
-    Allows user to add a Genome to a GenomeSet
+    Allows user to remove Genome(s) from a GenomeSet
 
-screenshots:
-    - Add_Genomes_to_GenomeSet.png
+screenshots: []
+
 
 icon: kb-purple.png
 
@@ -38,9 +38,14 @@ parameters :
             Enter Description
     input_genome_refs:
         ui-name : |
-            Add Genome Objects
+            Remove Genome Objects
         short-hint : |
-            Genome(s) to add to the GenomeSet.
+            Genome(s) to remove from the GenomeSet.
+    nonlocal_genome_names:
+        ui-name : |
+            Remove Nonlocal Genome Names
+        short-hint : |
+            Genome(s) that are not found in this Narrative to remove from the GenomeSet.
     input_genomeset_ref:
         ui-name : |
             Name for the base GenomeSet.
@@ -50,11 +55,11 @@ parameters :
         ui-name : |
             Output GenomeSet
         short-hint : |
-            The name for the Combined GenomeSet.
+            The name for the Trimmed GenomeSet.
 
 
 description : |
-    <p><b>Add Genomes to GenomeSet</b> allows a user to expand the membership of a set of genomes (each of which is a set of DNA contigs including structural and functional annotations). The GenomeSet object can be used in subsequent Apps allowing for bulk operations on Genome objects. The Genomes and GenomeSet must already be within the Narrative's data workspace, so if there are genomes from other Narratives or public reference genomes that the user wishes to include, they must first be imported into the active Narrative. Simply click the <b>”+”</b> plus icon to add a Genome object to the set. Once the plus icon is selected, a dropdown list will appear that is populated with all the assembly objects in the narrative.</p>
+    <p><b>Remove Genomes from GenomeSet</b> allows a user to reduce the membership of a set of genomes (each of which is a set of DNA contigs including structural and functional annotations). The GenomeSet object can be used in subsequent Apps allowing for bulk operations on Genome objects. The GenomeSet must already be within the Narrative's data workspace.  Genomes to be removed that are also in the same Narrative as the GenomeSet can be configured with the <i>"Remove Genome Objects"</i> pull-down option.  Genomes that are not in the same Narrative (e.g. RefSeq reference genomes) can be removed from the GenomeSet by adding the name of the Genome object with the <i>"Remove Nonlocal Genome Names"</i> text option.</p>
 
     <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 
