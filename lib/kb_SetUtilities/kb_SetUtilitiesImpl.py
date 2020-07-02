@@ -32,9 +32,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.5.0"
-    GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "6a5e5e8eb80e45967a7a50d955a781793050260b"
+    VERSION = "1.6.0"
+    GIT_URL = "https://github.com/dcchivian/kb_SetUtilities"
+    GIT_COMMIT_HASH = "6993da1ac2cbab8b9001baaf6af91091aec939a1"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -1151,6 +1151,74 @@ class kb_SetUtilities:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method KButil_Logical_Slice_Two_FeatureSets return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def KButil_Logical_Slice_Two_AssemblySets(self, ctx, params):
+        """
+        :param params: instance of type
+           "KButil_Logical_Slice_Two_AssemblySets_Params"
+           (KButil_Logical_Slice_Two_AssemblySets() ** **  Method for Slicing
+           Two AssemblySets by Venn overlap) -> structure: parameter
+           "workspace_name" of type "workspace_name" (** The workspace object
+           refs are of form: ** **    objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_assemblySet_ref_A" of type "data_obj_ref",
+           parameter "input_assemblySet_ref_B" of type "data_obj_ref",
+           parameter "operator" of String, parameter "desc" of String,
+           parameter "output_name" of type "data_obj_name"
+        :returns: instance of type
+           "KButil_Logical_Slice_Two_AssemblySets_Output" -> structure:
+           parameter "report_name" of type "data_obj_name", parameter
+           "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Logical_Slice_Two_AssemblySets
+        #END KButil_Logical_Slice_Two_AssemblySets
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Logical_Slice_Two_AssemblySets return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def KButil_Logical_Slice_Two_GenomeSets(self, ctx, params):
+        """
+        :param params: instance of type
+           "KButil_Logical_Slice_Two_GenomeSets_Params"
+           (KButil_Logical_Slice_Two_GenomeSets() ** **  Method for Slicing
+           Two AssemblySets by Venn overlap) -> structure: parameter
+           "workspace_name" of type "workspace_name" (** The workspace object
+           refs are of form: ** **    objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_assemblySet_ref_A" of type "data_obj_ref",
+           parameter "input_assemblySet_ref_B" of type "data_obj_ref",
+           parameter "operator" of String, parameter "desc" of String,
+           parameter "output_name" of type "data_obj_name"
+        :returns: instance of type
+           "KButil_Logical_Slice_Two_GenomeSets_Output" -> structure:
+           parameter "report_name" of type "data_obj_name", parameter
+           "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Logical_Slice_Two_GenomeSets
+        #END KButil_Logical_Slice_Two_GenomeSets
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Logical_Slice_Two_GenomeSets return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]

@@ -1,0 +1,81 @@
+#
+# define display information
+#
+name: Venn Slice Two AssemblySets - v1.6.0
+tooltip: |
+    Allows users to slice two AssemblySets according to their Venn overlap.
+screenshots:
+    - Logical_Slice_Two_Sets.png
+
+icon: kb-purple.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    input_assemblySet_ref_A:
+        ui-name : |
+            Input AssemblySet A
+        short-hint : |
+            Add name of AssemblySet A.
+    input_assemblySet_ref_B:
+        ui-name : |
+            Input AssemblySet B
+        short-hint : |
+            Add name of AssemblySet B.
+    operator:
+        ui-name : |
+            Logical slice
+        short-hint : |
+            Select which logical operation to perform (A and B, A and not B, not A and B).
+    desc:
+        ui-name : |
+            Description
+        short-hint : |
+            Describe the purpose or contents of the output AssemblySet(s).
+        placeholder: |
+            Enter Description
+    output_name:
+        ui-name : |
+            Output AssemblySet(s) Basename
+        short-hint : |
+            Basename for the sliced output AssemblySet(s).
+
+
+description : |
+    <p>This App allows users to create an intersection set or difference set from two <b><i>Assembly Sets</i></b>, A and B, ie, a new <b><i>AssemblySet</i></b> containing only assemblys that correspond to present in {A and B}, or {A and (not B)}, or {(not A) and B}.</p>
+
+    <p><b>Running the App:</b> <i>Note that in this App, all inputs are required or mandatory.</i> The first two inputs are sets of genome assemblys (AssemblySets), which may have been created by any of several Apps in KBase, such as Build Assembly Set from Genome, BLASTp prot-prot Search, Merge AssemblySets, Slice AssemblySets by Genomes, among others.</p>
+
+    <p>This is followed by a pull-down menu for “Logical slice” which indicates which set (Venn diagram) operation to perform:
+      <ul>
+        <li>Assemblys found in both A and B (set intersection)</li>
+        <li>Assemblys found in A but not B  (set difference, A - B)</li>
+        <li>Assemblys found in B but not A  (set difference, B - A)</li>
+      </ul>
+    <p>
+
+    <p>Below that is a text entry field for a meaningful description of the resultant set, followed by the name to be given to the resultant <b>AssemblySet</b> object. Upon successful completion, a new <b>AssemblySet</b> object with the given name will appear in the Data Pane, and a short report listing the description and number of assemblys in this set will appear below the App cell window in the Narrative.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+
+publications :
+    -
+        display-text: |
+            Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
+        link: https://www.nature.com/articles/nbt.4163
