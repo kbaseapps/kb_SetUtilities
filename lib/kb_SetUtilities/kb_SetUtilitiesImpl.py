@@ -33,7 +33,7 @@ class kb_SetUtilities:
     # the latter method is running.
     ######################################### noqa
     VERSION = "1.6.0"
-    GIT_URL = "https://github.com/dcchivian/kb_SetUtilities"
+    GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
     GIT_COMMIT_HASH = "6993da1ac2cbab8b9001baaf6af91091aec939a1"
 
     #BEGIN_CLASS_HEADER
@@ -1180,6 +1180,205 @@ class kb_SetUtilities:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN KButil_Logical_Slice_Two_AssemblySets
+        console = []
+        invalid_msgs = []
+        self.log(console, 'Running Logical_Slice_Two_AssemblySets with params=')
+        self.log(console, "\n" + pformat(params))
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
+        logMsg = ''
+        report = ''
+
+
+        #### do some basic checks
+        #
+        if 'workspace_name' not in params:
+            raise ValueError('workspace_name parameter is required')
+        if 'operator' not in params:
+            raise ValueError('operator parameter is required')
+        if 'input_assemblySet_ref_A' not in params:
+            raise ValueError('input_assemblySet_ref_A parameter is required')
+        if 'input_assemblySet_ref_B' not in params:
+            raise ValueError('input_assemblySet_ref_B parameter is required')
+        if 'output_name' not in params:
+            raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Sliced AssemblySet'
+
+        # establish workspace client
+        try:
+            wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
+        except Exception as e:
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+
+
+        # Get AssemblySets
+        #
+        AssemblySet = dict()
+        AssemblySet['A'] = dict()
+        AssemblySet['B'] = dict()
+        input_assemblySet_refs = dict()
+        input_assemblySet_refs['A'] = params['input_assemblySet_ref_A']
+        input_assemblySet_refs['B'] = params['input_assemblySet_ref_B']
+        input_assemblySet_names = dict()
+        for set_id in ['A','B']:
+            try:
+                #objects = wsClient.get_objects([{'ref': input_assemblySet_ref}])
+                objects = wsClient.get_objects2({'objects': [{'ref': input_assemblySet_refs[set_id]}]})['data']
+                data = objects[0]['data']
+                info = objects[0]['info']
+                this_assemblySet = data
+                this_assemblySet_obj_name = info[NAME_I]
+                input_assemblySet_names[set_id] = this_assemblySet_obj_name;
+                type_name = info[TYPE_I].split('.')[1].split('-')[0]
+            except Exception as e:
+                raise ValueError('Unable to fetch input_assemblySet_ref '+str(input_assemblySet_refs[set_id])+' object from workspace: ' + str(e))
+                #to get the full stack trace: traceback.format_exc()
+            if type_name != 'AssemblySet':
+                raise ValueError("Bad Type:  Should be AssemblySet instead of '" + type_name + "'")
+
+            AssemblySet[set_id] = this_assemblySet
+            logMsg = 'assemblies in input set {}: {}'.format(input_assemblySet_refs[set_id],
+                                                           len(AssemblySet[set_id]['items']))
+            self.log(console, logMsg)
+
+
+        # Store A and B genome + fid hits
+        #
+        assembly_obj_present = dict()
+        assembly_obj_present['A'] = dict()
+        assembly_obj_present['B'] = dict()
+        assembly_ref_to_standardized = dict()  # must use standardized assembly_refs
+
+        for set_id in ['A','B']:
+            new_items = []
+            for item in AssemblySet[set_id]['items']:
+                standardized_assembly_refs = []
+                this_assembly_ref = item['ref']
+                
+                if this_assembly_ref in assembly_ref_to_standardized:
+                    standardized_assembly_ref = assembly_ref_to_standardized[this_assembly_ref]
+                else:  # get standardized genome_ref
+                    try:
+                        assembly_obj_info = wsClient.get_object_info_new ({'objects':[{'ref':this_assembly_ref}]})[0]
+                        assembly_obj_type = re.sub ('-[0-9]+\.[0-9]+$', "", assembly_obj_info[TYPE_I])  # remove trailing version
+                    except Exception as e:
+                        raise ValueError('Unable to get assembly object info from workspace: (' + str(this_assembly_ref) +')' + str(e))
+
+                    acceptable_types = ["KBaseGenomeAnnotations.Assembly"]
+                    if assembly_obj_type not in acceptable_types:
+                        raise ValueError("Input Assembly of type: '" + assembly_obj_type +
+                                         "'.  Must be one of " + ", ".join(acceptable_types))
+
+                    standardized_assembly_ref = '{}/{}/{}'.format(assembly_obj_info[WSID_I],
+                                                                  assembly_obj_info[OBJID_I],
+                                                                  assembly_obj_info[VERSION_I])
+                    assembly_ref_to_standardized[this_assembly_ref] = standardized_assembly_ref
+                standardized_assembly_refs.append(standardized_assembly_ref)  # standardize list
+                assembly_obj_present[set_id][standardized_assembly_ref] = True
+                new_items.append({'ref':standardized_assembly_ref,'label':item['label']})
+            AssemblySet[set_id]['items'] = new_items
+
+
+        # Build sliced AssemblySet
+        #
+        self.log (console, "BUILDING SLICED ASSEMBLYSET")  # DEBUG
+        output_items = []
+        if params['operator'] == 'yesA_yesB' or params['operator'] == 'yesA_noB':
+            input_items = AssemblySet['A']['items']
+            fwd_set_id = 'A'
+            rev_set_id = 'B'
+        else:
+            input_items = AssemblySet['B']['items']
+            fwd_set_id = 'B'
+            rev_set_id = 'A'
+
+        for item in input_items:
+            #self.log (console, 'checking assemvly {}'.format(item['ref']))  # DEBUG
+            this_standardized_assembly_ref = item['ref']
+            if params['operator'] == 'yesA_yesB':
+                if assembly_obj_present[rev_set_id].get(this_standardized_assembly_ref):
+                    output_items.append(item)
+            else:
+                if not assembly_obj_present[rev_set_id].get(this_standardized_assembly_ref):
+                    output_items.append(item)
+        logMsg = 'assemblies in sliced output set: {}'.format(len(output_items))
+        self.log(console, logMsg)
+
+
+        # Save output AssemblySet
+        #
+        objects_created = []
+        if len(output_items) == 0:
+            report += 'no assemblies to output under operator '+params['operator']+"\n"
+        else:
+            # load the method provenance from the context object
+            self.log(console, "SETTING PROVENANCE")  # DEBUG
+            provenance = [{}]
+            if 'provenance' in ctx:
+                provenance = ctx['provenance']
+            # add additional info to provenance here, in this case the input data object reference
+            provenance[0]['input_ws_objects'] = []
+            provenance[0]['input_ws_objects'].append(input_assemblySet_refs['A'])
+            provenance[0]['input_ws_objects'].append(input_assemblySet_refs['B'])
+            provenance[0]['service'] = 'kb_SetUtilities'
+            provenance[0]['method'] = 'KButil_Logical_Slice_Two_AssemblySets'
+
+            # Store output Set object
+            try:
+                setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
+            except Exception as e:
+                raise ValueError('ERROR: unable to instantiate SetAPI' + str(e))
+
+            if params.get('desc'):
+                output_desc = params['desc']
+            else:
+                output_desc = 'Venn slice '+params['operator']+' of AssemblySets '+input_assemblySet_name['A']+' and '+input_assemblySet_name['B']
+            output_assemblySet_obj = { 'description': output_desc,
+                                       'items': output_items
+                                     }
+            output_assemblySet_name = params['output_name']
+            try:
+                output_assemblySet_ref = setAPI_Client.save_assembly_set_v1 ({'workspace_name': params['workspace_name'],
+                                                                        'output_object_name': output_assemblySet_name,
+                                                                        'data': output_assemblySet_obj
+                                                                        })['set_ref']
+            except Exception as e:
+                raise ValueError('SetAPI FAILURE: Unable to save assembly set object to workspace: (' + params['workspace_name']+")\n" + str(e))
+
+
+        # build output report object
+        self.log(console, "BUILDING REPORT")  # DEBUG
+        if len(output_items) > 0:
+            self.log(console, "assemblies in output set " + params['output_name'] + ": "
+                     + str(len(output_items)))
+            report += 'assemblies in output set ' + params['output_name'] + ': '
+            report += str(len(output_items)) + "\n"
+            reportObj = {
+                'objects_created': objects_created,
+                'text_message': report
+            }
+        else:
+            reportObj = {
+                'objects_created': [],
+                'text_message': report
+            }
+
+        reportName = 'kb_SetUtilities_logical_slice_two_assemblysets_report_' + str(uuid.uuid4())
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
+                                                 'objects': [{'type': 'KBaseReport.Report',
+                                                              'data': reportObj,
+                                                              'name': reportName,
+                                                              'meta': {},
+                                                              'hidden': 1,
+                                                              'provenance': provenance}]})[0]
+
+        # Build report and return
+        self.log(console, "BUILDING RETURN OBJECT")
+        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
+        returnVal = {'report_name': reportName,
+                     'report_ref': report_ref}
+        self.log(console, "KButil_Logical_Slice_Two_AssemblySets DONE")
         #END KButil_Logical_Slice_Two_AssemblySets
 
         # At some point might do deeper type checking...
@@ -1214,6 +1413,223 @@ class kb_SetUtilities:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN KButil_Logical_Slice_Two_GenomeSets
+        console = []
+        invalid_msgs = []
+        self.log(console, 'Running Logical_Slice_Two_GenomeSets with params=')
+        self.log(console, "\n" + pformat(params))
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
+        logMsg = ''
+        report = ''
+
+
+        #### do some basic checks
+        #
+        if 'workspace_name' not in params:
+            raise ValueError('workspace_name parameter is required')
+        if 'operator' not in params:
+            raise ValueError('operator parameter is required')
+        if 'input_genomeSet_ref_A' not in params:
+            raise ValueError('input_genomeSet_ref_A parameter is required')
+        if 'input_genomeSet_ref_B' not in params:
+            raise ValueError('input_genomeSet_ref_B parameter is required')
+        if 'output_name' not in params:
+            raise ValueError('output_name parameter is required')
+        if 'desc' not in params:
+            params['desc'] = params['output_name']+' Sliced GenomeSet'
+
+        # establish workspace client
+        try:
+            wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
+        except Exception as e:
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+
+
+        # Get GenomeSets
+        #
+        GenomeSet_element_refs = dict()
+        input_genomeSet_refs = dict()
+        input_genomeSet_refs['A'] = params['input_genomeSet_ref_A']
+        input_genomeSet_refs['B'] = params['input_genomeSet_ref_B']
+        input_genomeSet_names = dict()
+        for set_id in ['A','B']:
+            try:
+                #objects = wsClient.get_objects([{'ref': input_genomeSet_ref}])
+                objects = wsClient.get_objects2({'objects': [{'ref': input_genomeSet_refs[set_id]}]})['data']
+                data = objects[0]['data']
+                info = objects[0]['info']
+                this_genomeSet = data
+                this_genomeSet_obj_name = info[NAME_I]
+                input_genomeSet_names[set_id] = this_genomeSet_obj_name;
+                type_name = info[TYPE_I].split('.')[1].split('-')[0]
+            except Exception as e:
+                raise ValueError('Unable to fetch input_genomeSet_ref '+str(input_genomeSet_refs[set_id])+' object from workspace: ' + str(e))
+                #to get the full stack trace: traceback.format_exc()
+            if type_name != 'GenomeSet':
+                raise ValueError("Bad Type:  Should be GenomeSet instead of '" + type_name + "'")
+
+            GenomeSet_element_refs[set_id] = []
+            for genome_id in sorted(this_genomeSet['elements'].keys()):
+                GenomeSet_element_refs[set_id].append(this_genomeSet['elements'][genome_id]['ref'])
+            logMsg = 'genomes in input set {}: {}'.format(input_genomeSet_refs[set_id],
+                                                          len(GenomeSet_element_refs[set_id]))
+            self.log(console, logMsg)
+
+
+        # Store A and B genome + fid hits
+        #
+        genome_obj_present = dict()
+        genome_obj_present['A'] = dict()
+        genome_obj_present['B'] = dict()
+        genome_ref_to_standardized = dict()  # must use standardized genome_refs
+
+        for set_id in ['A','B']:
+            new_element_refs = []
+            for this_genome_ref in GenomeSet_element_refs[set_id]:
+                standardized_genome_refs = []
+                
+                if this_genome_ref in genome_ref_to_standardized:
+                    standardized_genome_ref = genome_ref_to_standardized[this_genome_ref]
+                else:  # get standardized genome_ref
+                    try:
+                        genome_obj_info = wsClient.get_object_info_new ({'objects':[{'ref':this_genome_ref}]})[0]
+                        genome_obj_type = re.sub ('-[0-9]+\.[0-9]+$', "", genome_obj_info[TYPE_I])  # remove trailing version
+                    except Exception as e:
+                        raise ValueError('Unable to get genome object info from workspace: (' + str(this_genome_ref) +')' + str(e))
+
+                    acceptable_types = ["KBaseGenomes.Genome","KBaseGenomeAnnotations.GenomeAnnotation"]
+                    if genome_obj_type not in acceptable_types:
+                        raise ValueError("Input Genome of type: '" + genome_obj_type +
+                                         "'.  Must be one of " + ", ".join(acceptable_types))
+
+                    standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
+                                                                genome_obj_info[OBJID_I],
+                                                                genome_obj_info[VERSION_I])
+                    genome_ref_to_standardized[this_genome_ref] = standardized_genome_ref
+                standardized_genome_refs.append(standardized_genome_ref)  # standardize list
+                genome_obj_present[set_id][standardized_genome_ref] = True
+                new_element_refs.append(standardized_genome_ref)
+            GenomeSet_element_refs[set_id] = new_element_refs
+
+
+        # Build sliced GenomeSet
+        #
+        self.log (console, "BUILDING SLICED GENOMESET")  # DEBUG
+        output_items = []
+        if params['operator'] == 'yesA_yesB' or params['operator'] == 'yesA_noB':
+            input_element_refs = GenomeSet_element_refs['A']
+            fwd_set_id = 'A'
+            rev_set_id = 'B'
+        else:
+            input_element_refs = GenomeSet_element_refs['B']
+            fwd_set_id = 'B'
+            rev_set_id = 'A'
+
+        for this_standardized_genome_ref in input_element_refs:
+            #self.log (console, 'checking genome {}'.format(item['ref']))  # DEBUG
+            if params['operator'] == 'yesA_yesB':
+                if genome_obj_present[rev_set_id].get(this_standardized_genome_ref):
+                    output_items.append(this_standardized_genome_ref)
+            else:
+                if not genome_obj_present[rev_set_id].get(this_standardized_genome_ref):
+                    output_items.append(this_standardized_genome_ref)
+        logMsg = 'genomes in sliced output set: {}'.format(len(output_items))
+        self.log(console, logMsg)
+
+
+        # Save output GenomeSet
+        #
+        objects_created = []
+        if len(output_items) == 0:
+            report += 'no genomes to output under operator '+params['operator']+"\n"
+        else:
+            # load the method provenance from the context object
+            self.log(console, "SETTING PROVENANCE")  # DEBUG
+            provenance = [{}]
+            if 'provenance' in ctx:
+                provenance = ctx['provenance']
+            # add additional info to provenance here, in this case the input data object reference
+            provenance[0]['input_ws_objects'] = []
+            provenance[0]['input_ws_objects'].append(input_genomeSet_refs['A'])
+            provenance[0]['input_ws_objects'].append(input_genomeSet_refs['B'])
+            provenance[0]['service'] = 'kb_SetUtilities'
+            provenance[0]['method'] = 'KButil_Logical_Slice_Two_GenomeSets'
+
+            """
+            # Store output Set object (use when we switch over to KBaseSets.GenomeSet)
+            try:
+                setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
+            except Exception as e:
+                raise ValueError('ERROR: unable to instantiate SetAPI' + str(e))
+            """
+            # KBaseSearch.GenomeSet form is a dict of elements, not a list of items
+            output_elements = dict();
+            for genome_ref in sorted(output_items):
+                output_elements[genome_ref] = {'ref':genome_ref}
+                
+            if params.get('desc'):
+                output_desc = params['desc']
+            else:
+                output_desc = 'Venn slice '+params['operator']+' of GenomeSets '+input_genomeSet_name['A']+' and '+input_genomeSet_name['B']
+            output_genomeSet_obj = { 'description': output_desc,
+                                     'elements': output_elements
+            }
+            output_genomeSet_name = params['output_name']
+
+            """
+            try:
+                output_assemblySet_ref = setAPI_Client.save_assembly_set_v1 ({'workspace_name': params['workspace_name'],
+                                                                        'output_object_name': output_assemblySet_name,
+                                                                        'data': output_assemblySet_obj
+                                                                        })['set_ref']
+            except Exception as e:
+                raise ValueError('SetAPI FAILURE: Unable to save assembly set object to workspace: (' + params['workspace_name']+")\n" + str(e))
+            """
+            new_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
+                                                  'objects': [{
+                                                      'type': 'KBaseSearch.GenomeSet',
+                                                      'data': output_genomeSet_obj,
+                                                      'name': output_genomeSet_name,
+                                                      'meta': {},
+                                                      'provenance': provenance}]})[0]
+
+            objects_created.append({'ref': params['workspace_name'] + '/' + output_genomeSet_name,
+                                    'description': output_desc})
+
+            
+
+        # build output report object
+        self.log(console, "BUILDING REPORT")  # DEBUG
+        if len(output_items) > 0:
+            self.log(console, "assemblies in output set " + params['output_name'] + ": "
+                     + str(len(output_items)))
+            report += 'genomes in output set ' + params['output_name'] + ': '
+            report += str(len(output_items)) + "\n"
+            reportObj = {
+                'objects_created': objects_created,
+                'text_message': report
+            }
+        else:
+            reportObj = {
+                'objects_created': [],
+                'text_message': report
+            }
+
+        reportName = 'kb_SetUtilities_logical_slice_two_genomesets_report_' + str(uuid.uuid4())
+        ws = workspaceService(self.workspaceURL, token=ctx['token'])
+        report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
+                                                 'objects': [{'type': 'KBaseReport.Report',
+                                                              'data': reportObj,
+                                                              'name': reportName,
+                                                              'meta': {},
+                                                              'hidden': 1,
+                                                              'provenance': provenance}]})[0]
+
+        # Build report and return
+        self.log(console, "BUILDING RETURN OBJECT")
+        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
+        returnVal = {'report_name': reportName,
+                     'report_ref': report_ref}
+        self.log(console, "KButil_Logical_Slice_Two_GenomeSets DONE")
         #END KButil_Logical_Slice_Two_GenomeSets
 
         # At some point might do deeper type checking...

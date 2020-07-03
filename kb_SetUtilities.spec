@@ -147,8 +147,8 @@ module kb_SetUtilities {
     */
     typedef structure {
         workspace_name workspace_name;
-	data_obj_ref   input_assemblySet_ref_A;
-	data_obj_ref   input_assemblySet_ref_B;
+	data_obj_ref   input_genomeSet_ref_A;
+	data_obj_ref   input_genomeSet_ref_B;
 	string         operator;
 	string         desc;
         data_obj_name  output_name;
