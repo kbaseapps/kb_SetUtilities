@@ -1,0 +1,145 @@
+{
+    "ver": "1.6.0",
+    "authors": [
+        "dylan"
+    ],
+    "contact": "http://kbase.us/contact-us/",
+    "visible": true,
+    "categories": ["active","util","comparative_genomics"],
+    "widgets": {
+        "input": null,
+        "output": "kbaseReportView"
+    },
+    "parameters": [ 
+        {
+            "id": "operator",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                                {
+                                        "value": "yesA_yesB",
+                                        "display": "Genomes found in both A and B",
+                                        "id": "operator-A_and_B",
+                                        "ui-name": "operator-A_and_B"
+                                },
+                                {
+                                        "value": "yesA_noB",
+                                        "display": "Genomes found in A but not B",
+                                        "id": "operator-A_and_not_B",
+                                        "ui-name": "operator-A_and_not_B"
+                                },
+                                {
+                                        "value": "noA_yesB",
+                                        "display": "Genomes found in B but not A",
+                                        "id": "operator-not_A_and_B",
+                                        "ui-name": "operator-not_A_and_B"
+                                }
+
+                ]
+            }
+        },
+        {
+            "id": "desc",
+            "optional": true,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+		"is_output_name": false
+            }
+        },
+        {
+            "id": "input_genomeSet_ref_A",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ "KBaseSets.GenomeSet" ]
+            }
+        },
+        {
+            "id": "input_genomeSet_ref_B",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ "KBaseSets.GenomeSet" ]
+            }
+        },
+        {
+            "id": "output_name",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ "KBaseSets.GenomeSet" ],
+		"is_output_name": true
+            }
+        }
+    ],
+    "behavior": {
+        "service-mapping": {
+            "url": "",
+            "name": "kb_SetUtilities",
+            "method": "KButil_Logical_Slice_Two_GenomeSets",
+            "input_mapping": [
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
+                },
+                {
+                    "input_parameter": "operator",
+                    "target_property": "operator"
+                },
+                {
+                    "input_parameter": "desc",
+                    "target_property": "desc"
+                },
+                {
+                    "input_parameter": "input_genomeSet_ref_A",
+                    "target_property": "input_genomeSet_ref_A",
+		    "target_type_transform": "resolved-ref"
+                },
+                {
+                    "input_parameter": "input_genomeSet_ref_B",
+                    "target_property": "input_genomeSet_ref_B",
+		    "target_type_transform": "resolved-ref"
+                },
+                {
+                    "input_parameter": "output_name",
+                    "target_property": "output_name"
+                }
+            ],
+            "output_mapping": [
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
+                },
+                {
+                    "service_method_output_path": [0, "report_name"],
+                    "target_property": "report_name"
+                },
+                {
+                    "service_method_output_path": [0, "report_ref"],
+                    "target_property": "report_ref"
+                },
+                {
+		    "constant_value": "5",
+                    "target_property": "report_window_line_height"
+                }
+            ]
+        }
+    },
+    "job_id_output_field": "docker"
+}

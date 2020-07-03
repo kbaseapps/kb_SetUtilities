@@ -12,6 +12,7 @@ from installed_clients.AssemblyUtilClient import AssemblyUtil
 from installed_clients.GenomeFileUtilClient import GenomeFileUtil
 from installed_clients.ReadsUtilsClient import ReadsUtils
 from installed_clients.WorkspaceClient import Workspace as workspaceService
+from installed_clients.SetAPIServiceClient import SetAPI
 from kb_SetUtilities.kb_SetUtilitiesImpl import kb_SetUtilities
 
 
@@ -1175,6 +1176,206 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         # output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
         # self.assertEqual(len(output_obj['element_ordering']),num_sliced_features)
         pass
+
+    
+    #### test_KButil_Logical_Slice_Two_AssemblySets_01()
+    ##
+    # HIDE @unittest.skip("skipped test_KButil_Logical_Slice_Two_AssemblySets_01()")  # uncomment to skip
+    def test_KButil_Logical_Slice_Two_AssemblySets_01(self):
+        method = 'KButil_Logical_Slice_Two_AssemblySets_01'
+        msg = "RUNNING: " + method + "()"
+        print("\n\n" + msg)
+        print("=" * len(msg) + "\n\n")
+
+        # upload test data
+        try:
+            auClient = AssemblyUtil(self.callbackURL, token=self.token)
+        except Exception as e:
+            raise ValueError(
+                'Unable to instantiate auClient with callbackURL: ' + self.callbackURL + ' ERROR: ' + str(
+                    e))
+        ass_file_1 = 'assembly_1.fa'
+        ass_file_2 = 'assembly_2.fa'
+        ass_path_1 = os.path.join(self.scratch, ass_file_1)
+        ass_path_2 = os.path.join(self.scratch, ass_file_2)
+        shutil.copy(os.path.join("data", ass_file_1), ass_path_1)
+        shutil.copy(os.path.join("data", ass_file_2), ass_path_2)
+        ass_ref_1 = auClient.save_assembly_from_fasta({
+            'file': {'path': ass_path_1},
+            'workspace_name': self.getWsName(),
+            'assembly_name': 'assembly_1'
+        })
+        ass_ref_2 = auClient.save_assembly_from_fasta({
+            'file': {'path': ass_path_2},
+            'workspace_name': self.getWsName(),
+            'assembly_name': 'assembly_2'
+        })
+        ass_ref_3 = auClient.save_assembly_from_fasta({
+            'file': {'path': ass_path_2},
+            'workspace_name': self.getWsName(),
+            'assembly_name': 'assembly_3'
+        })
+
+        # save assemblySets
+        try:
+            setAPI_Client = SetAPI (url=self.serviceWizardURL, token=self.ctx['token'])  # for dynamic service
+        except Exception as e:
+            raise ValueError('ERROR: unable to instantiate SetAPI' + str(e))
+        set_1_items = [{'ref':ass_ref_1, 'label': 'assembly 1'},
+                       {'ref':ass_ref_2, 'label': 'assembly 2'}]
+        set_2_items = [{'ref':ass_ref_2, 'label': 'assembly 2'},
+                       {'ref':ass_ref_3, 'label': 'assembly 3'}]
+        set_1_desc = 'test set'+'_1'
+        set_2_desc = 'test set'+'_2'
+        set_1_obj = { 'description': set_1_desc,
+                      'items': set_1_items
+        }
+        set_2_obj = { 'description': set_2_desc,
+                      'items': set_2_items
+        }
+        set_1_obj_name = 'set_1.AssemblySet'
+        set_2_obj_name = 'set_2.AssemblySet'
+        try:
+            set_1_ref = setAPI_Client.save_assembly_set_v1 ({'workspace_name': self.getWsName(),
+                                                             'output_object_name': set_1_obj_name,
+                                                             'data': set_1_obj
+            })['set_ref']
+            set_2_ref = setAPI_Client.save_assembly_set_v1 ({'workspace_name': self.getWsName(),
+                                                             'output_object_name': set_2_obj_name,
+                                                             'data': set_2_obj
+            })['set_ref']
+        except Exception as e:
+            raise ValueError('SetAPI FAILURE: Unable to save assembly set object to workspace: (' + self.getWsName()+")\n" + str(e))
+            
+        # run method
+        num_sliced_items = 1  # yesA_yesB
+        logical_operator = 'yesA_yesB'
+        base_output_name = 'logical_slice_assemblysets_output_' + logical_operator
+        params = {
+            'workspace_name': self.getWsName(),
+            'input_assemblySet_ref_A': set_1_ref,
+            'input_assemblySet_ref_B': set_2_ref,
+            'operator': logical_operator,
+            'output_name': base_output_name,
+            'desc': 'test'
+        }
+        result = self.getImpl().KButil_Logical_Slice_Two_AssemblySets(self.getContext(), params)
+        print('RESULT:')
+        pprint(result)
+
+        # check the output
+        output_name = base_output_name
+        output_type = 'KBaseSets.AssemblySet'
+        output_ref = self.getWsName() + '/' + output_name
+        info_list = self.getWsClient().get_object_info_new({'objects': [{'ref': output_ref}]})
+        self.assertEqual(len(info_list), 1)
+        output_info = info_list[0]
+        self.assertEqual(output_info[1], output_name)
+        self.assertEqual(output_info[2].split('-')[0], output_type)
+        output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        self.assertEqual(len(output_obj['items']), num_sliced_items)
+        pass
+
+
+    #### test_KButil_Logical_Slice_Two_GenomeSets_01()
+    ##
+    # HIDE @unittest.skip("skipped test_KButil_Logical_Slice_Two_GenomeSets_01()")  # uncomment to skip
+    def test_KButil_Logical_Slice_Two_GenomeSets_01(self):
+        method = 'KButil_Logical_Slice_Two_GenomeSets_01'
+        msg = "RUNNING: " + method + "()"
+        print("\n\n" + msg)
+        print("=" * len(msg) + "\n\n")
+
+        # upload test data
+        # input_data
+        genomeInfo_0 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 0)
+        genomeInfo_1 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 1)
+        genomeInfo_2 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic', 2)
+        genomeInfo_3 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic', 3)
+
+        genome_ref_0 = self.getWsName() + '/' + str(genomeInfo_0[0]) + '/' + str(genomeInfo_0[4])
+        genome_ref_1 = self.getWsName() + '/' + str(genomeInfo_1[0]) + '/' + str(genomeInfo_1[4])
+        genome_ref_2 = self.getWsName() + '/' + str(genomeInfo_2[0]) + '/' + str(genomeInfo_2[4])
+        genome_ref_3 = self.getWsName() + '/' + str(genomeInfo_3[0]) + '/' + str(genomeInfo_3[4])
+
+        # feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        # feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        # feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        # feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+
+        # GenomeSet 1
+        genomeSet_obj_1 = {'description': 'test genomeSet 1',
+                           'elements': {'genome_0a': {'ref': genome_ref_0},
+                                        'genome_1a': {'ref': genome_ref_1},
+                                        'genome_2a': {'ref': genome_ref_2},
+                                        }
+                           }
+        provenance = [{}]
+        genomeSet_info = self.getWsClient().save_objects({
+            'workspace': self.getWsName(),
+            'objects': [
+                {
+                    'type': 'KBaseSearch.GenomeSet',
+                    'data': genomeSet_obj_1,
+                    'name': 'test_genomeSet_1',
+                    'meta': {},
+                    'provenance': provenance
+                }
+            ]})[0]
+        set_1_ref = str(genomeSet_info[WSID_I]) + '/' + str(
+            genomeSet_info[OBJID_I]) + '/' + str(genomeSet_info[VERSION_I])
+
+        # GenomeSet 2
+        genomeSet_obj_2 = {'description': 'test genomeSet 2',
+                           'elements': {'genome_1b': {'ref': genome_ref_1},
+                                        'genome_2b': {'ref': genome_ref_2},
+                                        'genome_3b': {'ref': genome_ref_3}
+                                        }
+                           }
+        provenance = [{}]
+        genomeSet_info = self.getWsClient().save_objects({
+            'workspace': self.getWsName(),
+            'objects': [
+                {
+                    'type': 'KBaseSearch.GenomeSet',
+                    'data': genomeSet_obj_2,
+                    'name': 'test_genomeSet_2',
+                    'meta': {},
+                    'provenance': provenance
+                }
+            ]})[0]
+        set_2_ref = str(genomeSet_info[WSID_I]) + '/' + str(
+            genomeSet_info[OBJID_I]) + '/' + str(genomeSet_info[VERSION_I])
+            
+        # run method
+        num_sliced_elements = 2  # yesA_yesB
+        logical_operator = 'yesA_yesB'
+        base_output_name = 'logical_slice_genomesets_output_' + logical_operator
+        params = {
+            'workspace_name': self.getWsName(),
+            'input_genomeSet_ref_A': set_1_ref,
+            'input_genomeSet_ref_B': set_2_ref,
+            'operator': logical_operator,
+            'output_name': base_output_name,
+            'desc': 'test'
+        }
+        result = self.getImpl().KButil_Logical_Slice_Two_GenomeSets(self.getContext(), params)
+        print('RESULT:')
+        pprint(result)
+
+        # check the output
+        output_name = base_output_name
+        output_type = 'KBaseSearch.GenomeSet'
+        output_ref = self.getWsName() + '/' + output_name
+        info_list = self.getWsClient().get_object_info_new({'objects': [{'ref': output_ref}]})
+        self.assertEqual(len(info_list), 1)
+        output_info = info_list[0]
+        self.assertEqual(output_info[1], output_name)
+        self.assertEqual(output_info[2].split('-')[0], output_type)
+        output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        self.assertEqual(len(list(output_obj['elements'].keys())), num_sliced_elements)
+        pass
+
 
     #### test_KButil_Merge_GenomeSets_01():
     ##

@@ -1,8 +1,13 @@
+### Version 1.6.0
+__Changes__
+- added "Venn Slice Two AssemblySets" App
+- added "Venn Slice Two GenomeSets" App
+
 ### Version 1.5.0
 __Changes__
 - added KButil_Remove_Genomes_from_GenomeSet()
 - changed KButil_Add_Genomes_to_GenomeSet() to accept genome object list
-- Description input field no longer required
+- Description input field no longer required in Apps
 
 ### Version 1.4.0
 __Changes__
