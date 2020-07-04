@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Build GenomeSet from FeatureSet - v1.0.1
+name: Build GenomeSet from FeatureSet - v1.7.0
 tooltip: |
     Allows users to extract a GenomeSet from a FeatureSet.
 screenshots:
@@ -49,6 +49,7 @@ parameters :
 
 description : |
     <p><b>Build Genome Set from Feature Set</b> allows a user to extract Genomes from a FeatureSet and make a GenomeSet object from them. The features themselves in a FeatureSet object contain the information about which genomes they are associated with, so this information is extracted to form the output GenomeSet.</p>
+    <p>Note: Features from Annotated Metagenome Assembly objects are skipped so that output GenomeSet only contains Genome Objects.</p>
 
     <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
 

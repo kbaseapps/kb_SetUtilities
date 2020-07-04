@@ -1,9 +1,9 @@
 #
 # define display information
 #
-name: Slice FeatureSets by Genomes - v1.1.0
+name: Slice FeatureSets by Genomes - v1.7.0
 tooltip: |
-    Allows user to slice FeatureSets by Genomes.
+    Allows user to slice FeatureSets by Genomes and/or Metagenomes.
 screenshots:
     - Slice_FeatureSets_by_Genomes.png
 
@@ -42,9 +42,9 @@ parameters :
             Add a list of FeatureSet names here.
     input_genome_refs:
         ui-name : |
-            Input Slicing Genomes
+            Slicing Genomes and/or Metagenomes
         short-hint : |
-            Add a list of Genomes here.
+            Add a list of Genomes or Annotated Metagenome Assemblies here.
     output_name:
         ui-name : |
             Output FeatureSet(s) Name

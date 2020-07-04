@@ -1,13 +1,13 @@
 #
 # define display information
 #
-name: Venn Slice Two FeatureSets - v1.1.0
+name: Venn Slice Two FeatureSets - v1.7.0
 tooltip: |
     Allows users to slice two FeatureSets according to their Venn overlap.
 screenshots:
     - Logical_Slice_Two_FeatureSets.png
 
-icon: kb-purple.png
+icon: vennslice-purple.png
 
 #
 # define a set of similar methods that might be useful to the user
