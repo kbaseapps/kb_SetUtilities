@@ -681,7 +681,7 @@ class kb_SetUtilities:
             except Exception as e:
                 raise ValueError('Unable to get genome object info from workspace: (' + str(this_genome_ref) +')' + str(e))
 
-            acceptable_types = ["KBaseGenomes.Genome", "KBaseGenomeAnnotations.GenomeAnnotation"]
+            acceptable_types = ["KBaseGenomes.Genome", "KBaseMetagenomes.AnnotatedMetagenomeAssembly"]
             if genome_obj_type not in acceptable_types:
                 raise ValueError("Input Genome of type: '" + genome_obj_type +
                                  "'.  Must be one of " + ", ".join(acceptable_types))
@@ -777,7 +777,7 @@ class kb_SetUtilities:
                         except Exception as e:
                             raise ValueError('Unable to get genome object info from workspace: (' + str(this_genome_ref) +')' + str(e))
 
-                        acceptable_types = ["KBaseGenomes.Genome", "KBaseGenomeAnnotations.GenomeAnnotation"]
+                        acceptable_types = ["KBaseGenomes.Genome", "KBaseMetagenomes.AnnotatedMetagenomeAssembly"]
                         if genome_obj_type not in acceptable_types:
                             raise ValueError("Input Genome of type: '" + genome_obj_type +
                                              "'.  Must be one of " + ", ".join(acceptable_types))
@@ -1012,7 +1012,7 @@ class kb_SetUtilities:
                         except Exception as e:
                             raise ValueError('Unable to get genome object info from workspace: (' + str(this_genome_ref) +')' + str(e))
 
-                        acceptable_types = ["KBaseGenomes.Genome", "KBaseGenomeAnnotations.GenomeAnnotation"]
+                        acceptable_types = ["KBaseGenomes.Genome", "KBaseGenomeAnnotations.GenomeAnnotation","KBaseMetagenomes.AnnotatedMetagenomeAssembly"]
                         if genome_obj_type not in acceptable_types:
                             raise ValueError("Input Genome of type: '" + genome_obj_type +
                                              "'.  Must be one of " + ", ".join(acceptable_types))
@@ -2052,7 +2052,10 @@ class kb_SetUtilities:
                     except Exception as e:
                         errMsg = 'Unable to fetch genomeRef object from workspace: ' + str(e)
                         raise ValueError(errMsg)
-                    if type_name != 'Genome' and type_name != 'GenomeAnnotaton':
+                    if type_name == 'AnnotatedMetagenomeAssembly':
+                        self.log(console, "SKIPPING AnnotatedMetagenomeAssembly Object "+obj_name)
+                        continue
+                    elif type_name != 'Genome' and type_name != 'GenomeAnnotaton':
                         errMsg = "Bad Type:  Should be Genome or GenomeAnnotation instead"
                         errMsg += " of '{}' for ref: '{}'"
                         raise ValueError(errMsg.format(type_name, genomeRef))
