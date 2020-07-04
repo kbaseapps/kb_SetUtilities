@@ -1,9 +1,13 @@
+### Version 1.7.1
+__Changes__
+- tweaked Venn Slice to fix bug in GenomeSet and improve icon
+
 ### Version 1.7.0
 __Changes__
 - added support for FeatureSets that may include Annotated Metagenome Assembly features to
   * KButil_Slice_FeatureSets_by_Genomes
   * KButil_Build_GenomeSet_from_FeatureSet
-  * KButil_Logical_Slice_Two_FeatureSets
+  * KButil_Logical_Slice_Two_FeatureSets (aka "Venn Slice")
 
 ### Version 1.6.0
 __Changes__

@@ -1,5 +1,5 @@
 {
-    "ver": "1.6.0",
+    "ver": "1.7.1",
     "authors": [
         "dylan"
     ],
@@ -61,7 +61,7 @@
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": [ "KBaseSets.GenomeSet" ]
+                "valid_ws_types": [ "KBaseSearch.GenomeSet" ]
             }
         },
         {
@@ -72,7 +72,7 @@
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": [ "KBaseSets.GenomeSet" ]
+                "valid_ws_types": [ "KBaseSearch.GenomeSet" ]
             }
         },
         {
