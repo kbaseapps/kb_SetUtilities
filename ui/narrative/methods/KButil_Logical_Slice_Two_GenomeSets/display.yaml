@@ -5,9 +5,9 @@ name: Venn Slice Two GenomeSets - v1.6.0
 tooltip: |
     Allows users to slice two GenomeSets according to their Venn overlap.
 screenshots:
-    - Logical_Slice_Two_Sets.png
+    - Logical_Slice_Two_GenomeSets.png
 
-icon: kb-purple.png
+icon: vennslice-purple.png
 
 #
 # define a set of similar methods that might be useful to the user

@@ -1,3 +1,10 @@
+### Version 1.7.0
+__Changes__
+- added support for FeatureSets that may include Annotated Metagenome Assembly features to
+  * KButil_Slice_FeatureSets_by_Genomes
+  * KButil_Build_GenomeSet_from_FeatureSet
+  * KButil_Logical_Slice_Two_FeatureSets
+
 ### Version 1.6.0
 __Changes__
 - added "Venn Slice Two AssemblySets" App
