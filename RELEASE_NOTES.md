@@ -1,3 +1,7 @@
+### Version 1.7.2
+__Changes__
+- added GenomeSets and SpeciesTrees as option to be added in "Add Genomes to GenomeSet"
+
 ### Version 1.7.1
 __Changes__
 - tweaked Venn Slice to fix bug in GenomeSet and improve icon
