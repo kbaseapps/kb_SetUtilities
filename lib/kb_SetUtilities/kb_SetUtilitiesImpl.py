@@ -2170,6 +2170,7 @@ class kb_SetUtilities:
         #BEGIN KButil_Add_Genomes_to_GenomeSet
 
         # init
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
         ws = workspaceService(self.workspaceURL, token=ctx['token'])
         console = []
         invalid_msgs = []
@@ -2194,7 +2195,8 @@ class kb_SetUtilities:
 
         # Build GenomeSet
         elements = dict()
-
+        query_genome_ref_order = []
+        
         # add old GenomeSet
         #
         if 'input_genomeset_ref' in params and params['input_genomeset_ref'] is not None:
@@ -2217,38 +2219,57 @@ class kb_SetUtilities:
                 try:
                     already_included = elements[gId]
                 except:
-                    elements[gId] = dict()
-                    elements[gId]['ref'] = genomeRef  # the key line
+                    elements[genomeRef] = dict()
+                    elements[genomeRef]['ref'] = genomeRef  # the key line
                     self.log(console, "adding element " + gId + " : " + genomeRef)  # DEBUG
 
-        # add new genome
-        for genomeRef in params['input_genome_refs']:
+                    query_genome_ref_order.append(genomeRef)
+                    
 
+        # add new genomes
+        #
+        genomeSet_obj_types = ["KBaseSearch.GenomeSet", "KBaseSets.GenomeSet"]
+        genome_obj_types    = ["KBaseGenomes.Genome", "KBaseGenomeAnnotations.Genome"]
+        tree_obj_types      = ["KBaseTrees.Tree"]
+        for input_ref in params['input_genome_refs']:
             try:
-                #objects = ws.get_objects([{'ref': genomeRef}])
-                objects = ws.get_objects2({'objects': [{'ref': genomeRef}]})['data']
-                genomeObj = objects[0]['data']
-                info = objects[0]['info']
-                obj_name = info[1]
-                type_name = info[2].split('.')[1].split('-')[0]
-                if type_name != 'Genome':
-                    errMsg = "Bad Type: Should be Genome or GenomeAnnotation instead of '{}'"
-                    raise ValueError(errMsg.format(type_name))
-
-            except Exception as e:
-                raise ValueError('Unable to fetch input_name object from workspace: ' + str(e))
-                #to get the full stack trace: traceback.format_exc()
-
-            #gId = genomeObj['id']
-            #if gId == 'Unknown':
-            #    gId = genomeRef
-            gId = genomeRef
-            try:
-                already_included = elements[gId]
+                query_genome_obj = ws.get_objects2({'objects':[{'ref': input_ref}]})['data'][0]
+                query_genome_obj_data = query_genome_obj['data']
+                query_genome_obj_info = query_genome_obj['info']
+                query_genome_obj_type = query_genome_obj_info[TYPE_I].split('-')[0]
             except:
-                elements[gId] = dict()
-                elements[gId]['ref'] = genomeRef  # the key line
-                self.log(console, "adding new element " + gId + " : " + genomeRef)  # DEBUG
+                raise ValueError("unable to fetch input genome object: " + input_ref)
+
+            # just a genome
+            if query_genome_obj_type in genome_obj_types:
+                if input_ref not in elements:
+                    elements[input_ref] = dict()
+                    elements[input_ref]['ref'] = input_ref  # the key line
+                    self.log(console, "adding element " + input_ref)  # DEBUG
+                    query_genome_ref_order.append(input_ref)
+
+            # handle genomeSet
+            elif query_genome_obj_type in genomeSet_obj_types:
+                for genome_id in sorted(query_genome_obj_data['elements'].keys()):
+                    genome_ref = query_genome_obj_data['elements'][genome_id]['ref']
+                    if genome_ref not in elements:
+                        elements[genome_ref] = dict()
+                        elements[genome_ref]['ref'] = genome_ref  # the key line
+                        self.log(console, "adding element " + genome_ref)  # DEBUG
+                        query_genome_ref_order.append(genome_ref)
+
+            # handle tree type
+            elif query_genome_obj_type in tree_obj_types:
+                for genome_id in sorted(query_genome_obj_data['ws_refs'].keys()):
+                    genome_ref = query_genome_obj_data['ws_refs'][genome_id]['g'][0]
+                    if genome_ref not in elements:
+                        elements[genome_ref] = dict()
+                        elements[genome_ref]['ref'] = genome_ref  # the key line
+                        self.log(console, "adding element " + genome_ref)  # DEBUG
+                        query_genome_ref_order.append(genome_ref)
+            else:  
+                raise ValueError ("bad type for input_genome_refs")
+
 
         # load the method provenance from the context object
         #
