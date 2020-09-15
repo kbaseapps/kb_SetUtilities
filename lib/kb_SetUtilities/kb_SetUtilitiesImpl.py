@@ -32,7 +32,7 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.7.1"
+    VERSION = "1.7.3"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
     GIT_COMMIT_HASH = "6993da1ac2cbab8b9001baaf6af91091aec939a1"
 
@@ -1728,12 +1728,13 @@ class kb_SetUtilities:
 
             for gId in list(genomeSet['elements'].keys()):
                 genomeRef = genomeSet['elements'][gId]['ref']
+                new_gId = genomeRef
                 try:
-                    already_included = elements[gId]
+                    already_included = elements[new_gId]
                 except:
-                    elements[gId] = dict()
-                    elements[gId]['ref'] = genomeRef  # the key line
-                    self.log(console, "adding element " + gId + " : " + genomeRef)  # DEBUG
+                    elements[new_gId] = dict()
+                    elements[new_gId]['ref'] = genomeRef  # the key line
+                    self.log(console, "adding element " + new_gId + " : " + genomeRef)  # DEBUG
 
         # Store output object
         #
