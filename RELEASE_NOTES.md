@@ -1,3 +1,7 @@
+### Version 1.7.3
+__Changes__
+- fixed bug in "Merge GenomeSets" caused by SpeciesTree GenomeSet elements having same ids
+
 ### Version 1.7.2
 __Changes__
 - added GenomeSets and SpeciesTrees as option to be added in "Add Genomes to GenomeSet"
