@@ -478,9 +478,13 @@ class kb_SetUtilities:
         element_ordering = []
         elements = {}
         featureSet_seen = dict()
+        feature_seen    = dict()
+        input_feature_cnt = dict()
+        merged_feature_cnt = 0
         for featureSet_ref in params['input_refs']:
             if featureSet_ref not in list(featureSet_seen.keys()):
-                featureSet_seen[featureSet_ref] = 1
+                featureSet_seen[featureSet_ref] = True
+                input_feature_cnt[featureSet_ref] = 0
             else:
                 self.log("repeat featureSet_ref: '" + featureSet_ref + "'")
                 self.log(invalid_msgs, "repeat featureSet_ref: '" + featureSet_ref + "'")
@@ -520,16 +524,24 @@ class kb_SetUtilities:
                 this_element_ordering = this_featureSet['element_ordering']
             else:
                 this_element_ordering = sorted(this_featureSet['elements'].keys())
-            element_ordering.extend(this_element_ordering)
             logMsg = 'features in input set {}: {}'.format(featureSet_ref,
                                                            len(this_element_ordering))
             self.log(console, logMsg)
+
+            for fId in this_element_ordering:
+                if not elements.get(fId):
+                    elements[fId] = []
+                    element_ordering.append(fId)
+                for genome_ref in this_featureSet['elements'][fId]:
+                    input_feature_cnt[featureSet_ref] += 1
+                    unique_fId = genome_ref+'-'+fId
+                    if not feature_seen.get(unique_fId):
+                        elements[fId].append(genome_ref)
+                        merged_feature_cnt += 1
+                        feature_seen[unique_fId] = True
             report += 'features in input set ' + featureSet_ref + ': ' + str(
-                len(this_element_ordering)) + "\n"
-
-            for fId in list(this_featureSet['elements'].keys()):
-                elements[fId] = this_featureSet['elements'][fId]
-
+                input_feature_cnt[featureSet_ref]) + "\n"
+                
         # load the method provenance from the context object
         self.log(console, "SETTING PROVENANCE")  # DEBUG
         provenance = [{}]
@@ -562,9 +574,9 @@ class kb_SetUtilities:
         self.log(console, "BUILDING REPORT")  # DEBUG
         if len(invalid_msgs) == 0:
             self.log(console, "features in output set " + params['output_name'] + ": "
-                     + str(len(element_ordering)))
+                     + str(merged_feature_cnt))
             report += 'features in output set ' + params['output_name'] + ': '
-            report += str(len(element_ordering)) + "\n"
+            report += str(merged_feature_cnt) + "\n"
             reportObj = {
                 'objects_created': [{'ref': params['workspace_name'] + '/' + params['output_name'],
                                      'description':'KButil_Merge_FeatureSet_Collection'}],

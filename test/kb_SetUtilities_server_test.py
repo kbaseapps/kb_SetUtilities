@@ -364,7 +364,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
     #### test_KButil_Localize_FeatureSet():
     ##
     # skipping unittest until method fully debugged and going to be active
-    @unittest.skip("skipped test_KButil_Localize_FeatureSet()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Localize_FeatureSet()")  # uncomment to skip
     def test_KButil_Localize_FeatureSet_01(self):
         method = 'KButil_Localize_FeatureSet_01'
         msg = "RUNNING: " + method + "()"
