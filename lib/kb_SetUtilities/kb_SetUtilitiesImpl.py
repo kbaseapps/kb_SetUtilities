@@ -998,10 +998,12 @@ class kb_SetUtilities:
             FeatureSet[set_id] = this_featureSet
             if 'element_ordering' not in list(this_featureSet.keys()):
                 FeatureSet[set_id]['element_ordering'] = sorted(this_featureSet['elements'].keys())
-            logMsg = 'features in input set {}: {}'.format(input_featureSet_refs[set_id],
+            logMsg = 'features in input set {} - {}: {}'.format(set_id,
+                                                                this_featureSet_obj_name,
                                                            len(FeatureSet[set_id]['element_ordering']))
             self.log(console, logMsg)
-
+            report += logMsg+"\n"
+            
 
         # Store A and B genome + fid hits
         #
@@ -1036,6 +1038,7 @@ class kb_SetUtilities:
                     feature_standardized_genome_refs.append(standardized_genome_ref)  # standardize list
                     combo_id = standardized_genome_ref + genome_id_feature_id_delim + fId
                     genome_feature_present[set_id][combo_id] = True
+                    self.log(console,"Set {} contains {}".format(set_id,combo_id))  # DEBUG
                 FeatureSet[set_id]['elements'][fId] = feature_standardized_genome_refs
 
 
@@ -1059,13 +1062,14 @@ class kb_SetUtilities:
             genomes_retained = []
             for this_genome_ref in FeatureSet[fwd_set_id]['elements'][fId]:
                 combo_id = this_genome_ref + genome_id_feature_id_delim + fId
-                #self.log (console, "\t"+'checking genome {}'.format(this_genome_ref))  # DEBUG
+                self.log (console, "\t"+'checking set {} genome+fid: {}'.format(fwd_set_id,combo_id))  # DEBUG
 
                 if params['operator'] == 'yesA_yesB':
                     try:
                         seen = genome_feature_present[rev_set_id][combo_id]
                         feature_hit = True
                         genomes_retained.append(this_genome_ref)
+                        self.log(console, "keeping feature {}".format(combo_id))  # DEBUG
                     except:
                         pass
                 else:
@@ -1075,6 +1079,7 @@ class kb_SetUtilities:
                     except:
                         feature_hit = True
                         genomes_retained.append(this_genome_ref)
+                        self.log(console, "keeping feature {}".format(combo_id))  # DEBUG
 
             if feature_hit:
                 output_element_ordering.append(fId)
@@ -1249,10 +1254,12 @@ class kb_SetUtilities:
                 raise ValueError("Bad Type:  Should be AssemblySet instead of '" + type_name + "'")
 
             AssemblySet[set_id] = this_assemblySet
-            logMsg = 'assemblies in input set {}: {}'.format(input_assemblySet_refs[set_id],
+            logMsg = 'assemblies in input set {} - {}: {}'.format(set_id,
+                                                                  this_assemblySet_obj_name,
                                                            len(AssemblySet[set_id]['items']))
             self.log(console, logMsg)
-
+            report += logMsg+"\n"
+            
 
         # Store A and B genome + fid hits
         #
@@ -1288,6 +1295,7 @@ class kb_SetUtilities:
                 standardized_assembly_refs.append(standardized_assembly_ref)  # standardize list
                 assembly_obj_present[set_id][standardized_assembly_ref] = True
                 new_items.append({'ref':standardized_assembly_ref,'label':item['label']})
+                self.log(console,"Set {} contains {}".format(set_id,standardized_assembly_ref))  # DEBUG
             AssemblySet[set_id]['items'] = new_items
 
 
@@ -1305,13 +1313,15 @@ class kb_SetUtilities:
             rev_set_id = 'A'
 
         for item in input_items:
-            #self.log (console, 'checking assemvly {}'.format(item['ref']))  # DEBUG
+            self.log (console, 'checking assembly {} from set {}'.format(item['ref'],fwd_set_id))  # DEBUG
             this_standardized_assembly_ref = item['ref']
             if params['operator'] == 'yesA_yesB':
                 if assembly_obj_present[rev_set_id].get(this_standardized_assembly_ref):
+                    self.log(console, "keeping assembly {}".format(item['ref']))  # DEBUG
                     output_items.append(item)
             else:
                 if not assembly_obj_present[rev_set_id].get(this_standardized_assembly_ref):
+                    self.log(console, "keeping assembly {}".format(item['ref']))  # DEBUG
                     output_items.append(item)
         logMsg = 'assemblies in sliced output set: {}'.format(len(output_items))
         self.log(console, logMsg)
@@ -1482,9 +1492,11 @@ class kb_SetUtilities:
             GenomeSet_element_refs[set_id] = []
             for genome_id in sorted(this_genomeSet['elements'].keys()):
                 GenomeSet_element_refs[set_id].append(this_genomeSet['elements'][genome_id]['ref'])
-            logMsg = 'genomes in input set {}: {}'.format(input_genomeSet_refs[set_id],
+            logMsg = 'genomes in input set {} - {}: {}'.format(set_id,
+                                                               this_genomeSet_obj_name,
                                                           len(GenomeSet_element_refs[set_id]))
             self.log(console, logMsg)
+            report += logMsg+"\n"
 
 
         # Store A and B genome + fid hits
@@ -1520,6 +1532,7 @@ class kb_SetUtilities:
                 standardized_genome_refs.append(standardized_genome_ref)  # standardize list
                 genome_obj_present[set_id][standardized_genome_ref] = True
                 new_element_refs.append(standardized_genome_ref)
+                self.log(console,"Set {} contains {}".format(set_id,standardized_genome_ref))  # DEBUG
             GenomeSet_element_refs[set_id] = new_element_refs
 
 
@@ -1537,13 +1550,15 @@ class kb_SetUtilities:
             rev_set_id = 'A'
 
         for this_standardized_genome_ref in input_element_refs:
-            #self.log (console, 'checking genome {}'.format(item['ref']))  # DEBUG
+            self.log (console, 'checking set {} genome {}'.format(set_id,this_standardized_genome_ref))  # DEBUG
             if params['operator'] == 'yesA_yesB':
                 if genome_obj_present[rev_set_id].get(this_standardized_genome_ref):
                     output_items.append(this_standardized_genome_ref)
+                    self.log(console, "keeping genome {}".format(this_standardized_genome_ref))  # DEBUG
             else:
                 if not genome_obj_present[rev_set_id].get(this_standardized_genome_ref):
                     output_items.append(this_standardized_genome_ref)
+                    self.log(console, "keeping genome {}".format(this_standardized_genome_ref))  # DEBUG
         logMsg = 'genomes in sliced output set: {}'.format(len(output_items))
         self.log(console, logMsg)
 

@@ -1249,7 +1249,11 @@ class kb_SetUtilitiesTest(unittest.TestCase):
             
         # run method
         num_sliced_items = 1  # yesA_yesB
+        #num_sliced_items = 1  # yesA_noB
+        #num_sliced_items = 1  # noA_yesB
         logical_operator = 'yesA_yesB'
+        #logical_operator = 'yesA_noB'
+        #logical_operator = 'noA_yesB'
         base_output_name = 'logical_slice_assemblysets_output_' + logical_operator
         params = {
             'workspace_name': self.getWsName(),
