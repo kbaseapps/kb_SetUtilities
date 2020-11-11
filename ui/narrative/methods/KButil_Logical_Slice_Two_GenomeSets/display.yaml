@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Venn Slice Two GenomeSets - v1.7.1
+name: Venn Slice Two GenomeSets - v1.7.4
 tooltip: |
     Allows users to slice two GenomeSets according to their Venn overlap.
 screenshots:

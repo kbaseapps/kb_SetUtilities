@@ -3,6 +3,8 @@ __Changes__
 - added support for FeatureSets that may include Annotated Metagenome Assembly features to
   * KButil_Merge_FeatureSet_Collection
 - fixed bug in KButil_Merge_FeatureSet_Collection to avoid duplication
+- fixed bug in KButil_Logical_Slice_*() that was returning union for yesA_notB and notA_yesB
+- updated path to support URL
 
 ### Version 1.7.3
 __Changes__
