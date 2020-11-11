@@ -798,7 +798,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
                 {
                     'type': 'KBaseCollections.FeatureSet',
                     'data': featureSet_obj_2,
-                    'name': 'test_featureSet_1',
+                    'name': 'test_featureSet_2',
                     'meta': {},
                     'provenance': provenance
                 }
@@ -912,7 +912,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
                 {
                     'type': 'KBaseCollections.FeatureSet',
                     'data': featureSet_obj_2,
-                    'name': 'test_featureSet_1',
+                    'name': 'test_featureSet_2',
                     'meta': {},
                     'provenance': provenance
                 }
@@ -1027,7 +1027,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
                 {
                     'type': 'KBaseCollections.FeatureSet',
                     'data': featureSet_obj_2,
-                    'name': 'test_featureSet_1',
+                    'name': 'test_featureSet_2',
                     'meta': {},
                     'provenance': provenance
                 }
@@ -1138,7 +1138,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
                 {
                     'type': 'KBaseCollections.FeatureSet',
                     'data': featureSet_obj_2,
-                    'name': 'test_featureSet_1',
+                    'name': 'test_featureSet_2',
                     'meta': {},
                     'provenance': provenance
                 }
