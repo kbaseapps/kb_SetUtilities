@@ -1018,7 +1018,7 @@ class kb_SetUtilities:
                 for this_genome_ref in FeatureSet[set_id]['elements'][fId]:
 
                     if this_genome_ref in featureSet_genome_ref_to_standardized:
-                        standardized_genome_ref = featureSet_genome_ref_to_standardized[this_genome_ref]
+                        standardized_genome_ref_noVer = featureSet_genome_ref_to_standardized[this_genome_ref]
                     else:  # get standardized genome_ref
                         try:
                             genome_obj_info = wsClient.get_object_info_new ({'objects':[{'ref':this_genome_ref}]})[0]
@@ -1031,12 +1031,14 @@ class kb_SetUtilities:
                             raise ValueError("Input Genome of type: '" + genome_obj_type +
                                              "'.  Must be one of " + ", ".join(acceptable_types))
 
-                        standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
-                                                                    genome_obj_info[OBJID_I],
-                                                                    genome_obj_info[VERSION_I])
-                        featureSet_genome_ref_to_standardized[this_genome_ref] = standardized_genome_ref
-                    feature_standardized_genome_refs.append(standardized_genome_ref)  # standardize list
-                    combo_id = standardized_genome_ref + genome_id_feature_id_delim + fId
+                        #standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
+                        #                                            genome_obj_info[OBJID_I],
+                        #                                            genome_obj_info[VERSION_I])
+                        standardized_genome_ref_noVer = '{}/{}'.format(genome_obj_info[WSID_I],
+                                                                       genome_obj_info[OBJID_I])
+                        featureSet_genome_ref_to_standardized[this_genome_ref] = standardized_genome_ref_noVer
+                    feature_standardized_genome_refs.append(standardized_genome_ref_noVer)  # standardize list
+                    combo_id = standardized_genome_ref_noVer + genome_id_feature_id_delim + fId
                     genome_feature_present[set_id][combo_id] = True
                     self.log(console,"Set {} contains {}".format(set_id,combo_id))  # DEBUG
                 FeatureSet[set_id]['elements'][fId] = feature_standardized_genome_refs
@@ -1060,25 +1062,19 @@ class kb_SetUtilities:
             #self.log (console, 'checking feature {}'.format(fId))  # DEBUG
             feature_hit = False
             genomes_retained = []
-            for this_genome_ref in FeatureSet[fwd_set_id]['elements'][fId]:
-                combo_id = this_genome_ref + genome_id_feature_id_delim + fId
+            for this_genome_ref_noVer in FeatureSet[fwd_set_id]['elements'][fId]:
+                combo_id = this_genome_ref_noVer + genome_id_feature_id_delim + fId
                 self.log (console, "\t"+'checking set {} genome+fid: {}'.format(fwd_set_id,combo_id))  # DEBUG
 
                 if params['operator'] == 'yesA_yesB':
-                    try:
-                        seen = genome_feature_present[rev_set_id][combo_id]
+                    if genome_feature_present[rev_set_id].get(combo_id):
                         feature_hit = True
-                        genomes_retained.append(this_genome_ref)
+                        genomes_retained.append(this_genome_ref_noVer)
                         self.log(console, "keeping feature {}".format(combo_id))  # DEBUG
-                    except:
-                        pass
                 else:
-                    try:
-                        seen = genome_feature_present[rev_set_id][combo_id]
-                        pass
-                    except:
+                    if not genome_feature_present[rev_set_id].get(combo_id):
                         feature_hit = True
-                        genomes_retained.append(this_genome_ref)
+                        genomes_retained.append(this_genome_ref_noVer)
                         self.log(console, "keeping feature {}".format(combo_id))  # DEBUG
 
             if feature_hit:
@@ -1288,14 +1284,16 @@ class kb_SetUtilities:
                         raise ValueError("Input Assembly of type: '" + assembly_obj_type +
                                          "'.  Must be one of " + ", ".join(acceptable_types))
 
-                    standardized_assembly_ref = '{}/{}/{}'.format(assembly_obj_info[WSID_I],
-                                                                  assembly_obj_info[OBJID_I],
-                                                                  assembly_obj_info[VERSION_I])
-                    assembly_ref_to_standardized[this_assembly_ref] = standardized_assembly_ref
-                standardized_assembly_refs.append(standardized_assembly_ref)  # standardize list
-                assembly_obj_present[set_id][standardized_assembly_ref] = True
-                new_items.append({'ref':standardized_assembly_ref,'label':item['label']})
-                self.log(console,"Set {} contains {}".format(set_id,standardized_assembly_ref))  # DEBUG
+                    #standardized_assembly_ref = '{}/{}/{}'.format(assembly_obj_info[WSID_I],
+                    #                                              assembly_obj_info[OBJID_I],
+                    #                                              assembly_obj_info[VERSION_I])
+                    standardized_assembly_ref_noVer = '{}/{}'.format(assembly_obj_info[WSID_I],
+                                                                     assembly_obj_info[OBJID_I])
+                    assembly_ref_to_standardized[this_assembly_ref] = standardized_assembly_ref_noVer
+                standardized_assembly_refs.append(standardized_assembly_ref_noVer)  # standardize list
+                assembly_obj_present[set_id][standardized_assembly_ref_noVer] = True
+                new_items.append({'ref':standardized_assembly_ref_noVer,'label':item['label']})
+                self.log(console,"Set {} contains {}".format(set_id,standardized_assembly_ref_noVer))  # DEBUG
             AssemblySet[set_id]['items'] = new_items
 
 
@@ -1314,13 +1312,13 @@ class kb_SetUtilities:
 
         for item in input_items:
             self.log (console, 'checking assembly {} from set {}'.format(item['ref'],fwd_set_id))  # DEBUG
-            this_standardized_assembly_ref = item['ref']
+            this_standardized_assembly_ref_noVer = item['ref']
             if params['operator'] == 'yesA_yesB':
-                if assembly_obj_present[rev_set_id].get(this_standardized_assembly_ref):
+                if assembly_obj_present[rev_set_id].get(this_standardized_assembly_ref_noVer):
                     self.log(console, "keeping assembly {}".format(item['ref']))  # DEBUG
                     output_items.append(item)
             else:
-                if not assembly_obj_present[rev_set_id].get(this_standardized_assembly_ref):
+                if not assembly_obj_present[rev_set_id].get(this_standardized_assembly_ref_noVer):
                     self.log(console, "keeping assembly {}".format(item['ref']))  # DEBUG
                     output_items.append(item)
         logMsg = 'assemblies in sliced output set: {}'.format(len(output_items))
@@ -1512,7 +1510,7 @@ class kb_SetUtilities:
                 standardized_genome_refs = []
                 
                 if this_genome_ref in genome_ref_to_standardized:
-                    standardized_genome_ref = genome_ref_to_standardized[this_genome_ref]
+                    standardized_genome_ref_noVer = genome_ref_to_standardized[this_genome_ref]
                 else:  # get standardized genome_ref
                     try:
                         genome_obj_info = wsClient.get_object_info_new ({'objects':[{'ref':this_genome_ref}]})[0]
@@ -1525,14 +1523,16 @@ class kb_SetUtilities:
                         raise ValueError("Input Genome of type: '" + genome_obj_type +
                                          "'.  Must be one of " + ", ".join(acceptable_types))
 
-                    standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
-                                                                genome_obj_info[OBJID_I],
-                                                                genome_obj_info[VERSION_I])
-                    genome_ref_to_standardized[this_genome_ref] = standardized_genome_ref
-                standardized_genome_refs.append(standardized_genome_ref)  # standardize list
-                genome_obj_present[set_id][standardized_genome_ref] = True
-                new_element_refs.append(standardized_genome_ref)
-                self.log(console,"Set {} contains {}".format(set_id,standardized_genome_ref))  # DEBUG
+                    #standardized_genome_ref = '{}/{}/{}'.format(genome_obj_info[WSID_I],
+                    #                                            genome_obj_info[OBJID_I],
+                    #                                            genome_obj_info[VERSION_I])
+                    standardized_genome_ref_noVer = '{}/{}'.format(genome_obj_info[WSID_I],
+                                                                   genome_obj_info[OBJID_I])
+                    genome_ref_to_standardized[this_genome_ref] = standardized_genome_ref_noVer
+                standardized_genome_refs.append(standardized_genome_ref_noVer)  # standardize list
+                genome_obj_present[set_id][standardized_genome_ref_noVer] = True
+                new_element_refs.append(standardized_genome_ref_noVer)
+                self.log(console,"Set {} contains {}".format(set_id,standardized_genome_ref_noVer))  # DEBUG
             GenomeSet_element_refs[set_id] = new_element_refs
 
 
@@ -1549,16 +1549,16 @@ class kb_SetUtilities:
             fwd_set_id = 'B'
             rev_set_id = 'A'
 
-        for this_standardized_genome_ref in input_element_refs:
-            self.log (console, 'checking set {} genome {}'.format(set_id,this_standardized_genome_ref))  # DEBUG
+        for this_standardized_genome_ref_noVer in input_element_refs:
+            self.log (console, 'checking set {} genome {}'.format(set_id,this_standardized_genome_ref_noVer))  # DEBUG
             if params['operator'] == 'yesA_yesB':
-                if genome_obj_present[rev_set_id].get(this_standardized_genome_ref):
-                    output_items.append(this_standardized_genome_ref)
-                    self.log(console, "keeping genome {}".format(this_standardized_genome_ref))  # DEBUG
+                if genome_obj_present[rev_set_id].get(this_standardized_genome_ref_noVer):
+                    output_items.append(this_standardized_genome_ref_noVer)
+                    self.log(console, "keeping genome {}".format(this_standardized_genome_ref_noVer))  # DEBUG
             else:
-                if not genome_obj_present[rev_set_id].get(this_standardized_genome_ref):
-                    output_items.append(this_standardized_genome_ref)
-                    self.log(console, "keeping genome {}".format(this_standardized_genome_ref))  # DEBUG
+                if not genome_obj_present[rev_set_id].get(this_standardized_genome_ref_noVer):
+                    output_items.append(this_standardized_genome_ref_noVer)
+                    self.log(console, "keeping genome {}".format(this_standardized_genome_ref_noVer))  # DEBUG
         logMsg = 'genomes in sliced output set: {}'.format(len(output_items))
         self.log(console, logMsg)
 
@@ -1687,6 +1687,7 @@ class kb_SetUtilities:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN KButil_Merge_GenomeSets
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
         console = []
         invalid_msgs = []
         self.log(console, 'Running KButil_Merge_GenomeSets with params=')
@@ -1754,14 +1755,14 @@ class kb_SetUtilities:
                 #to get the full stack trace: traceback.format_exc()
 
             for gId in list(genomeSet['elements'].keys()):
-                genomeRef = genomeSet['elements'][gId]['ref']
-                new_gId = genomeRef
-                try:
-                    already_included = elements[new_gId]
-                except:
+                old_genomeRef = genomeSet['elements'][gId]['ref']
+                this_obj_info = ws.get_object_info_new({'objects':[{'ref':old_genomeRef}]})[0]
+                standardized_genomeRef = str(this_obj_info[WORKSPACE_I])+'/'+str(this_obj_info[OBJID_I])
+                new_gId = standardized_genomeRef
+                if not elements.get(new_gId):
                     elements[new_gId] = dict()
-                    elements[new_gId]['ref'] = genomeRef  # the key line
-                    self.log(console, "adding element " + new_gId + " : " + genomeRef)  # DEBUG
+                    elements[new_gId]['ref'] = standardized_genomeRef  # the key line
+                    self.log(console, "adding element " + new_gId + " : " + standardized_genomeRef)  # DEBUG
 
         # Store output object
         #
