@@ -1,4 +1,4 @@
-### Version 1.7.4
+### Version 1.7.5
 __Changes__
 - added Github Actions unit testing
 - tidied up links to support in App Docs
