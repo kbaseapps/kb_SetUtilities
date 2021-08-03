@@ -72,7 +72,7 @@ description : |
 
     <p>Below that is a text entry field for a meaningful description of the resultant set, followed by the name to be given to the resultant <b>GenomeSet</b> object. Upon successful completion, a new <b>GenomeSet</b> object with the given name will appear in the Data Pane, and a short report listing the description and number of genomes in this set will appear below the App cell window in the Narrative.</p>
 
-    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
 
 publications :
     -

@@ -48,9 +48,6 @@ parameters :
 
 description : |
     <p>This App allows the user to group individual <b><i>Reads Library</i></b> objects into an <b><i>Reads Set</i></b>.</p>
-    <hr>
-    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
-    <hr>
     <p>
     <h3>Description</h3>
     <b>Batch Create Reads Set</b> allows a user to create a Set of Reads Libraries which can be used in subsequent Apps that operate on Reads Sets.  Each Reads Library object must already be within the Narrative's data workspace, so if there are Reads Libraries from other Narratives that the user wishes to include, they must first be imported into the active Narrative.  All Reads Libraries that match the <i>Name Pattern</i> will be included in the Set.  If the <i>Name Pattern</i> is left blank, all Reads Library objects in the current Narrative will be included.
@@ -65,6 +62,8 @@ description : |
     <li> <b>Sample_1-*.PairedEnd</b>
     </ul>
     </p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
 
 publications :
     -

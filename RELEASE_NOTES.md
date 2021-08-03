@@ -1,3 +1,8 @@
+### Version 1.7.5
+__Changes__
+- added Github Actions unit testing
+- tidied up links to support in App Docs
+
 ### Version 1.7.4
 __Changes__
 - added support for FeatureSets that may include Annotated Metagenome Assembly features to

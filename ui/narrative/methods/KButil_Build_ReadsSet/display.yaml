@@ -60,7 +60,7 @@ description : |
 
     <p>Two other text inputs are mandatory: a meaningful description and the name of the <b>ReadsSet</b> object to be created.</p>
 
-    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
 
 result : |
     <p>The result tab of this App displays the name of the created ReadsSet object. It also displays the number of the Reads Library objects in the set. To see the component Assembly object names, go to the “View Configure” tab within the App.</p>
