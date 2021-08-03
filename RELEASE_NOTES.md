@@ -1,5 +1,10 @@
 ### Version 1.7.4
 __Changes__
+- added Github Actions unit testing
+- tidied up links to support in App Docs
+
+### Version 1.7.4
+__Changes__
 - added support for FeatureSets that may include Annotated Metagenome Assembly features to
   * KButil_Merge_FeatureSet_Collection
 - fixed bug in KButil_Merge_FeatureSet_Collection to avoid duplication

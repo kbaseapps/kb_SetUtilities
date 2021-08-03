@@ -50,7 +50,9 @@ parameters :
 description : |
     <p><b>Merge Feature Sets</b> allows a user to combine multiple input FeatureSets into a single FeatureSet object. This may be useful in scenarios where features are identified as being of interest from multiple approaches, and the user wishes to perform follow up investigation of all the features together. For example, if running the <i>Find Candidate Genes for a Reaction</i> App to generate multiple sets of gene candidates, these sets can be combined for analysis in the <i>Homolog Genome Context</i>.</p>
 
-    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> Dylan Chivian. For questions, please <a href=”http://kbase.us/contact-us/”>contact us</a>.</p>
+    <p>Note: FeatureSets may contain features from Genomes and/or Annotated Metagenome Assemblies.</p>
+
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
 
 publications :
     -

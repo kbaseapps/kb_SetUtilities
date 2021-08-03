@@ -32,9 +32,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.7.3"
+    VERSION = "1.7.5"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "6993da1ac2cbab8b9001baaf6af91091aec939a1"
+    GIT_COMMIT_HASH = "dc7e72a1e4531266fd5b89df6ef3a67423ece119"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -1421,8 +1421,8 @@ class kb_SetUtilities:
            "id" is a numerical identifier of the workspace or object, and
            should just be used for workspace ** "name" is a string identifier
            of a workspace or object.  This is received from Narrative.),
-           parameter "input_assemblySet_ref_A" of type "data_obj_ref",
-           parameter "input_assemblySet_ref_B" of type "data_obj_ref",
+           parameter "input_genomeSet_ref_A" of type "data_obj_ref",
+           parameter "input_genomeSet_ref_B" of type "data_obj_ref",
            parameter "operator" of String, parameter "desc" of String,
            parameter "output_name" of type "data_obj_name"
         :returns: instance of type
