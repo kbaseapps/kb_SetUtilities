@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Build GenomeSet from FeatureSet - v1.7.0
+name: Build GenomeSet from FeatureSet - v1.7.6
 tooltip: |
     Allows users to extract a GenomeSet from a FeatureSet.
 screenshots:
@@ -37,12 +37,12 @@ parameters :
             Enter Description
     input_ref:
         ui-name : |
-            Input FeatureSet Name
+            Input FeatureSet
         short-hint : |
             Add a FeatureSet name here.
     output_name:
         ui-name : |
-            Output GenomeSet Name
+            Output GenomeSet
         short-hint : |
             The name for the output GenomeSet.
 

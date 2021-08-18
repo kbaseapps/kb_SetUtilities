@@ -32,9 +32,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.7.5"
+    VERSION = "1.7.6"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "dc7e72a1e4531266fd5b89df6ef3a67423ece119"
+    GIT_COMMIT_HASH = "db160f725f75ef9761201f32f19430c8d5c4991b"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -1328,20 +1328,21 @@ class kb_SetUtilities:
         # Save output AssemblySet
         #
         objects_created = []
+        provenance = [{}]
+        if 'provenance' in ctx:
+            provenance = ctx['provenance']
+        # add additional info to provenance here, in this case the input data object reference
+        provenance[0]['input_ws_objects'] = []
+        provenance[0]['input_ws_objects'].append(input_assemblySet_refs['A'])
+        provenance[0]['input_ws_objects'].append(input_assemblySet_refs['B'])
+        provenance[0]['service'] = 'kb_SetUtilities'
+        provenance[0]['method'] = 'KButil_Logical_Slice_Two_AssemblySets'
+
         if len(output_items) == 0:
             report += 'no assemblies to output under operator '+params['operator']+"\n"
         else:
             # load the method provenance from the context object
             self.log(console, "SETTING PROVENANCE")  # DEBUG
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
-            # add additional info to provenance here, in this case the input data object reference
-            provenance[0]['input_ws_objects'] = []
-            provenance[0]['input_ws_objects'].append(input_assemblySet_refs['A'])
-            provenance[0]['input_ws_objects'].append(input_assemblySet_refs['B'])
-            provenance[0]['service'] = 'kb_SetUtilities'
-            provenance[0]['method'] = 'KButil_Logical_Slice_Two_AssemblySets'
 
             # Store output Set object
             try:
@@ -1596,7 +1597,7 @@ class kb_SetUtilities:
             if params.get('desc'):
                 output_desc = params['desc']
             else:
-                output_desc = 'Venn slice '+params['operator']+' of GenomeSets '+input_genomeSet_name['A']+' and '+input_genomeSet_name['B']
+                output_desc = 'Venn slice '+params['operator']+' of GenomeSets '+input_genomeSet_names['A']+' and '+input_genomeSet_names['B']
             output_genomeSet_obj = { 'description': output_desc,
                                      'elements': output_elements
             }
@@ -2648,8 +2649,10 @@ class kb_SetUtilities:
 
                     if set_type is not None:
                         if lib_type != set_type:
-                            raise ValueError("Don't currently support heterogeneous ReadsSets." +
-                                             "You have more than one type in your input")
+                            raise ValueError("Don't currently support heterogeneous ReadsSets"+
+                                             " (e.g. PairedEndLibrary and SingleEndLibrary)." +
+                                             " You have more than one type in your input")
+                    else:
                         set_type = lib_type
                 except Exception as e:
                     raise ValueError('Unable to fetch input_name object from workspace: ' + str(e))
