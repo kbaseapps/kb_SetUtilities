@@ -190,7 +190,7 @@ class kb_SetUtilities:
             src_featureSet_name = info[NAME_I]
             type_name = info[TYPE_I].split('.')[1].split('-')[0]
         except Exception as e:
-            raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+            raise ValueError('Unable to fetch input_ref '+src_featureSet_ref+' object from workspace: ' + str(e))
             #to get the full stack trace: traceback.format_exc()
         if type_name != 'FeatureSet':
             raise ValueError("Bad Type:  Should be FeatureSet instead of '" + type_name + "'")
@@ -512,7 +512,7 @@ class kb_SetUtilities:
                 type_name = info[2].split('.')[1].split('-')[0]
 
             except Exception as e:
-                raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+                raise ValueError('Unable to fetch input_ref '+featureSet_ref+' object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
 
             if type_name != 'FeatureSet':
@@ -742,7 +742,7 @@ class kb_SetUtilities:
                 type_name = info[2].split('.')[1].split('-')[0]
 
             except Exception as e:
-                raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+                raise ValueError('Unable to fetch input_ref '+featureSet_ref+' object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
 
             if type_name != 'FeatureSet':
@@ -1257,7 +1257,7 @@ class kb_SetUtilities:
             report += logMsg+"\n"
             
 
-        # Store A and B genome + fid hits
+        # Store A and B assemblies
         #
         assembly_obj_present = dict()
         assembly_obj_present['A'] = dict()
@@ -1271,7 +1271,7 @@ class kb_SetUtilities:
                 this_assembly_ref = item['ref']
                 
                 if this_assembly_ref in assembly_ref_to_standardized:
-                    standardized_assembly_ref = assembly_ref_to_standardized[this_assembly_ref]
+                    standardized_assembly_ref_noVer = assembly_ref_to_standardized[this_assembly_ref]
                 else:  # get standardized genome_ref
                     try:
                         assembly_obj_info = wsClient.get_object_info_new ({'objects':[{'ref':this_assembly_ref}]})[0]
@@ -1567,21 +1567,22 @@ class kb_SetUtilities:
         # Save output GenomeSet
         #
         objects_created = []
+
+        # load the method provenance from the context object
+        self.log(console, "SETTING PROVENANCE")  # DEBUG
+        provenance = [{}]
+        if 'provenance' in ctx:
+            provenance = ctx['provenance']
+        # add additional info to provenance here, in this case the input data object reference
+        provenance[0]['input_ws_objects'] = []
+        provenance[0]['input_ws_objects'].append(input_genomeSet_refs['A'])
+        provenance[0]['input_ws_objects'].append(input_genomeSet_refs['B'])
+        provenance[0]['service'] = 'kb_SetUtilities'
+        provenance[0]['method'] = 'KButil_Logical_Slice_Two_GenomeSets'
+
         if len(output_items) == 0:
             report += 'no genomes to output under operator '+params['operator']+"\n"
         else:
-            # load the method provenance from the context object
-            self.log(console, "SETTING PROVENANCE")  # DEBUG
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
-            # add additional info to provenance here, in this case the input data object reference
-            provenance[0]['input_ws_objects'] = []
-            provenance[0]['input_ws_objects'].append(input_genomeSet_refs['A'])
-            provenance[0]['input_ws_objects'].append(input_genomeSet_refs['B'])
-            provenance[0]['service'] = 'kb_SetUtilities'
-            provenance[0]['method'] = 'KButil_Logical_Slice_Two_GenomeSets'
-
             """
             # Store output Set object (use when we switch over to KBaseSets.GenomeSet)
             try:
@@ -1752,7 +1753,7 @@ class kb_SetUtilities:
                 if type_name != 'GenomeSet':
                     raise ValueError("Bad Type: Should be GenomeSet instead of '" + type_name + "'")
             except Exception as e:
-                raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+                raise ValueError('Unable to fetch input_genomeset_ref '+input_genomeset_ref+' object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
 
             for gId in list(genomeSet['elements'].keys()):
@@ -1883,9 +1884,7 @@ class kb_SetUtilities:
 
         for genomeRef in params['input_refs']:
 
-            try:
-                already_included = genome_seen[genomeRef]
-            except:
+            if not genome_seen.get(genomeRef):
                 genome_seen[genomeRef] = True
 
                 try:
@@ -1898,7 +1897,7 @@ class kb_SetUtilities:
                     obj_name = info[1]
                     type_name = info[2].split('.')[1].split('-')[0]
                 except Exception as e:
-                    raise ValueError('Unable to fetch input_name object from workspace: ' + str(e))
+                    raise ValueError('Unable to fetch genomeRef '+genomeRef+' object from workspace: ' + str(e))
                 if type_name != 'Genome' and type_name != 'GenomeAnnotation':
                     errMsg = "Bad Type: Should be Genome or GenomeAnnotation not '{}' for ref: '{}'"
                     raise ValueError(errMsg.format(type_name, genomeRef))
@@ -2053,7 +2052,7 @@ class kb_SetUtilities:
             featureSet = data
             type_name = info[2].split('.')[1].split('-')[0]
         except Exception as e:
-            raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+            raise ValueError('Unable to fetch input_ref '+params['input_ref']+' object from workspace: ' + str(e))
             #to get the full stack trace: traceback.format_exc()
         if type_name != 'FeatureSet':
             raise ValueError("Bad Type:  Should be FeatureSet instead of '" + type_name + "'")
@@ -2065,9 +2064,7 @@ class kb_SetUtilities:
         for fId in list(featureSet['elements'].keys()):
             for genomeRef in featureSet['elements'][fId]:
 
-                try:
-                    already_included = genome_seen[genomeRef]
-                except:
+                if not genome_seen.get(genomeRef):
                     genome_seen[genomeRef] = True
 
                     try:
@@ -2080,7 +2077,7 @@ class kb_SetUtilities:
                         obj_name = info[1]
                         type_name = info[2].split('.')[1].split('-')[0]
                     except Exception as e:
-                        errMsg = 'Unable to fetch genomeRef object from workspace: ' + str(e)
+                        errMsg = 'Unable to fetch genomeRef '+genomeRef+' object from workspace: ' + str(e)
                         raise ValueError(errMsg)
                     if type_name == 'AnnotatedMetagenomeAssembly':
                         self.log(console, "SKIPPING AnnotatedMetagenomeAssembly Object "+obj_name)
@@ -2241,14 +2238,13 @@ class kb_SetUtilities:
                 if type_name != 'GenomeSet':
                     raise ValueError("Bad Type: Should be GenomeSet instead of '" + type_name + "'")
             except Exception as e:
-                raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+                raise ValueError('Unable to fetch input_genomeset_ref '+params['input_genomeset_ref']+' object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
 
             for gId in list(genomeSet['elements'].keys()):
                 genomeRef = genomeSet['elements'][gId]['ref']
-                try:
-                    already_included = elements[gId]
-                except:
+
+                if not elements.get(genomeRef):
                     elements[genomeRef] = dict()
                     elements[genomeRef]['ref'] = genomeRef  # the key line
                     self.log(console, "adding element " + gId + " : " + genomeRef)  # DEBUG
@@ -2449,7 +2445,7 @@ class kb_SetUtilities:
                 if type_name != 'GenomeSet':
                     raise ValueError("Bad Type: Should be GenomeSet instead of '" + type_name + "'")
             except Exception as e:
-                raise ValueError('Unable to fetch input_ref object from workspace: ' + str(e))
+                raise ValueError('Unable to fetch input_genomeset_ref '+params['input_genomeset_ref']+' object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
 
 
@@ -2630,9 +2626,7 @@ class kb_SetUtilities:
 
         for libRef in params['input_refs']:
 
-            try:
-                already_included = lib_seen[libRef]
-            except:
+            if not lib_seen.get(libRef):
                 lib_seen[libRef] = True
 
                 try:
@@ -2647,15 +2641,15 @@ class kb_SetUtilities:
                     lib_name = info[NAME_I]
                     lib_type = info[TYPE_I].split('.')[1].split('-')[0]
 
-                    if set_type is not None:
-                        if lib_type != set_type:
-                            raise ValueError("Don't currently support heterogeneous ReadsSets"+
-                                             " (e.g. PairedEndLibrary and SingleEndLibrary)." +
-                                             " You have more than one type in your input")
-                    else:
-                        set_type = lib_type
                 except Exception as e:
-                    raise ValueError('Unable to fetch input_name object from workspace: ' + str(e))
+                    raise ValueError('Unable to fetch libRef '+libRef+' object from workspace: ' + str(e))
+                if set_type == None:
+                    set_type = lib_type
+                elif lib_type != set_type:
+                    raise ValueError("Don't currently support heterogeneous ReadsSets"+
+                                     " (e.g. PairedEndLibrary and SingleEndLibrary)." +
+                                     " You have more than one type in your input")
+
                 if lib_type != 'SingleEndLibrary' and lib_type != 'PairedEndLibrary':
                     errMsg = "Bad Type: Should be SingleEndLibrary or PairedEndLibrary instead of "
                     errMsg += "'{}' for ref: '{}'"
@@ -2995,9 +2989,7 @@ class kb_SetUtilities:
 
         for assRef in params['input_refs']:
 
-            try:
-                already_included = ass_seen[assRef]
-            except:
+            if not ass_seen.get(assRef):
                 ass_seen[assRef] = True
 
                 try:
