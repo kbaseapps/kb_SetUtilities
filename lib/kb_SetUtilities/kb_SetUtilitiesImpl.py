@@ -2643,7 +2643,7 @@ class kb_SetUtilities:
 
                 except Exception as e:
                     raise ValueError('Unable to fetch libRef '+libRef+' object from workspace: ' + str(e))
-                if set_type == None:
+                if set_type is None:
                     set_type = lib_type
                 elif lib_type != set_type:
                     raise ValueError("Don't currently support heterogeneous ReadsSets"+
@@ -2782,7 +2782,7 @@ class kb_SetUtilities:
                            'output_name'
                            ]
         for required_param in required_params:
-            if required_param not in params or params[required_param] == None:
+            if not params.get(required_param):
                 raise ValueError ("Must define required param: '"+required_param+"'")
 
         # clean input_refs
@@ -2858,7 +2858,7 @@ class kb_SetUtilities:
                 this_readsLib_type   = readsLibrary_obj['info'][TYPE_I]
                 # remove trailing version
                 this_readsLib_type   = re.sub ('-[0-9]+\.[0-9]+$', "", this_readsLib_type)
-                if reads_lib_type == None:
+                if reads_lib_type is None:
                     reads_lib_type = this_readsLib_type
                 elif this_readsLib_type != reads_lib_type:
                     raise ValueError ("inconsistent reads library types in ReadsSets.  " +
