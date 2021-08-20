@@ -1353,7 +1353,7 @@ class kb_SetUtilities:
             if params.get('desc'):
                 output_desc = params['desc']
             else:
-                output_desc = 'Venn slice '+params['operator']+' of AssemblySets '+input_assemblySet_name['A']+' and '+input_assemblySet_name['B']
+                output_desc = 'Venn slice '+params['operator']+' of AssemblySets '+input_assemblySet_names['A']+' and '+input_assemblySet_names['B']
             output_assemblySet_obj = { 'description': output_desc,
                                        'items': output_items
                                      }
