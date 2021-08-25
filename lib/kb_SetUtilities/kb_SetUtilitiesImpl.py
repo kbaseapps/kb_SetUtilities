@@ -181,7 +181,7 @@ class kb_SetUtilities:
         try:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
-            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL + str(e))
 
 
         # read FeatureSet to get local workspace ID, source object name, and list of original genome refs
@@ -468,7 +468,7 @@ class kb_SetUtilities:
                 featureSet_seen[featureSet_ref] = True
                 input_feature_cnt[featureSet_ref] = 0
             else:
-                self.log("repeat featureSet_ref: '" + featureSet_ref + "'")
+                self.log(console, "repeat featureSet_ref: '" + featureSet_ref + "'")
                 self.log(invalid_msgs, "repeat featureSet_ref: '" + featureSet_ref + "'")
                 continue
 
@@ -631,7 +631,7 @@ class kb_SetUtilities:
         try:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
-            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL + str(e))
 
 
         # clean input_feature_refs
@@ -683,7 +683,7 @@ class kb_SetUtilities:
             if featureSet_ref not in list(featureSet_seen.keys()):
                 featureSet_seen[featureSet_ref] = 1
             else:
-                self.log("repeat featureSet_ref: '" + featureSet_ref + "'")
+                self.log(console, "repeat featureSet_ref: '" + featureSet_ref + "'")
                 self.log(invalid_msgs, "repeat featureSet_ref: '" + featureSet_ref + "'")
                 continue
 
@@ -909,7 +909,7 @@ class kb_SetUtilities:
         try:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
-            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL + str(e))
 
 
         # Get FeatureSets
@@ -1145,7 +1145,7 @@ class kb_SetUtilities:
         try:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
-            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL + str(e))
 
 
         # Get AssemblySets
@@ -1373,7 +1373,7 @@ class kb_SetUtilities:
         try:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
-            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL + str(e))
 
 
         # Get GenomeSets
@@ -2892,7 +2892,7 @@ class kb_SetUtilities:
         try:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
-            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL + str(e))
         self.log (console, "GETTING SetAPI CLIENT")
         try:
             setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
@@ -2926,6 +2926,7 @@ class kb_SetUtilities:
         ##
         pe_reads_obj_ref_by_name = dict()
         se_reads_obj_ref_by_name = dict()
+        reads_obj_ref_by_name    = dict()
 
         # Paired End
         try:
@@ -2979,7 +2980,6 @@ class kb_SetUtilities:
             reads_ref_list = []
 
             # pick whether to use single end or paired end hits (favor paired end)
-            reads_obj_ref_by_name = dict()
             if len(list(pe_reads_obj_ref_by_name.keys())) == 0 \
                and len(list(se_reads_obj_ref_by_name.keys())) != 0:
                 reads_obj_ref_by_name = se_reads_obj_ref_by_name
@@ -3103,7 +3103,7 @@ class kb_SetUtilities:
         try:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
-            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL + str(e))
         self.log (console, "GETTING SetAPI CLIENT")
         try:
             setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
@@ -3284,7 +3284,7 @@ class kb_SetUtilities:
         try:
             wsClient = workspaceService(self.workspaceURL, token=ctx['token'])
         except Exception as e:
-            raise ValueError('Unable to connect to workspace at '+self.workspaceURL)+ str(e)
+            raise ValueError('Unable to connect to workspace at '+self.workspaceURL + str(e))
 #        self.log (console, "GETTING SetAPI CLIENT")
 #        try:
 #            setAPI_Client = SetAPI (url=self.serviceWizardURL, token=ctx['token'])  # for dynamic service
