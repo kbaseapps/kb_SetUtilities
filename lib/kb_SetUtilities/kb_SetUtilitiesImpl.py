@@ -58,17 +58,21 @@ class kb_SetUtilities:
         print(message)
         sys.stdout.flush()
 
-    def get_single_end_read_library(self, ws_data, ws_info, forward):
-        pass
-
-    def get_feature_set_seqs(self, ws_data, ws_info):
-        pass
-
-    def get_genome_feature_seqs(self, ws_data, ws_info):
-        pass
-
-    def get_genome_set_feature_seqs(self, ws_data, ws_info):
-        pass
+    def set_provenance (self, ctx, input_ws_obj_refs=[], service_name=None, method_name=None):
+        provenance = [{}]
+        # load any existing provenance from the context object
+        if 'provenance' in ctx:
+            provenance = ctx['provenance']
+        # add additional info to provenance here, especially the input data object reference(s)
+        if 'input_ws_objects' not in provenance[0]:
+            provenance[0]['input_ws_objects'] = []
+        if len(input_ws_obj_refs) > 0:
+            provenance[0]['input_ws_objects'].extend(input_ws_obj_refs)
+        if service_name is not None:
+            provenance[0]['service'] = service_name
+        if service_name is not None:
+            provenance[0]['method'] = method_name
+        return provenance
 
     #END_CLASS_HEADER
 
@@ -158,6 +162,9 @@ class kb_SetUtilities:
         report = ''
 #        report = 'Running KButil_FASTQ_to_FASTA with params='
 #        report += "\n"+pformat(params)
+
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -287,16 +294,9 @@ class kb_SetUtilities:
                     continue
                 non_local_genome_cnt += 1
 
-                # load the method provenance from the context object
-                provenance = [{}]
-                if 'provenance' in ctx:
-                    provenance = ctx['provenance']
-                # add additional info to provenance here, in this case the input data object reference
-                provenance[0]['input_ws_objects'] = []
-                provenance[0]['input_ws_objects'].append(src_featureSet_ref)
-                provenance[0]['input_ws_objects'].append(src_genome_ref)
-                provenance[0]['service'] = 'kb_SetUtilities'
-                provenance[0]['method'] = 'KButil_Localize_FeatureSet'
+                # set provenance
+                input_ws_obj_refs = [src_featureSet_ref, src_genome_ref]
+                provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Localize_FeatureSet')
 
                 # Save object
                 self.log(console, "SAVING GENOME "+str(src_genome_obj_info[NAME_I])+" "+str(src_genome_ref)+" to workspace "+str(params['workspace_name'])+" (ws."+str(local_WSID)+")")  # DEBUG
@@ -342,18 +342,11 @@ class kb_SetUtilities:
             # Overwrite input FeatureSet object with local genome refs
             dst_featureSet_name = src_featureSet_name
 
-            # load the method provenance from the context object
-            self.log(console, "SAVING UPDATED FEATURESET")  # DEBUG
-            #self.log(console, "SETTING PROVENANCE")  # DEBUG
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
-            # add additional info to provenance here, in this case the input data object reference
-            provenance[0]['input_ws_objects'] = []
-            provenance[0]['input_ws_objects'].append(src_featureSet_ref)
-            provenance[0]['service'] = 'kb_SetUtilities'
-            provenance[0]['method'] = 'KButil_Localize_FeatureSet'
+            # set provenance
+            input_ws_obj_refs = [src_featureSet_ref]
+            provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Localize_FeatureSet')
 
+            # save output obj
             dst_featureSet_info = wsClient.save_objects({
                 'workspace': params['workspace_name'],
                 'objects': [
@@ -371,6 +364,7 @@ class kb_SetUtilities:
 
         # build output report object
         self.log(console, "BUILDING REPORT")  # DEBUG
+
         total_genomes_cnt = len(standardized_genome_refs)
         if non_local_genome_cnt > 0 or local_genome_cnt > 0:
             final_msg = []
@@ -392,25 +386,10 @@ class kb_SetUtilities:
             }
 
         # Save report
-        reportName = 'kb_SetUtilities_localize_featureset_report_' + str(uuid.uuid4())
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Localize_FeatureSet'
-        report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
-                                                 'objects': [{'type': 'KBaseReport.Report',
-                                                              'data': reportObj,
-                                                              'name': reportName,
-                                                              'meta': {},
-                                                              'hidden': 1,
-                                                              'provenance': provenance}]})[0]
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Localize_FeatureSet DONE")
         #END KButil_Localize_FeatureSet
 
@@ -451,6 +430,9 @@ class kb_SetUtilities:
         report = ''
 #        report = 'Running KButil_FASTQ_to_FASTA with params='
 #        report += "\n"+pformat(params)
+
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -542,17 +524,9 @@ class kb_SetUtilities:
             report += 'features in input set ' + featureSet_ref + ': ' + str(
                 input_feature_cnt[featureSet_ref]) + "\n"
                 
-        # load the method provenance from the context object
-        self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        for featureSet_ref in params['input_refs']:
-            provenance[0]['input_ws_objects'].append(featureSet_ref)
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Merge_FeatureSet_Collection'
+        # set provenance
+        input_ws_obj_refs = params['input_refs']
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Merge_FeatureSet_Collection')
 
         # Store output object
         #
@@ -589,21 +563,11 @@ class kb_SetUtilities:
                 'text_message': report
             }
 
-        reportName = 'kb_SetUtilities_merge_featureset_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({'workspace': params['workspace_name'],
-                                           'objects': [{'type': 'KBaseReport.Report',
-                                                        'data': reportObj,
-                                                        'name': reportName,
-                                                        'meta': {},
-                                                        'hidden': 1,
-                                                        'provenance': provenance}]})[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Merge_FeatureSet_Collection DONE")
         #END KButil_Merge_FeatureSet_Collection
 
@@ -646,6 +610,9 @@ class kb_SetUtilities:
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
         logMsg = ''
         report = ''
+
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -819,18 +786,11 @@ class kb_SetUtilities:
                 report += 'no features for requested genomes in FeatureSet '+str(featureSet_ref)
                 feature_list_lens.append(0)
             else:
-                # load the method provenance from the context object
+                # set provenance
                 self.log(console, "SETTING PROVENANCE")  # DEBUG
-                provenance = [{}]
-                if 'provenance' in ctx:
-                    provenance = ctx['provenance']
-                # add additional info to provenance here, in this case the input data object reference
-                provenance[0]['input_ws_objects'] = []
-                provenance[0]['input_ws_objects'].append(featureSet_ref)
-                for genome_ref in params['input_genome_refs']:
-                    provenance[0]['input_ws_objects'].append(genome_ref)
-                provenance[0]['service'] = 'kb_SetUtilities'
-                provenance[0]['method'] = 'KButil_Slice_FeatureSets_by_Genome'
+                input_ws_obj_refs = [featureSet_ref]
+                input_ws_obj_refs.extend(params['input_genome_refs'])
+                provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Slice_FeatureSets_by_Genome')
 
                 # Store output object
                 if len(invalid_msgs) == 0:
@@ -878,33 +838,11 @@ class kb_SetUtilities:
                 'text_message': report
             }
 
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        for featureSet_ref in params['input_featureSet_refs']:
-            provenance[0]['input_ws_objects'].append(featureSet_ref)
-        for genome_ref in params['input_genome_refs']:
-            provenance[0]['input_ws_objects'].append(genome_ref)
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Slice_FeatureSets_by_Genome'
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        reportName = 'kb_SetUtilities_slice_featureset_by_genomes_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
-                                                 'objects': [{'type': 'KBaseReport.Report',
-                                                              'data': reportObj,
-                                                              'name': reportName,
-                                                              'meta': {},
-                                                              'hidden': 1,
-                                                              'provenance': provenance}]})[0]
-
-        # Build report and return
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Slice_FeatureSets_by_Genomes DONE")
         #END KButil_Slice_FeatureSets_by_Genomes
 
@@ -949,6 +887,8 @@ class kb_SetUtilities:
         report = ''
         genome_id_feature_id_delim = ".f:"
 
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -1088,17 +1028,9 @@ class kb_SetUtilities:
         #
         objects_created = []
 
-        # load the method provenance from the context object
-        self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        provenance[0]['input_ws_objects'].append(input_featureSet_refs['A'])
-        provenance[0]['input_ws_objects'].append(input_featureSet_refs['B'])
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Logical_Slice_Two_FeatureSets'
+        # set provenance
+        input_ws_obj_refs = [input_featureSet_refs['A'], input_featureSet_refs['B']]
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Logical_Slice_Two_FeatureSets')
 
         if len(output_element_ordering) == 0:
             report += 'no features to output under operator '+params['operator']+"\n"
@@ -1143,21 +1075,11 @@ class kb_SetUtilities:
                 'text_message': report
             }
 
-        reportName = 'kb_SetUtilities_logical_slice_two_featuresets_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
-                                                 'objects': [{'type': 'KBaseReport.Report',
-                                                              'data': reportObj,
-                                                              'name': reportName,
-                                                              'meta': {},
-                                                              'hidden': 1,
-                                                              'provenance': provenance}]})[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Logical_Slice_Two_FeatureSets DONE")
         #END KButil_Logical_Slice_Two_FeatureSets
 
@@ -1201,6 +1123,8 @@ class kb_SetUtilities:
         logMsg = ''
         report = ''
 
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -1328,15 +1252,10 @@ class kb_SetUtilities:
         # Save output AssemblySet
         #
         objects_created = []
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        provenance[0]['input_ws_objects'].append(input_assemblySet_refs['A'])
-        provenance[0]['input_ws_objects'].append(input_assemblySet_refs['B'])
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Logical_Slice_Two_AssemblySets'
+
+        # set provenance
+        input_ws_obj_refs = [input_assemblySet_refs['A'], input_assemblySet_refs['B']]
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Logical_Slice_Two_AssemblySets')
 
         if len(output_items) == 0:
             report += 'no assemblies to output under operator '+params['operator']+"\n"
@@ -1384,21 +1303,11 @@ class kb_SetUtilities:
                 'text_message': report
             }
 
-        reportName = 'kb_SetUtilities_logical_slice_two_assemblysets_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
-                                                 'objects': [{'type': 'KBaseReport.Report',
-                                                              'data': reportObj,
-                                                              'name': reportName,
-                                                              'meta': {},
-                                                              'hidden': 1,
-                                                              'provenance': provenance}]})[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Logical_Slice_Two_AssemblySets DONE")
         #END KButil_Logical_Slice_Two_AssemblySets
 
@@ -1442,6 +1351,8 @@ class kb_SetUtilities:
         logMsg = ''
         report = ''
 
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -1568,17 +1479,9 @@ class kb_SetUtilities:
         #
         objects_created = []
 
-        # load the method provenance from the context object
-        self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        provenance[0]['input_ws_objects'].append(input_genomeSet_refs['A'])
-        provenance[0]['input_ws_objects'].append(input_genomeSet_refs['B'])
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Logical_Slice_Two_GenomeSets'
+        # set provenance
+        input_ws_obj_refs = [input_genomeSet_refs['A'], input_genomeSet_refs['B']]
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Logical_Slice_Two_GenomeSets')
 
         if len(output_items) == 0:
             report += 'no genomes to output under operator '+params['operator']+"\n"
@@ -1643,21 +1546,11 @@ class kb_SetUtilities:
                 'text_message': report
             }
 
-        reportName = 'kb_SetUtilities_logical_slice_two_genomesets_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = wsClient.save_objects({'workspace': params['workspace_name'],
-                                                 'objects': [{'type': 'KBaseReport.Report',
-                                                              'data': reportObj,
-                                                              'name': reportName,
-                                                              'meta': {},
-                                                              'hidden': 1,
-                                                              'provenance': provenance}]})[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Logical_Slice_Two_GenomeSets DONE")
         #END KButil_Logical_Slice_Two_GenomeSets
 
@@ -1698,6 +1591,9 @@ class kb_SetUtilities:
 #        report = 'Running KButil_Merge_GenomeSets with params='
 #        report += "\n"+pformat(params)
 
+        # set test status for called modules
+        SERVICE_VER = 'release'
+
         #### do some basic checks
         if 'workspace_name' not in params:
             raise ValueError('workspace_name parameter is required')
@@ -1719,21 +1615,10 @@ class kb_SetUtilities:
             self.log(console, "Must provide at least two GenomeSets")
             self.log(invalid_msgs, "Must provide at least two GenomeSets")
 
-        # load the method provenance from the context object
-        #
+        # set provenance
         self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        try:
-            prov_defined = provenance[0]['input_ws_objects']
-        except:
-            provenance[0]['input_ws_objects'] = []
-        for input_genomeset_ref in params['input_refs']:
-            provenance[0]['input_ws_objects'].append(input_genomeset_ref)
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Merge_GenomeSets'
+        input_ws_obj_refs = params['input_refs']
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Merge_GenomeSets')
 
         # Build GenomeSet
         #
@@ -1801,23 +1686,11 @@ class kb_SetUtilities:
                          'text_message': report
                          }
 
-        reportName = 'kb_SetUtilities_merge_genomesets_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({'workspace': params['workspace_name'],
-                                           'objects': [{'type': 'KBaseReport.Report',
-                                                        'data': reportObj,
-                                                        'name': reportName,
-                                                        'meta': {},
-                                                        'hidden': 1,
-                                                        'provenance': provenance}]})[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        #
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{0}/{1}/{2}".format(report_obj_info[6], report_obj_info[0],
-                                          report_obj_info[4])
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Merge_GenomeSets DONE")
         #END KButil_Merge_GenomeSets
 
@@ -1854,6 +1727,9 @@ class kb_SetUtilities:
         self.log(console, 'Running KButil_Build_GenomeSet with params=')
         self.log(console, "\n" + pformat(params))
         report = ''
+
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -1919,17 +1795,10 @@ class kb_SetUtilities:
                                                                                genome_id,
                                                                                genomeRef))  # DEBUG
 
-        # load the method provenance from the context object
+        # set provenance
         self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        for genomeRef in params['input_refs']:
-            provenance[0]['input_ws_objects'].append(genomeRef)
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Build_GenomeSet'
+        input_ws_obj_refs = params['input_refs']
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Build_GenomeSet')
 
         # Store output object
         if len(invalid_msgs) == 0:
@@ -1962,22 +1831,11 @@ class kb_SetUtilities:
             reportObj = {'objects_created': [],
                          'text_message': report}
 
-        reportName = 'kb_SetUtilities_build_genomeset_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({'workspace': params['workspace_name'],
-                                           'objects': [{'type': 'KBaseReport.Report',
-                                                        'data': reportObj,
-                                                        'name': reportName,
-                                                        'meta': {},
-                                                        'hidden': 1,
-                                                        'provenance': provenance}]})[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        #
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}".format(report_obj_info[6], report_obj_info[0], report_obj_info[4])
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Build_GenomeSet DONE")
         #END KButil_Build_GenomeSet
 
@@ -2018,6 +1876,9 @@ class kb_SetUtilities:
         report = ''
 #        report = 'Running KButil_Build_GenomeSet_from_FeatureSet with params='
 #        report += "\n"+pformat(params)
+
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         if 'workspace_name' not in params:
@@ -2104,17 +1965,10 @@ class kb_SetUtilities:
                                                                               genome_id,
                                                                               genomeRef))  # DEBUG
 
-        # load the method provenance from the context object
-        #
+        # set provenance
         self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        provenance[0]['input_ws_objects'].append(params['input_ref'])
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Build_GenomeSet_from_FeatureSet'
+        input_ws_obj_refs = [params['input_ref']]
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Build_GenomeSet_from_FeatureSet')
 
         # Store output object
         #
@@ -2147,21 +2001,11 @@ class kb_SetUtilities:
             reportObj = {'objects_created': [],
                          'text_message': report}
 
-        reportName = 'kb_SetUtilities_build_genomeset_from_featureset_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({'workspace': params['workspace_name'],
-                                           'objects': [{'type': 'KBaseReport.Report',
-                                                        'data': reportObj,
-                                                        'name': reportName,
-                                                        'meta': {},
-                                                        'hidden': 1,
-                                                        'provenance': provenance}]})[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        self.log(console, "BUILDING RETURN OBJECT")
-        returnVal = {'report_name': reportName,
-                     'report_ref': "{}/{}/{}".format(report_obj_info[6], report_obj_info[0],
-                                                     report_obj_info[4])}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Build_GenomeSet_from_FeatureSet DONE")
         #END KButil_Build_GenomeSet_from_FeatureSet
 
@@ -2206,6 +2050,9 @@ class kb_SetUtilities:
         report = ''
 #        report = 'Running KButil_Add_Genomes_to_GenomeSet with params='
 #        report += "\n"+pformat(params)
+
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -2297,21 +2144,11 @@ class kb_SetUtilities:
                 raise ValueError ("bad type for input_genome_refs")
 
 
-        # load the method provenance from the context object
-        #
+        # set provenance
         self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        try:
-            prov_defined = provenance[0]['input_ws_objects']
-        except:
-            provenance[0]['input_ws_objects'] = []
-        provenance[0]['input_ws_objects'].append(params['input_genomeset_ref'])
-        provenance[0]['input_ws_objects'].extend(params['input_genome_refs'])
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Add_Genomes_to_GenomeSet'
+        input_ws_obj_refs = [params['input_genomeset_ref']]
+        input_ws_obj_refs.extend(params['input_genome_refs'])
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Add_Genomes_to_GenomeSet')
 
         # Store output object
         #
@@ -2344,29 +2181,11 @@ class kb_SetUtilities:
             reportObj = {'objects_created': [],
                          'text_message': report}
 
-        reportName = 'kb_SetUtilities_add_genomes_to_genomeset_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({
-                'workspace':params['workspace_name'],
-                'objects':[
-                    {
-                        'type':'KBaseReport.Report',
-                        'data':reportObj,
-                        'name':reportName,
-                        'meta':{},
-                        'hidden':1,
-                        'provenance':provenance
-                    }
-                ]
-            })[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        #
-        self.log(console,"BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}"
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref.format(report_obj_info[6], report_obj_info[0],
-                                                     report_obj_info[4])}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Add_Genomes_to_GenomeSet DONE")
         #END KButil_Add_Genomes_to_GenomeSet
 
@@ -2413,6 +2232,9 @@ class kb_SetUtilities:
 #        report = 'Running KButil_Remove_Genomes_from_GenomeSet with params='
 #        report += "\n"+pformat(params)
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
+
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -2485,22 +2307,11 @@ class kb_SetUtilities:
             else:
                 self.log(console, "removing element " + gId + " : " + genomeRef)  # DEBUG
 
-        # load the method provenance from the context object
-        #
+        # set provenance
         self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        try:
-            prov_defined = provenance[0]['input_ws_objects']
-        except:
-            provenance[0]['input_ws_objects'] = []
-        provenance[0]['input_ws_objects'].append(params['input_genomeset_ref'])
-        provenance[0]['input_ws_objects'].extend(params['input_genome_refs'])
-        provenance[0]['input_ws_objects'].extend(nonlocal_skip_genome_refs)
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Remove_Genomes_from_GenomeSet'
+        input_ws_obj_refs = [params['input_genomeset_ref']]
+        input_ws_obj_refs.extend(params['input_genome_refs'])
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Remove_Genomes_from_GenomeSet')
 
         # Store output object
         #
@@ -2533,29 +2344,11 @@ class kb_SetUtilities:
             reportObj = {'objects_created': [],
                          'text_message': report}
 
-        reportName = 'kb_SetUtilities_remove_genomes_from_genomeset_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({
-                'workspace':params['workspace_name'],
-                'objects':[
-                    {
-                        'type':'KBaseReport.Report',
-                        'data':reportObj,
-                        'name':reportName,
-                        'meta':{},
-                        'hidden':1,
-                        'provenance':provenance
-                    }
-                ]
-            })[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        #
-        self.log(console,"BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}"
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref.format(report_obj_info[6], report_obj_info[0],
-                                                     report_obj_info[4])}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Remove_Genomes_from_GenomeSet DONE")
         #END KButil_Remove_Genomes_from_GenomeSet
 
@@ -2592,6 +2385,9 @@ class kb_SetUtilities:
         self.log(console,'Running KButil_Build_ReadsSet with params=')
         self.log(console, "\n" + pformat(params))
         report = ''
+
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -2659,19 +2455,10 @@ class kb_SetUtilities:
                 self.log(console, "adding lib " + lib_name + " : " + libRef)  # DEBUG
                 items.append({'ref': libRef, 'label': lib_name})
 
-        # load the method provenance from the context object
-        #
+        # set provenance
         self.log(console, "SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        for libRef in params['input_refs']:
-            provenance[0]['input_ws_objects'].append(libRef)
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Build_ReadsSet'
-
+        input_ws_obj_refs = params['input_refs']
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Build_ReadsSet')
 
         # Store output object
         #
@@ -2711,23 +2498,11 @@ class kb_SetUtilities:
             report += "FAILURE:\n\n"+"\n".join(invalid_msgs)+"\n"
             reportObj = {'objects_created': [], 'text_message': report}
 
-        reportName = 'kb_SetUtilities_build_readsset_report_' + str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({'workspace': params['workspace_name'],
-                                           'objects': [{
-                                               'type': 'KBaseReport.Report',
-                                               'data': reportObj,
-                                               'name': reportName,
-                                               'meta': {},
-                                               'hidden': 1,
-                                               'provenance': provenance}]})[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        # Build report and return
-        self.log(console, "BUILDING RETURN OBJECT")
-        report_ref = "{}/{}/{}"
-        returnVal = {'report_name': reportName,
-                     'report_ref': report_ref.format(report_obj_info[6], report_obj_info[0],
-                                                     report_obj_info[4])}
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console, "KButil_Build_ReadsSet DONE")
         #END KButil_Build_ReadsSet
 
@@ -2773,7 +2548,7 @@ class kb_SetUtilities:
         env = os.environ.copy()
         env['KB_AUTH_TOKEN'] = token
 
-        #SERVICE_VER = 'dev'  # DEBUG
+        # set test status for called modules
         SERVICE_VER = 'release'
 
         # param checks
@@ -2795,15 +2570,6 @@ class kb_SetUtilities:
         if len(params['input_refs']) < 2:
             self.log(console,"Must provide at least two ReadsSets")
             self.log(invalid_msgs,"Must provide at least two ReadsSets")
-
-
-        # load provenance
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects']=params['input_refs']
-
 
         # init output object fields and SetAPI
         combined_readsSet_ref_list   = []
@@ -2912,10 +2678,11 @@ class kb_SetUtilities:
 
         # save report object
         #
-        report = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
-        report_info = report.create({'report':reportObj, 'workspace_name':params['workspace_name']})
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
         returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
+        self.log(console,"KButil_Merge_MultipleReadsSets_to_OneReadsSet DONE")
         #END KButil_Merge_MultipleReadsSets_to_OneReadsSet
 
         # At some point might do deeper type checking...
@@ -2954,6 +2721,8 @@ class kb_SetUtilities:
 #        report = 'Running KButil_Build_AssemblySet with params='
 #        report += "\n"+pformat(params)
 
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
         #### do some basic checks
         #
@@ -3019,19 +2788,10 @@ class kb_SetUtilities:
                                #'info'
                                })
 
-        # load the method provenance from the context object
-        #
-        self.log(console,"SETTING PROVENANCE")  # DEBUG
-        provenance = [{}]
-        if 'provenance' in ctx:
-            provenance = ctx['provenance']
-        # add additional info to provenance here, in this case the input data object reference
-        provenance[0]['input_ws_objects'] = []
-        for assRef in params['input_refs']:
-            provenance[0]['input_ws_objects'].append(assRef)
-        provenance[0]['service'] = 'kb_SetUtilities'
-        provenance[0]['method'] = 'KButil_Build_AssemblySet'
-
+        # set provenance
+        self.log(console, "SETTING PROVENANCE")  # DEBUG
+        input_ws_obj_refs = params['input_refs']
+        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Build_AssemblySet')
 
         # Store output object
         #
@@ -3073,30 +2833,11 @@ class kb_SetUtilities:
                 'text_message':report
                 }
 
-        reportName = 'kb_SetUtilities_build_assemblyset_report_'+str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({
-#                'id':info[6],
-                'workspace':params['workspace_name'],
-                'objects':[
-                    {
-                        'type':'KBaseReport.Report',
-                        'data':reportObj,
-                        'name':reportName,
-                        'meta':{},
-                        'hidden':1,
-                        'provenance':provenance
-                    }
-                ]
-            })[0]
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-
-        # Build report and return
-        #
-        self.log(console,"BUILDING RETURN OBJECT")
-        returnVal = { 'report_name': reportName,
-                      'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
-                      }
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console,"KButil_Build_AssemblySet DONE")
         #END KButil_Build_AssemblySet
 
@@ -3141,7 +2882,10 @@ class kb_SetUtilities:
 #        report = 'Running KButil_Batch_Create_ReadsSet with params='
 #        report += "\n"+pformat(params)
 
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
+        
         #### STEP 1: instantiate clients
         ##
         self.log (console, "GETTING WORKSPACE CLIENT")
@@ -3226,11 +2970,8 @@ class kb_SetUtilities:
                 self.log(invalid_msgs, "No Reads Library objects found")
             else:
                 self.log(invalid_msgs, "No Reads Library objects passing name_pattern filter: '"+name_pattern+"'")
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
 
-
+                
         #### STEP 5: Build ReadsSet
         ##
         if len(invalid_msgs) == 0:
@@ -3264,16 +3005,8 @@ class kb_SetUtilities:
             self.log(console,"SAVING READS_SET")  # DEBUG
 
             # set provenance
-            self.log(console,"SETTING PROVENANCE")  # DEBUG
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
-            # add additional info to provenance here, in this case the input data object reference
-            provenance[0]['input_ws_objects'] = []
-            for reads_ref in reads_ref_list:
-                provenance[0]['input_ws_objects'].append(reads_ref)
-            provenance[0]['service'] = 'kb_SetUtilities'
-            provenance[0]['method'] = 'KButil_Batch_Create_ReadsSet'
+            input_ws_obj_refs = reads_ref_list
+            provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Batch_Create_ReadsSet')
 
             # object def
             output_readsSet_obj = { 'description': params['desc'],
@@ -3309,30 +3042,12 @@ class kb_SetUtilities:
                 'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':desc}],
                 'text_message':report
             }
-        reportName = 'kb_SetUtilities_batch_create_readsset_report_'+str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({
-            #'id':info[6],
-            'workspace':params['workspace_name'],
-            'objects':[
-                {
-                    'type':'KBaseReport.Report',
-                    'data':reportObj,
-                    'name':reportName,
-                    'meta':{},
-                    'hidden':1,
-                    'provenance':provenance
-                }
-            ]
-        })[0]
 
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        #### STEP 8: return
-        ##
-        self.log(console,"BUILDING RETURN OBJECT")
-        returnVal = { 'report_name': reportName,
-                      'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
-                      }
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console,"KButil_Batch_Create_ReadsSet DONE")
         #END KButil_Batch_Create_ReadsSet
 
@@ -3378,7 +3093,10 @@ class kb_SetUtilities:
 #        report = 'Running KButil_Batch_Create_AssemblySet with params='
 #        report += "\n"+pformat(params)
 
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
+        
         #### STEP 1: instantiate clients
         ##
         self.log (console, "GETTING WORKSPACE CLIENT")
@@ -3441,9 +3159,6 @@ class kb_SetUtilities:
                 self.log(invalid_msgs, "No Assembly objects found")
             else:
                 self.log(invalid_msgs, "No Assembly objects passing name_pattern filter: '"+name_pattern+"'")
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
 
 
         #### STEP 5: Build AssemblySet
@@ -3470,16 +3185,9 @@ class kb_SetUtilities:
             self.log(console,"SAVING ASSEMBLY_SET")  # DEBUG
 
             # set provenance
-            self.log(console,"SETTING PROVENANCE")  # DEBUG
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
-            # add additional info to provenance here, in this case the input data object reference
-            provenance[0]['input_ws_objects'] = []
-            for ass_ref in assembly_ref_list:
-                provenance[0]['input_ws_objects'].append(ass_ref)
-            provenance[0]['service'] = 'kb_SetUtilities'
-            provenance[0]['method'] = 'KButil_Batch_Create_AssemblySet'
+            self.log(console, "SETTING PROVENANCE")  # DEBUG
+            input_ws_obj_refs = assembly_ref_list
+            provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Batch_Create_AssemblySet')
 
             # object def
             output_assemblySet_obj = { 'description': params['desc'],
@@ -3515,30 +3223,12 @@ class kb_SetUtilities:
                 'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':desc}],
                 'text_message':report
             }
-        reportName = 'kb_SetUtilities_batch_create_assemblyset_report_'+str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({
-            #'id':info[6],
-            'workspace':params['workspace_name'],
-            'objects':[
-                {
-                    'type':'KBaseReport.Report',
-                    'data':reportObj,
-                    'name':reportName,
-                    'meta':{},
-                    'hidden':1,
-                    'provenance':provenance
-                }
-            ]
-        })[0]
 
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        #### STEP 8: return
-        ##
-        self.log(console,"BUILDING RETURN OBJECT")
-        returnVal = { 'report_name': reportName,
-                      'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
-                      }
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console,"KButil_Batch_Create_AssemblySet DONE")
         #END KButil_Batch_Create_AssemblySet
 
@@ -3584,7 +3274,10 @@ class kb_SetUtilities:
 #        report = 'Running KButil_Batch_Create_GenomeSet with params='
 #        report += "\n"+pformat(params)
 
+        # set test status for called modules
+        SERVICE_VER = 'release'
 
+        
         #### STEP 1: instantiate clients
         ##
         self.log (console, "GETTING WORKSPACE CLIENT")
@@ -3647,11 +3340,8 @@ class kb_SetUtilities:
                 self.log(invalid_msgs, "No Genome objects found")
             else:
                 self.log(invalid_msgs, "No Genome objects passing name_pattern filter: '"+name_pattern+"'")
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
 
-
+                
         #### STEP 5: Build GenomeSet
         ##
         if len(invalid_msgs) == 0:
@@ -3679,16 +3369,9 @@ class kb_SetUtilities:
             self.log(console,"SAVING GENOME_SET")  # DEBUG
 
             # set provenance
-            self.log(console,"SETTING PROVENANCE")  # DEBUG
-            provenance = [{}]
-            if 'provenance' in ctx:
-                provenance = ctx['provenance']
-            # add additional info to provenance here, in this case the input data object reference
-            provenance[0]['input_ws_objects'] = []
-            for ass_ref in genome_ref_list:
-                provenance[0]['input_ws_objects'].append(ass_ref)
-            provenance[0]['service'] = 'kb_SetUtilities'
-            provenance[0]['method'] = 'KButil_Batch_Create_GenomeSet'
+            self.log(console, "SETTING PROVENANCE")  # DEBUG
+            input_ws_obj_refs = genome_ref_list
+            provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Batch_Create_GenomeSet')
 
             # object def
             output_genomeSet_obj = { 'description': params['desc'],
@@ -3733,30 +3416,12 @@ class kb_SetUtilities:
                 'objects_created':[{'ref':params['workspace_name']+'/'+params['output_name'], 'description':desc}],
                 'text_message':report
             }
-        reportName = 'kb_SetUtilities_batch_create_genomeset_report_'+str(uuid.uuid4())
-        ws = workspaceService(self.workspaceURL, token=ctx['token'])
-        report_obj_info = ws.save_objects({
-            #'id':info[6],
-            'workspace':params['workspace_name'],
-            'objects':[
-                {
-                    'type':'KBaseReport.Report',
-                    'data':reportObj,
-                    'name':reportName,
-                    'meta':{},
-                    'hidden':1,
-                    'provenance':provenance
-                }
-            ]
-        })[0]
 
+        # Save report
+        reportClient = KBaseReport(self.callbackURL, token=ctx['token'], service_ver=SERVICE_VER)
+        report_info = reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
 
-        #### STEP 8: return
-        ##
-        self.log(console,"BUILDING RETURN OBJECT")
-        returnVal = { 'report_name': reportName,
-                      'report_ref': str(report_obj_info[6]) + '/' + str(report_obj_info[0]) + '/' + str(report_obj_info[4]),
-                      }
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
         self.log(console,"KButil_Batch_Create_GenomeSet DONE")
         #END KButil_Batch_Create_GenomeSet
 
