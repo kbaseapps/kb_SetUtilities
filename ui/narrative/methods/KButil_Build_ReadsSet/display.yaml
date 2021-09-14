@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Build ReadsSet - v1.0.1
+name: Build ReadsSet - v1.7.6
 tooltip: |
     Allows users to create a ReadsSet object.
 screenshots:
@@ -42,7 +42,7 @@ parameters :
             Add a list of Reads Libraries here.
     output_name:
         ui-name : |
-            Output ReadsSet Name
+            Output ReadsSet
         short-hint : |
             The name for the output ReadsSet.
 

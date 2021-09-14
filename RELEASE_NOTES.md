@@ -1,3 +1,12 @@
+### Version 1.7.6
+__Changes__
+- fixed bugs found in narrative beta testing
+- added error when trying to build ReadsSet mixing PE and SE
+- removed redundant output cells from Set creation Apps
+- made set_provenance() method
+- updated to use KBaseReport.create()
+- followed recommended code tidying
+
 ### Version 1.7.5
 __Changes__
 - added Github Actions unit testing

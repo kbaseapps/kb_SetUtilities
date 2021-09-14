@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Venn Slice Two AssemblySets - v1.7.4
+name: Venn Slice Two AssemblySets - v1.7.6
 tooltip: |
     Allows users to slice two AssemblySets according to their Venn overlap.
 screenshots:
@@ -52,7 +52,7 @@ parameters :
             Enter Description
     output_name:
         ui-name : |
-            Output AssemblySet(s) Basename
+            Output AssemblySet
         short-hint : |
             Basename for the sliced output AssemblySet(s).
 
