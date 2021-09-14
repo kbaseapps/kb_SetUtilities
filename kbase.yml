@@ -8,7 +8,7 @@ service-language:
     python
 
 module-version:
-    1.7.5
+    1.7.6
 
 owners:
     [dylan, sychan]
