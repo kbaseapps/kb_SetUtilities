@@ -3,7 +3,6 @@
 import os
 import re
 import sys
-import uuid
 from datetime import datetime
 from pprint import pformat  # ,pprint
 
@@ -1202,16 +1201,9 @@ class kb_SetUtilities:
         #
         objects_created = []
 
-        # set provenance
-        input_ws_obj_refs = [input_assemblySet_refs['A'], input_assemblySet_refs['B']]
-        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Logical_Slice_Two_AssemblySets')
-
         if len(output_items) == 0:
             report += 'no assemblies to output under operator '+params['operator']+"\n"
         else:
-            # load the method provenance from the context object
-            self.log(console, "SETTING PROVENANCE")
-
             if params.get('desc'):
                 output_desc = params['desc']
             else:
@@ -2267,10 +2259,6 @@ class kb_SetUtilities:
                 self.log(console, "adding lib " + lib_name + " : " + libRef)
                 items.append({'ref': libRef, 'label': lib_name})
 
-        # set provenance
-        self.log(console, "SETTING PROVENANCE")
-        input_ws_obj_refs = params['input_refs']
-        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Build_ReadsSet')
 
         # Store output object
         #
@@ -2399,8 +2387,6 @@ class kb_SetUtilities:
                 raise ValueError('SetAPI Error: Unable to get read library set from workspace: (' +
                                  this_readsSet_ref + ")\n" + str(e))
 
-            NAME_I = 1
-            TYPE_I = 2
             for readsLibrary_obj in input_readsSet_obj['data']['items']:
                 this_readsLib_ref    = readsLibrary_obj['ref']
                 this_readsLib_label  = readsLibrary_obj['label']
@@ -2551,10 +2537,6 @@ class kb_SetUtilities:
                                #'info'
                                })
 
-        # set provenance
-        self.log(console, "SETTING PROVENANCE")
-        input_ws_obj_refs = params['input_refs']
-        provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Build_AssemblySet')
 
         # Store output object
         #
@@ -2662,7 +2644,7 @@ class kb_SetUtilities:
         ##
         pe_reads_obj_ref_by_name = dict()
         se_reads_obj_ref_by_name = dict()
-        reads_obj_ref_by_name    = dict()
+        reads_obj_ref_by_name    = None
 
         # Paired End
         pe_reads_obj_info_list = self.get_obj_info_list_from_ws_name(params['workspace_name'],
@@ -2733,10 +2715,6 @@ class kb_SetUtilities:
         ##
         if len(invalid_msgs) == 0:
             self.log(console,"SAVING READS_SET")
-
-            # set provenance
-            input_ws_obj_refs = reads_ref_list
-            provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Batch_Create_ReadsSet')
 
             # object def
             output_readsSet_obj = { 'description': params['desc'],
@@ -2888,11 +2866,6 @@ class kb_SetUtilities:
         ##
         if len(invalid_msgs) == 0:
             self.log(console,"SAVING ASSEMBLY_SET")
-
-            # set provenance
-            self.log(console, "SETTING PROVENANCE")
-            input_ws_obj_refs = assembly_ref_list
-            provenance = self.set_provenance(ctx, input_ws_obj_refs, 'kb_SetUtilities', 'KButil_Batch_Create_AssemblySet')
 
             # object def
             output_assemblySet_obj = { 'description': params['desc'],
