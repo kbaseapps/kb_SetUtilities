@@ -5,6 +5,7 @@ __Changes__
 - removed redundant output cells from Set creation Apps
 - made set_provenance() method
 - updated to use KBaseReport.create()
+- followed recommended code tidying
 
 ### Version 1.7.5
 __Changes__
