@@ -62,11 +62,8 @@ class kb_SetUtilities:
         for param in required_params:
             if not params.get(param):
                 missing_params.append(param)
-        if len(missing_params) > 0:
-            msg = []
-            for missing_param in missing_params:
-                msg.append('Missing required param: '+missing_param)
-                raise ValueError ("\n".join(msg))
+        if len(missing_params):
+            raise ValueError("Missing required param(s):\n" + "\n".join(missing_params))
 
     def ws_fetch_error(self, obj_desc, obj_ref, error=None):
         msg = 'Unable to fetch '+obj_desc+' ref:'+ obj_ref + ' from workspace.'
