@@ -257,7 +257,6 @@ class kb_SetUtilities:
         # param checks
         required_params = ['workspace_name',
                            'input_ref'
-                           #'output_name'
                            ]
         self.check_params (params, required_params)
 
@@ -730,15 +729,12 @@ class kb_SetUtilities:
             element_ordering = []
             elements = {}
             for fId in this_element_ordering:
-                #self.log (console, 'checking feature {}'.format(fId))
                 feature_hit = False
                 genomes_retained = []
                 for this_genome_ref in this_featureSet['elements'][fId]:
                     genome_hit = False
-                    #self.log (console, "\t"+'checking genome {}'.format(this_genome_ref))
 
-                    #if this_genome_ref in params['input_genome_refs']:   # The KEY line
-                    if this_genome_ref in genome_ref_to_standardized:
+                    if this_genome_ref in genome_ref_to_standardized:  # The KEY line
                         genome_hit = True
                         standardized_genome_ref = genome_ref_to_standardized[this_genome_ref]
                     elif this_genome_ref in featureSet_genome_ref_to_standardized:
@@ -761,7 +757,6 @@ class kb_SetUtilities:
                             genome_hit = True
 
                     if genome_hit:
-                        #self.log (console, "\t"+'GENOME HIT')
                         feature_hit = True
                         genomes_retained.append(standardized_genome_ref)
 
@@ -970,7 +965,6 @@ class kb_SetUtilities:
             rev_set_id = 'A'
 
         for fId in input_element_ordering:
-            #self.log (console, 'checking feature {}'.format(fId))
             feature_hit = False
             genomes_retained = []
             for this_genome_ref_noVer in FeatureSet[fwd_set_id]['elements'][fId]:
