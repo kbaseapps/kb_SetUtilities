@@ -1,3 +1,7 @@
+### Version 1.8.0
+__Changes__
+- Added "Summarize Genome Set" App
+
 ### Version 1.7.6
 __Changes__
 - fixed bugs found in narrative beta testing

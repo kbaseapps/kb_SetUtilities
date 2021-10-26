@@ -1,0 +1,64 @@
+#
+# define display information
+#
+name: Summarize GenomeSet - v1.8.0
+tooltip: |
+    Allows user to view Genome summaries within a GenomeSet
+screenshots: []
+
+icon: kb-purple.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    input_ref:
+        ui-name : |
+            GenomeSet
+        short-hint : |
+            The GenomeSet to Summarize
+    use_newest_version:
+        ui-name : |
+            Use Newest Genome Version
+        short-hint : |
+            GenomeSet may include older version of Genome object, so you can use the newest version instead.
+    show_sci_name:
+        ui-name : |
+            Scientific Name
+        short-hint : |
+            Show or hide the scientific name in the table (many MAGs have no meaningful name)
+    run_qc:
+        ui-name : |
+            Add Quality Scores
+        short-hint : |
+            Decide whether to run CheckM completeness and contamination QC
+    run_env_bioelement:
+        ui-name : |
+            Add EnvBioelement
+        short-hint : |
+            Decide whether to run EnvBioelement functional summaries
+    run_dbCAN:
+        ui-name : |
+            Add dbCAN2 CAZy
+        short-hint : |
+            Decide whether to run dbCAN2 CAZy summaries
+
+description : |
+    <p>This App allows the user to view summaries of the <b><i>Genomes</i></b> in a <b><i>Genome Set</i></b>.  This includes any taxonomic classification, tallies of feature types (e.g. number of protein encoding genes, ribosomal RNA genes, etc.).  Optionally, and slower, the user can include quality completeness and contamination measures from CheckM, environmental bioelement processing functional summaries, and CAZy gene family summaries.</p>
+    <hr>
+    <p>Team members who contributed to this application: <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a></p>

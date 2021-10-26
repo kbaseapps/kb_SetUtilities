@@ -11,6 +11,14 @@
   "type" : "sdk",
   "version_tag" : "release"
 }, {
+  "module_name" : "kb_hmmer",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
+  "module_name" : "kb_Msuite",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
   "module_name" : "KBaseReport",
   "type" : "sdk",
   "version_tag" : "release"

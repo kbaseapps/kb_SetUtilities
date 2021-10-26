@@ -410,6 +410,10 @@ class Application(object):
                              name='kb_SetUtilities.KButil_Batch_Create_GenomeSet',
                              types=[dict])
         self.method_authentication['kb_SetUtilities.KButil_Batch_Create_GenomeSet'] = 'required'  # noqa
+        self.rpc_service.add(impl_kb_SetUtilities.KButil_Summarize_GenomeSet,
+                             name='kb_SetUtilities.KButil_Summarize_GenomeSet',
+                             types=[dict])
+        self.method_authentication['kb_SetUtilities.KButil_Summarize_GenomeSet'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.status,
                              name='kb_SetUtilities.status',
                              types=[dict])

@@ -3,12 +3,14 @@
 import os
 import re
 import sys
+import uuid
 from datetime import datetime
 from pprint import pformat  # ,pprint
 
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.SetAPIServiceClient import SetAPI
 from installed_clients.WorkspaceClient import Workspace as workspaceService
+from installed_clients.DataFileUtilClient import DataFileUtil
 #END_HEADER
 
 
@@ -31,9 +33,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.7.6"
+    VERSION = "1.8.0"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "5d75bb3340d9a3b78f4b81d44f9ec0dc3b2195a9"
+    GIT_COMMIT_HASH = "1d093bc1c3b896a541b850cd57b606bdea70d066"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -131,6 +133,25 @@ class kb_SetUtilities:
         (obj_name, obj_type) = self.get_obj_name_and_type_from_obj_info (obj_info, full_type)
         return (obj_info, obj_name, obj_type)
     
+    def get_newest_obj_info (self, old_obj_ref, obj_type_desc, full_type=False):
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
+        obj_info = None
+        obj_name = None
+        obj_type = None
+        try:
+            obj_info = self.wsClient.get_object_info_new ({'objects':[{'ref':old_obj_ref}]})[0]
+        except Exception as e:
+            self.ws_fetch_error(obj_type_desc+' object info', old_obj_ref, error=e)
+        (obj_name, obj_type) = self.get_obj_name_and_type_from_obj_info (obj_info, full_type)
+
+        # get newest ref
+        wsid = obj_info[WSID_I]
+        try:
+            newest_obj_info = self.wsClient.get_object_info_new ({'objects':[{'wsid':wsid,'name':obj_name}]})[0]
+        except Exception as e:
+            self.ws_fetch_error(obj_type_desc+' object info', obj_name, error=e)
+        return (newest_obj_info, obj_name, obj_type)
+    
     def get_obj_info_list_from_ws_id (self, ws_id, obj_type, obj_type_desc):
         obj_info_list = []
         try:
@@ -146,7 +167,89 @@ class kb_SetUtilities:
         except Exception as e:
             raise ValueError ("Unable to list "+obj_type_desc+" objects from workspace: "+str(ws_id)+" "+str(e))
         return obj_info_list
-        
+
+    def get_genome_attribute (self, genome_data, attr):
+        val = None
+        known_attrs = ['sci_name',
+                       'taxonomy',
+                       'contig_count',
+                       'genome_length',
+                       'CDS_count',
+                       'tRNA_count',
+                       '5S_rRNA_count',
+                       '16S_rRNA_count',
+                       '23S_rRNA_count',
+                       'CRISPR_array_count']
+        if attr not in known_attrs:
+            raise ValueError ("Uknown attr '"+attr+"' requested in get_genome_attribute(")
+
+        if attr == 'sci_name':
+            val = genome_data['scientific_name']
+        elif attr == 'taxonomy':
+            val = genome_data['taxonomy']
+        elif attr == 'contig_count':
+            val = genome_data['num_contigs']
+        elif attr == 'genome_length':
+            val = 0
+            for length in genome_data['contig_lengths']:
+                val += length
+        elif attr == 'CDS_count':
+            val = len(genome_data['cdss'])
+        elif attr == 'tRNA_count':
+            val = 0
+            #tRNAs_seen = dict()  # don't always include anti-codon
+            if 'non_coding_features' in genome_data:
+                for f in genome_data['non_coding_features']:
+                    if 'functions' in f:
+                        for func in f['functions']:
+                            if func.startswith('tRNA'):
+                                #tRNAs_seen[func] = True 
+                                val += 1
+                                break
+                #val += len(tRNAs_seen.keys())
+        elif attr == '5S_rRNA_count':
+            val = 0
+            if 'non_coding_features' in genome_data:
+                for f in genome_data['non_coding_features']:
+                    if 'functions' in f:
+                        for func in f['functions']:
+                            if func.startswith('5S rRNA') or \
+                               func.startswith('5S ribosomal RNA'):
+                                val += 1
+                                break
+        elif attr == '16S_rRNA_count':
+            val = 0
+            if 'non_coding_features' in genome_data:
+                for f in genome_data['non_coding_features']:
+                    if 'functions' in f:
+                        for func in f['functions']:
+                            if func.startswith('16S rRNA') or \
+                               func.startswith('16S ribosomal RNA'):
+                                val += 1
+                                break
+        elif attr == '23S_rRNA_count':
+            val = 0
+            if 'non_coding_features' in genome_data:
+                for f in genome_data['non_coding_features']:
+                    if 'functions' in f:
+                        for func in f['functions']:
+                            if func.startswith('23S rRNA') or \
+                               func.startswith('23S ribosomal RNA'):
+                                val += 1
+                                break
+        elif attr == 'CRISPR_array_count':
+            val = 0
+            if 'non_coding_features' in genome_data:
+                for f in genome_data['non_coding_features']:
+                    if 'function' in f:
+                        func = f['function']
+                        if func.startswith('CRISPR region'):
+                            val += 1
+        else:
+            raise ValueError ('wrong attr type for get_genome_attr()')
+            
+        return str(val)
+    
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -168,6 +271,14 @@ class kb_SetUtilities:
         if not os.path.exists(self.scratch):
             os.makedirs(self.scratch)
 
+        self.indir = os.path.join(self.scratch, 'in-',str(uuid.uuid4()))
+        if not os.path.exists(self.indir):
+            os.makedirs(self.indir)
+            
+        self.outdir = os.path.join(self.scratch, 'out-',str(uuid.uuid4()))
+        if not os.path.exists(self.outdir):
+            os.makedirs(self.outdir)
+            
         # set test status for called modules
         self.SERVICE_VER = 'release'
 
@@ -176,6 +287,11 @@ class kb_SetUtilities:
             self.wsClient = workspaceService(self.workspaceURL, token=self.token)
         except Exception as e:
             raise ValueError('Unable to connect to workspace at ' + self.workspaceURL + str(e))
+
+        try:
+            self.dfuClient = DataFileUtil(self.callbackURL, token=self.token, service_ver=self.SERVICE_VER)
+        except Exception as e:
+            raise ValueError('Unable to instantiate dfuClient ' + str(e))
 
         try:
             self.reportClient = KBaseReport(self.callbackURL, token=self.token, service_ver=self.SERVICE_VER)
@@ -3067,6 +3183,283 @@ class kb_SetUtilities:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method KButil_Batch_Create_GenomeSet return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def KButil_Summarize_GenomeSet(self, ctx, params):
+        """
+        :param params: instance of type "KButil_Summarize_GenomeSet_Params"
+           (KButil_Summarize_GenomeSet() ** **  Method for building an HTML
+           report with Genome summaries) -> structure: parameter
+           "workspace_name" of type "workspace_name" (** The workspace object
+           refs are of form: ** **    objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_ref" of type "data_obj_ref", parameter
+           "use_newest_version" of type "bool", parameter "show_sci_name" of
+           type "bool", parameter "run_qc" of type "bool", parameter
+           "run_env_bioelement" of type "bool", parameter "run_dbCAN" of type
+           "bool"
+        :returns: instance of type "KButil_Summarize_GenomeSet_Output" ->
+           structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Summarize_GenomeSet
+        console = []
+        invalid_msgs = []
+        self.log(console, 'Running Summarize_GenomeSet with params=')
+        self.log(console, "\n" + pformat(params))
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
+        outdir = os.path.join(self.outdir, 'summarize_genomeset')
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+        html_dir = os.path.join(outdir, 'html')
+        if not os.path.exists(html_dir):
+            os.makedirs(html_dir)
+        logMsg = ''
+        report = ''
+
+        #### check params
+        ##
+        required_params = ['workspace_name',
+                           'input_ref',
+                           'use_newest_version',
+                           'show_sci_name',
+                           'run_qc',
+                           'run_env_bioelement',
+                           'run_dbCAN'
+        ]
+        self.check_params (params, required_params)
+
+
+        #### Get GenomeSet
+        ##
+        GenomeSet_element_refs = dict()
+        (genomeSet_data,
+         info,
+         genomeSet_obj_name,
+         type_name) = self.get_obj_data(params['input_ref'], 'genomeSet')
+
+        if type_name != 'GenomeSet':
+            raise ValueError("Bad Type:  Should be GenomeSet instead of '" + type_name + "'")
+
+        genome_newVer_ref_to_oldVer_ref = dict()
+        genome_newVer_ref_to_obj_name = dict()
+        genome_obj_name_to_newVer_ref = dict()
+        genome_newVer_ref_order = []
+        for genome_id in sorted(genomeSet_data['elements'].keys()):
+            genome_oldVer_ref = genomeSet_data['elements'][genome_id]['ref']
+
+            (genome_obj_info,
+             genome_obj_name,
+             genome_obj_type) = self.get_newest_obj_info (genome_oldVer_ref, 'genome', full_type=True)
+
+            #acceptable_types = ["KBaseGenomes.Genome","KBaseGenomeAnnotations.GenomeAnnotation"]
+            acceptable_types = ["KBaseGenomes.Genome"]
+            if genome_obj_type not in acceptable_types:
+                raise ValueError("Input Genome of type: '" + genome_obj_type +
+                                 "'.  Must be one of " + ", ".join(acceptable_types))
+            # get newVer ref
+            genome_newVer_ref = self.get_obj_ref_from_obj_info (genome_obj_info)
+
+            # store mappings
+            genome_newVer_ref_to_oldVer_ref[genome_newVer_ref] = genome_oldVer_ref
+            genome_newVer_ref_to_obj_name[genome_newVer_ref]   = genome_obj_name
+            
+            # can have same obj_name in different workspaces, so must be a list of refs
+            if 'genome_obj_name' not in genome_obj_name_to_newVer_ref:
+                genome_obj_name_to_newVer_ref[genome_obj_name] = []
+            genome_obj_name_to_newVer_ref[genome_obj_name].append(genome_newVer_ref)
+
+
+        # sort refs by genome name
+        for genome_obj_name in sorted(genome_obj_name_to_newVer_ref.keys()):
+            for genome_newVer_ref in genome_obj_name_to_newVer_ref[genome_obj_name]:
+                genome_newVer_ref_order.append(genome_newVer_ref)
+
+        #### read genome objects to get table info
+        ##
+        table = dict()
+        for genome_newVer_ref in genome_newVer_ref_order:
+            if int(params['use_newest_version']) == 0:
+                genome_ref = genome_newVer_ref_to_oldVer_ref[genome_newVer_ref]
+            else:
+                genome_ref = genome_newVer_ref
+                
+            (genome_data,
+             info,
+             this_genome_obj_name,
+             type_name) = self.get_obj_data(genome_ref, 'genome')
+            
+            table[genome_newVer_ref] = dict()
+            if int(params.get('show_sci_name',1)) == 1:
+                table[genome_newVer_ref]['sci_name'] = self.get_genome_attribute(genome_data, 'sci_name')
+            table[genome_newVer_ref]['taxonomy'] = self.get_genome_attribute(genome_data, 'taxonomy')
+            table[genome_newVer_ref]['contig_count'] = self.get_genome_attribute(genome_data, 'contig_count')
+            table[genome_newVer_ref]['genome_length'] = self.get_genome_attribute(genome_data, 'genome_length')
+            table[genome_newVer_ref]['CDS_count'] = self.get_genome_attribute(genome_data, 'CDS_count')
+            table[genome_newVer_ref]['tRNA_count'] = self.get_genome_attribute(genome_data, 'tRNA_count')
+            table[genome_newVer_ref]['5S_rRNA_count'] = self.get_genome_attribute(genome_data, '5S_rRNA_count')
+            table[genome_newVer_ref]['16S_rRNA_count'] = self.get_genome_attribute(genome_data, '16S_rRNA_count')
+            table[genome_newVer_ref]['23S_rRNA_count'] = self.get_genome_attribute(genome_data, '23S_rRNA_count')
+            table[genome_newVer_ref]['CRISPR_array_count'] = self.get_genome_attribute(genome_data, 'CRISPR_array_count')
+
+
+        #### build TSV table
+        ##
+        TSV_table_buf = []
+        field_titles = {'sci_name': 'Scientific Name',
+                        'taxonomy': 'Taxonomy',
+                        'contig_count': 'Contigs',
+                        'genome_length': 'Genome Size',
+                        'CDS_count': 'CDS',
+                        'tRNA_count': 'tRNA',
+                        '5S_rRNA_count': '5S rRNA',
+                        '16S_rRNA_count': '16S rRNA',
+                        '23S_rRNA_count': '23S rRNA',
+                        'CRISPR_array_count': 'CRISPR arrays'}
+        fields = []
+        if int(params.get('show_sci_name',1)) == 1:
+            fields.append('sci_name')
+        fields.extend(['taxonomy',
+                       'contig_count',
+                       'genome_length',
+                       'CDS_count',
+                       'tRNA_count',
+                       '5S_rRNA_count',
+                       '16S_rRNA_count',
+                       '23S_rRNA_count',
+                       'CRISPR_array_count'])
+        # header
+        TSV_row = ['Genome']
+        for field in fields:
+            TSV_row.append(field_titles[field])
+        TSV_table_buf.append("\t".join(TSV_row))
+
+        # data
+        for genome_newVer_ref in genome_newVer_ref_order:
+            genome_obj_name = genome_newVer_ref_to_obj_name[genome_newVer_ref]
+            TSV_row = [genome_obj_name]
+            for field in fields:
+                TSV_row.append(table[genome_newVer_ref][field])
+            TSV_table_buf.append("\t".join(TSV_row))
+
+        # report in log
+        for row in TSV_table_buf:
+            self.log(console, row)
+
+        # write TSV to file and upload
+        TSV_file = 'GenomeSet_summary.tsv'
+        TSV_path = os.path.join(outdir, TSV_file)
+        TSV_str = "\n".join(TSV_table_buf)
+        with open(TSV_path, 'w') as TSV_handle:
+            TSV_handle.write(TSV_str)
+        try:
+            TSV_file_save_info = self.dfuClient.file_to_shock({'file_path': TSV_path, 'make_handle': 0})
+        except:
+            raise ValueError ("error saving TSV_file")
+        file_links = [{'shock_id': TSV_file_save_info['shock_id'],
+                       'name': TSV_file,
+                       'label': 'GenomeSet summary TSV'}]
+        
+        
+        #### build HTML table
+        ##
+        html_file_path = None
+        # config
+        head_color = "#eeeeff"
+        border_head_color = "#ffccff"
+        accept_row_color = 'white'
+        #reject_row_color = '#ffeeee'
+        reject_row_color = '#eeeeee'
+        reject_cell_color = '#ffcccc'
+        text_fontsize = "2"
+        text_color = '#606060'
+        border_body_color = "#cccccc"
+        bar_width = 100
+        bar_height = 15
+        bar_color = "lightblue"
+        bar_line_color = "#cccccc"
+        bar_fontsize = "1"
+        bar_char = "."
+        cellpadding = "3"
+        cellspacing = "2"
+        border = "0"
+
+        # begin buffer and table header
+        html_report_lines = []
+        html_report_lines += ['<html>']
+        html_report_lines += ['<body bgcolor="white">']
+        html_report_lines += ['<p>']
+
+        html_report_lines += ['<table cellpadding='+cellpadding+' cellspacing = '+cellspacing+' border='+border+'>']
+        html_report_lines += ['<tr bgcolor="'+head_color+'">']
+        for field in fields:
+            html_report_lines += ['<td style="border-right:solid 2px '+border_head_color+'; border-bottom:solid 2px '+border_head_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+field_titles[field]+'</font></td>']
+        html_report_lines += ['</tr>']
+
+        # add in data
+        for genome_newVer_ref in genome_newVer_ref_order:
+            row_color = accept_row_color
+            html_report_lines += ['<tr bgcolor="'+row_color+'">']
+            genome_obj_name = genome_newVer_ref_to_obj_name[genome_newVer_ref]
+            html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+genome_obj_name+'</font></td>']
+            for field in fields:
+                html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+str(table[genome_newVer_ref][field])+'</font></td>']
+            html_report_lines += ['</tr>']
+
+        html_report_lines += ['</table>']
+        html_report_lines += ['</body>']
+        html_report_lines += ['</html>']
+
+        # write html to file and upload
+        html_report_str = "\n".join(html_report_lines)
+        html_file = 'GenomeSet_summary_table.html'
+        html_path = os.path.join (html_dir, html_file)
+        with open (html_path, 'w') as html_handle:
+            html_handle.write(html_report_str)
+        try:
+            HTML_dir_save_info = self.dfuClient.file_to_shock({'file_path': html_dir,
+                                                               'make_handle': 0,
+                                                               'pack': 'zip'})
+        except:
+            raise ValueError ("error saving HTML dir")
+
+        html_links = [{'shock_id': HTML_dir_save_info['shock_id'],
+                       'name': html_file,
+                       'label': 'GenomeSet summary table HTML'}]
+        
+        
+            
+        # build output report object
+        self.log(console, "BUILDING REPORT")
+        reportName = 'GenomeSet_summary_report'+str(uuid.uuid4())
+        reportObj = {'objects_created': [],
+                     'message': '',
+                     'direct_html': '',
+                     'direct_html_link_index': 0,
+                     'file_links': file_links,
+                     'html_links': html_links,
+                     'workspace_name': params['workspace_name'],
+                     'report_object_name': reportName
+                     }
+
+        # Save report
+        report_info = self.reportClient.create_extended_report(reportObj)
+        returnVal = { 'report_name': report_info['name'],
+                      'report_ref': report_info['ref'] }
+        self.log(console, "KButil_Summarize_GenomeSet DONE")
+        #END KButil_Summarize_GenomeSet
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Summarize_GenomeSet return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]
