@@ -270,7 +270,7 @@ class kb_SetUtilities:
                  assembly_obj_name,
                  assembly_obj_type) = self.get_obj_data(genome_data['assembly_ref'], 'assembly')
                 if len(assembly_obj_data.get('contigs',{}).keys()) > 0:
-                    contig_lenghts = []
+                    contig_lengths = []
                     for contig_id in assembly_obj_data['contigs'].keys():
                         if assembly_obj_data['contigs'][contig_id].get('length',0) > 0:
                             contig_lengths.append(assembly_obj_data['contigs'][contig_id].get('length'))
