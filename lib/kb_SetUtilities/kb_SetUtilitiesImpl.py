@@ -168,12 +168,14 @@ class kb_SetUtilities:
             raise ValueError ("Unable to list "+obj_type_desc+" objects from workspace: "+str(ws_id)+" "+str(e))
         return obj_info_list
 
-    def get_genome_attribute (self, genome_data, attr):
+    def get_genome_attribute (self, genome_data, attr, genome_tag=None):
         val = None
         known_attrs = ['sci_name',
                        'taxonomy',
                        'contig_count',
                        'genome_length',
+                       'N50',
+                       'GC',
                        'CDS_count',
                        'tRNA_count',
                        '5S_rRNA_count',
@@ -183,18 +185,157 @@ class kb_SetUtilities:
         if attr not in known_attrs:
             raise ValueError ("Uknown attr '"+attr+"' requested in get_genome_attribute(")
 
+        def _get_genome_id (genome_data, genome_tag):
+            genome_id = ''
+            if genome_tag is not None:
+                genome_id = genome_tag
+            elif genome_data.get('id'):
+                genome_id = genome_data['id']
+            return genome_id
+            
+        # sci_name
         if attr == 'sci_name':
-            val = genome_data['scientific_name']
+            val = '-'
+            if genome_data.get('scientific_namne'):
+                val = genome_data['scientific_name']
+
+        # taxonomy
         elif attr == 'taxonomy':
-            val = genome_data['taxonomy']
+            val = '-'
+            if genome_data.get('taxonomy'):
+                val = genome_data['taxonomy']
+
+        # contig_count
         elif attr == 'contig_count':
-            val = genome_data['num_contigs']
+            if genome_data.get('num_contigs',0) > 0:
+                val = genome_data['num_contigs']
+            elif len(genome_data.get('contig_ids',[])) > 0:
+                val = len(genome_data['contig_ids'])
+            elif len(genome_data.get('contig_lengths',[])) > 0:
+                val = len(genome_data['contig_lengths'])
+            elif genome_data.get('assembly_ref'):
+                (assembly_obj_data,
+                 assembly_obj_info,
+                 assembly_obj_name,
+                 assembly_obj_type) = self.get_obj_data(genome_data['assembly_ref'], 'assembly')
+                if assembly_obj_data.get('num_contigs',0) > 0:
+                    val = assembly_obj_data['num_contigs']
+                elif len(assembly_obj_data.get('contigs',{}).keys()) > 0:
+                    val = len(assembly_obj_data['contigs'].keys())
+                else:
+                    genome_id = _get_genome_id (genome_data, genome_tag)
+                    raise ValueError ("assembly for genome "+genome_id+" missing all necessary fields for "+attr)
+            else:
+                genome_id = _get_genome_id (genome_data, genome_tag)
+                raise ValueError ("genome "+genome_id+" missing all necessary fields for "+attr)
+
+        # genome_length
         elif attr == 'genome_length':
-            val = 0
-            for length in genome_data['contig_lengths']:
-                val += length
+            if genome_data.get('dna_size',0) > 0:
+                val = genome_data['dna_size']
+            elif len(genome_data.get('contig_lengths',[])) > 0:
+                val = 0
+                for contig_len in genome_data.get('contig_lengths'):
+                    val += contig_len
+            elif genome_data.get('assembly_ref'):
+                (assembly_obj_data,
+                 assembly_obj_info,
+                 assembly_obj_name,
+                 assembly_obj_type) = self.get_obj_data(genome_data['assembly_ref'], 'assembly')
+                if assembly_obj_data.get('dna_size',0) > 0:
+                    val = assembly_obj_data['dna_size']
+                elif len(assembly_obj_data.get('contigs',{}).keys()) > 0:
+                    val = 0
+                    for contig_id in assembly_obj_data['contigs'].keys():
+                        if assembly_obj_data['contigs'][contig_id].get('length',0) > 0:
+                            val += assembly_obj_data['contigs'][contig_id].get('length')
+                else:
+                    genome_id = _get_genome_id (genome_data, genome_tag)
+                    raise ValueError ("assembly for genome "+genome_id+" missing all necessary fields for "+attr)
+            else:
+                genome_id = _get_genome_id (genome_data, genome_tag)
+                raise ValueError ("genome "+genome_id+" missing all necessary fields for "+attr)
+
+        # N50
+        elif attr == 'N50':
+            total_length = self.get_genome_attribute (genome_data, 'genome_length', genome_tag)
+            half_length = int((0.5*float(total_length)+0.5))
+            sorted_contig_lengths = []
+            
+            if len(genome_data.get('contig_lengths',[])) > 0:
+                sorted_contig_lengths = sorted(genome_data['contig_lengths'], key=int, reverse=True)
+            elif genome_data.get('assembly_ref'):
+                (assembly_obj_data,
+                 assembly_obj_info,
+                 assembly_obj_name,
+                 assembly_obj_type) = self.get_obj_data(genome_data['assembly_ref'], 'assembly')
+                if len(assembly_obj_data.get('contigs',{}).keys()) > 0:
+                    contig_lenghts = []
+                    for contig_id in assembly_obj_data['contigs'].keys():
+                        if assembly_obj_data['contigs'][contig_id].get('length',0) > 0:
+                            contig_lengths.append(assembly_obj_data['contigs'][contig_id].get('length'))
+                else:
+                    genome_id = _get_genome_id (genome_data, genome_tag)
+                    raise ValueError ("assembly for genome "+genome_id+" missing all necessary fields for "+attr)
+                sorted_contig_lengths = sorted(contig_lengths, key=int, reverse=True)
+            else:
+                genome_id = _get_genome_id (genome_data, genome_tag)
+                raise ValueError ("genome "+genome_id+" missing all necessary fields for "+attr)
+
+            running_sum = 0
+            N50 = 0
+            for contig_length in sorted_contig_lengths:
+                running_sum += contig_length
+                if running_sum >= half_length:
+                    N50 = contig_length
+            val = N50
+        
+        # GC
+        elif attr == 'GC':
+            GC = '-'
+            if genome_data.get('gc_content'):
+                GC = str(round(100*genome_data['gc_content'],2))+'%'
+            elif genome_data.get('assembly_ref'):
+                (assembly_obj_data,
+                 assembly_obj_info,
+                 assembly_obj_name,
+                 assembly_obj_type) = self.get_obj_data(genome_data['assembly_ref'], 'assembly')
+                GC = '-'
+                if assembly_obj_data.get('gc_content'):
+                    GC = str(round(100*assembly_obj_data['gc_content'],2))+'%'
+                elif len(assembly_obj_data.get('contigs',{}).keys()) > 0:
+                    total_length = self.get_genome_attribute (genome_data, 'genome_length', genome_tag)
+                    running_weighted_sum = 0
+                    for contig_id in assembly_obj_data['contigs'].keys():
+                        if assembly_obj_data['contigs'][contig_id].get('length',0) > 0 and \
+                           assembly_obj_data['contigs'][contig_id].get('gc_content',0) > 0:
+                            this_length = assembly_obj_data['contigs'][contig_id]['length']
+                            this_gc = assembly_obj_data['contigs'][contig_id]['gc_content']
+                            running_weighted_sum += this_length * this_gc
+                    GC = str(round(100*(float(running_weighted_sum)/float(total_length)),2))+'%'
+                if str(GC) == '-':
+                    if assembly_obj_data.get('base_counts'):
+                        base_counts = assembly_obj_data['base_counts']
+                        total_bases = base_counts['A'] + base_counts['T'] + base_counts['G'] + base_counts['C']
+                        gc_content = float(base_counts['G'] + base_counts['C']) / float(total_bases)
+                        GC = str(round(100*gc_content,2))+'%'
+                        
+                if str(GC) == '-':
+                    genome_id = _get_genome_id (genome_data, genome_tag)
+                    raise ValueError ("assembly for genome "+genome_id+" missing all necessary fields for "+attr)
+                sorted_contig_lengths = sorted(contig_lengths, key=int, reverse=True)
+            else:
+                genome_id = _get_genome_id (genome_data, genome_tag)
+                raise ValueError ("genome "+genome_id+" missing all necessary fields for "+attr)
+            val = GC
+            
+        # CDS count
         elif attr == 'CDS_count':
-            val = len(genome_data['cdss'])
+            val = '-'
+            if len(genome_data.get('cdss',[])) > 0:
+                val = len(genome_data['cdss'])
+
+        # tRNA_count
         elif attr == 'tRNA_count':
             val = 0
             #tRNAs_seen = dict()  # don't always include anti-codon
@@ -207,6 +348,8 @@ class kb_SetUtilities:
                                 val += 1
                                 break
                 #val += len(tRNAs_seen.keys())
+
+        # 5S_rRNA_count
         elif attr == '5S_rRNA_count':
             val = 0
             if 'non_coding_features' in genome_data:
@@ -217,6 +360,8 @@ class kb_SetUtilities:
                                func.startswith('5S ribosomal RNA'):
                                 val += 1
                                 break
+
+        # 16S_rRNA_count
         elif attr == '16S_rRNA_count':
             val = 0
             if 'non_coding_features' in genome_data:
@@ -227,6 +372,8 @@ class kb_SetUtilities:
                                func.startswith('16S ribosomal RNA'):
                                 val += 1
                                 break
+
+        # 23S_rRNA_count
         elif attr == '23S_rRNA_count':
             val = 0
             if 'non_coding_features' in genome_data:
@@ -237,6 +384,8 @@ class kb_SetUtilities:
                                func.startswith('23S ribosomal RNA'):
                                 val += 1
                                 break
+
+        # CRISPR_array_count
         elif attr == 'CRISPR_array_count':
             val = 0
             if 'non_coding_features' in genome_data:
@@ -245,8 +394,9 @@ class kb_SetUtilities:
                         func = f['function']
                         if func.startswith('CRISPR region'):
                             val += 1
+
         else:
-            raise ValueError ('wrong attr type for get_genome_attr()')
+            raise ValueError ('wrong attr type for get_genome_attribute()')
             
         return str(val)
     
@@ -3299,16 +3449,18 @@ class kb_SetUtilities:
             
             table[genome_newVer_ref] = dict()
             if int(params.get('show_sci_name',1)) == 1:
-                table[genome_newVer_ref]['sci_name'] = self.get_genome_attribute(genome_data, 'sci_name')
-            table[genome_newVer_ref]['taxonomy'] = self.get_genome_attribute(genome_data, 'taxonomy')
-            table[genome_newVer_ref]['contig_count'] = self.get_genome_attribute(genome_data, 'contig_count')
-            table[genome_newVer_ref]['genome_length'] = self.get_genome_attribute(genome_data, 'genome_length')
-            table[genome_newVer_ref]['CDS_count'] = self.get_genome_attribute(genome_data, 'CDS_count')
-            table[genome_newVer_ref]['tRNA_count'] = self.get_genome_attribute(genome_data, 'tRNA_count')
-            table[genome_newVer_ref]['5S_rRNA_count'] = self.get_genome_attribute(genome_data, '5S_rRNA_count')
-            table[genome_newVer_ref]['16S_rRNA_count'] = self.get_genome_attribute(genome_data, '16S_rRNA_count')
-            table[genome_newVer_ref]['23S_rRNA_count'] = self.get_genome_attribute(genome_data, '23S_rRNA_count')
-            table[genome_newVer_ref]['CRISPR_array_count'] = self.get_genome_attribute(genome_data, 'CRISPR_array_count')
+                table[genome_newVer_ref]['sci_name'] = self.get_genome_attribute(genome_data, 'sci_name', genome_newVer_ref)
+            table[genome_newVer_ref]['taxonomy'] = self.get_genome_attribute(genome_data, 'taxonomy', genome_newVer_ref)
+            table[genome_newVer_ref]['contig_count'] = self.get_genome_attribute(genome_data, 'contig_count', genome_newVer_ref)
+            table[genome_newVer_ref]['genome_length'] = self.get_genome_attribute(genome_data, 'genome_length', genome_newVer_ref)
+            table[genome_newVer_ref]['N50'] = self.get_genome_attribute(genome_data, 'N50', genome_newVer_ref)
+            table[genome_newVer_ref]['GC'] = self.get_genome_attribute(genome_data, 'GC', genome_newVer_ref)
+            table[genome_newVer_ref]['CDS_count'] = self.get_genome_attribute(genome_data, 'CDS_count', genome_newVer_ref)
+            table[genome_newVer_ref]['tRNA_count'] = self.get_genome_attribute(genome_data, 'tRNA_count', genome_newVer_ref)
+            table[genome_newVer_ref]['5S_rRNA_count'] = self.get_genome_attribute(genome_data, '5S_rRNA_count', genome_newVer_ref)
+            table[genome_newVer_ref]['16S_rRNA_count'] = self.get_genome_attribute(genome_data, '16S_rRNA_count', genome_newVer_ref)
+            table[genome_newVer_ref]['23S_rRNA_count'] = self.get_genome_attribute(genome_data, '23S_rRNA_count', genome_newVer_ref)
+            table[genome_newVer_ref]['CRISPR_array_count'] = self.get_genome_attribute(genome_data, 'CRISPR_array_count', genome_newVer_ref)
 
 
         #### build TSV table
@@ -3318,6 +3470,8 @@ class kb_SetUtilities:
                         'taxonomy': 'Taxonomy',
                         'contig_count': 'Contigs',
                         'genome_length': 'Genome Size',
+                        'N50': 'N50',
+                        'GC': 'G+C%',
                         'CDS_count': 'CDS',
                         'tRNA_count': 'tRNA',
                         '5S_rRNA_count': '5S rRNA',
@@ -3330,6 +3484,8 @@ class kb_SetUtilities:
         fields.extend(['taxonomy',
                        'contig_count',
                        'genome_length',
+                       'N50',
+                       'GC',
                        'CDS_count',
                        'tRNA_count',
                        '5S_rRNA_count',
