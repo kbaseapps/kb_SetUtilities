@@ -185,6 +185,7 @@ class kb_SetUtilities:
         if attr not in known_attrs:
             raise ValueError ("Uknown attr '"+attr+"' requested in get_genome_attribute(")
 
+        # handy functions
         def _get_genome_id (genome_data, genome_tag):
             genome_id = ''
             if genome_tag is not None:
@@ -193,6 +194,23 @@ class kb_SetUtilities:
                 genome_id = genome_data['id']
             return genome_id
             
+        def _check_feature_func (f, target_str_list):
+            hit = False
+            if f.get('function'):
+                func = f['function']
+                for target in target_str_list:
+                    if func.startswith(target):
+                        hit = True
+            if len(f.get('functions',[])) > 0:
+                for func in f['functions']:
+                    for target in target_str_list:
+                        if func.startswith(target):
+                            hit = True
+                            break
+            if hit:
+                return 1
+            return 0
+
         # sci_name
         if attr == 'sci_name':
             val = '-'
@@ -338,15 +356,10 @@ class kb_SetUtilities:
         # tRNA_count
         elif attr == 'tRNA_count':
             val = 0
-            #tRNAs_seen = dict()  # don't always include anti-codon
+            #tRNAs_seen = dict()  # function string doesn't always include anti-codon
             if 'non_coding_features' in genome_data:
                 for f in genome_data['non_coding_features']:
-                    if 'functions' in f:
-                        for func in f['functions']:
-                            if func.startswith('tRNA'):
-                                #tRNAs_seen[func] = True 
-                                val += 1
-                                break
+                    val += _check_feature_func (f, ['tRNA'])
                 #val += len(tRNAs_seen.keys())
 
         # 5S_rRNA_count
@@ -354,46 +367,35 @@ class kb_SetUtilities:
             val = 0
             if 'non_coding_features' in genome_data:
                 for f in genome_data['non_coding_features']:
-                    if 'functions' in f:
-                        for func in f['functions']:
-                            if func.startswith('5S rRNA') or \
-                               func.startswith('5S ribosomal RNA'):
-                                val += 1
-                                break
+                    val += _check_feature_func (f, ['5S rRNA',
+                                                    '5S ribosomal RNA'])
 
         # 16S_rRNA_count
         elif attr == '16S_rRNA_count':
             val = 0
             if 'non_coding_features' in genome_data:
                 for f in genome_data['non_coding_features']:
-                    if 'functions' in f:
-                        for func in f['functions']:
-                            if func.startswith('16S rRNA') or \
-                               func.startswith('16S ribosomal RNA'):
-                                val += 1
-                                break
+                    val += _check_feature_func (f, ['16S rRNA',
+                                                    '16S ribosomal RNA',
+                                                    'SSU rRNA',
+                                                    'SSU ribosomal RNA'])
 
         # 23S_rRNA_count
         elif attr == '23S_rRNA_count':
             val = 0
             if 'non_coding_features' in genome_data:
                 for f in genome_data['non_coding_features']:
-                    if 'functions' in f:
-                        for func in f['functions']:
-                            if func.startswith('23S rRNA') or \
-                               func.startswith('23S ribosomal RNA'):
-                                val += 1
-                                break
+                    val += _check_feature_func (f, ['23S rRNA',
+                                                    '23S ribosomal RNA',
+                                                    'LSU rRNA',
+                                                    'LSU ribosomal RNA'])
 
         # CRISPR_array_count
         elif attr == 'CRISPR_array_count':
             val = 0
             if 'non_coding_features' in genome_data:
                 for f in genome_data['non_coding_features']:
-                    if 'function' in f:
-                        func = f['function']
-                        if func.startswith('CRISPR region'):
-                            val += 1
+                    val += _check_feature_func (f, ['CRISPR region'])
 
         else:
             raise ValueError ('wrong attr type for get_genome_attribute()')
@@ -3468,8 +3470,8 @@ class kb_SetUtilities:
         TSV_table_buf = []
         field_titles = {'sci_name': 'Scientific Name',
                         'taxonomy': 'Taxonomy',
-                        'contig_count': 'Contigs',
-                        'genome_length': 'Genome Size',
+                        'contig_count': 'Num Contigs',
+                        'genome_length': 'Genome Size (bp)',
                         'N50': 'N50',
                         'GC': 'G+C%',
                         'CDS_count': 'CDS',
@@ -3556,8 +3558,9 @@ class kb_SetUtilities:
 
         html_report_lines += ['<table cellpadding='+cellpadding+' cellspacing = '+cellspacing+' border='+border+'>']
         html_report_lines += ['<tr bgcolor="'+head_color+'">']
+        html_report_lines += ['<td style="border-right:solid 2px '+border_head_color+'; border-bottom:solid 2px '+border_head_color+'"><font color="'+text_color+'" size='+text_fontsize+'><b>'+'Genome'+'</b></font></td>']
         for field in fields:
-            html_report_lines += ['<td style="border-right:solid 2px '+border_head_color+'; border-bottom:solid 2px '+border_head_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+field_titles[field]+'</font></td>']
+            html_report_lines += ['<td style="border-right:solid 2px '+border_head_color+'; border-bottom:solid 2px '+border_head_color+'"><font color="'+text_color+'" size='+text_fontsize+'><b>'+field_titles[field]+'</b></font></td>']
         html_report_lines += ['</tr>']
 
         # add in data
@@ -3567,7 +3570,11 @@ class kb_SetUtilities:
             genome_obj_name = genome_newVer_ref_to_obj_name[genome_newVer_ref]
             html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+genome_obj_name+'</font></td>']
             for field in fields:
-                html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+str(table[genome_newVer_ref][field])+'</font></td>']
+                if field == 'taxonomy':
+                    val = "<br>".join(table[genome_newVer_ref][field].split(';'))
+                else:
+                    val = str(table[genome_newVer_ref][field])
+                html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+val+'</font></td>']
             html_report_lines += ['</tr>']
 
         html_report_lines += ['</table>']
