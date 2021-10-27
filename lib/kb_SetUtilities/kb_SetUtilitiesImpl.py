@@ -214,7 +214,7 @@ class kb_SetUtilities:
         # sci_name
         if attr == 'sci_name':
             val = '-'
-            if genome_data.get('scientific_namne'):
+            if genome_data.get('scientific_name'):
                 val = genome_data['scientific_name']
 
         # taxonomy
@@ -3571,7 +3571,8 @@ class kb_SetUtilities:
             html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+genome_obj_name+'</font></td>']
             for field in fields:
                 if field == 'taxonomy':
-                    val = "<br>".join(table[genome_newVer_ref][field].split(';'))
+                    val = "</nobr><br><nobr>".join(table[genome_newVer_ref][field].split(';'))
+                    val = '<nobr>'+val+'</nobr>'
                 else:
                     val = str(table[genome_newVer_ref][field])
                 html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+val+'</font></td>']
