@@ -3503,7 +3503,8 @@ class kb_SetUtilities:
                     raise ValueError("unable to fetch "+sub_method+" report: " + this_retVal['report_ref']+". "+str(e))
 
                 # retrieve CheckM TSV file
-                checkM_tsv_outfile = os.path.join(outdir, 'checkM', 'checkM_summary.tsv')
+                checkM_tsv_outdir = os.path.join(outdir, 'checkM')
+                #checkM_tsv_outfile = os.path.join(outdir, 'checkM', 'checkM_summary.tsv')
                 found_checkM_summary = False
                 if len(this_report_obj.get('file_links',[])) > 0:
                     for file_link in this_report_obj['file_links']:
@@ -3512,10 +3513,12 @@ class kb_SetUtilities:
                             for key in file_link.keys():
                                 self.log(console, "FILE_LINK "+key+": "+file_link[key])
                                 
-                            download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
+                            checkM_tsv_outfile = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
 #                                                                         'file_path': checkM_tsv_outfile+'.zip',
-                                                                         'file_path': checkM_tsv_outfile,
-                                                                         'unpack': 'unpack'})
+#                                                                         'file_path': checkM_tsv_outfile,
+                                                                         'file_path': checkM_tsv_outdir,
+                                                                         'unpack': 'unpack'})['file_path']
+                            
                             found_checkM_summary = True
                             break
                 if not found_checkM_summary:
