@@ -3498,7 +3498,7 @@ class kb_SetUtilities:
                 except Exception as e:
                     raise ValueError ("unable to run "+sub_method+". "+str(e))
                 try:
-                    this_report_obj = wsClient.get_objects2({'objects':[{'ref':this_retVal['report_ref']}]})['data'][0]['data']
+                    this_report_obj = self.wsClient.get_objects2({'objects':[{'ref':this_retVal['report_ref']}]})['data'][0]['data']
                 except Exception as e:
                     raise ValueError("unable to fetch "+sub_method+" report: " + this_retVal['report_ref']+". "+str(e))
 
