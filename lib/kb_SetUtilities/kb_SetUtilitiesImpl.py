@@ -3514,7 +3514,7 @@ class kb_SetUtilities:
                                 
                             download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
                                                                          'file_path': checkM_tsv_outfile+'.zip',
-                                                                         'unpack': 'uncompress'})
+                                                                         'unpack': 'unpack'})
                             found_checkM_summary = True
                             break
                 if not found_checkM_summary:
