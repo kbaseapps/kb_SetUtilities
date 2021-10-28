@@ -3512,7 +3512,7 @@ class kb_SetUtilities:
                             for key in file_link.keys():
                                 self.log(console, "FILE_LINK "+key+": "+file_link[key])
                                 
-                            download_ret = self.dfuClient.shock_to_file({'namdle_id': file_link['handle'],
+                            download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
                                                                          'file_path': checkM_tsv_outfile,
                                                                          'unpack': 1})
                             found_checkM_summary = True
