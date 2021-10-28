@@ -42,21 +42,26 @@ parameters :
             Scientific Name
         short-hint : |
             Show or hide the scientific name in the table (many MAGs have no meaningful name)
-    run_qc:
+    add_qc:
         ui-name : |
             Add Quality Scores
         short-hint : |
             Decide whether to run CheckM completeness and contamination QC
-    run_env_bioelement:
+    add_env_bioelement:
         ui-name : |
             Add EnvBioelement
         short-hint : |
             Decide whether to run EnvBioelement functional summaries
-    run_dbCAN:
+    add_dbCAN:
         ui-name : |
             Add dbCAN2 CAZy
         short-hint : |
             Decide whether to run dbCAN2 CAZy summaries
+    checkM_reduced_tree :
+        ui-name : |
+            CheckM Reference Tree
+        short-hint : |
+            Select the CheckM reference tree to use. The reduced tree is faster and requires less memory because it is smaller. The developers recommend using the full tree, if possible, even though tests suggest that the same lineage-specific marker set will be selected for the vast majority of genomes regardless of the underlying reference tree.
 
 description : |
     <p>This App allows the user to view summaries of the <b><i>Genomes</i></b> in a <b><i>Genome Set</i></b>.  This includes any taxonomic classification, tallies of feature types (e.g. number of protein encoding genes, ribosomal RNA genes, etc.).  Optionally, and slower, the user can include quality completeness and contamination measures from CheckM, environmental bioelement processing functional summaries, and CAZy gene family summaries.</p>

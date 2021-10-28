@@ -71,7 +71,7 @@
             }
         },
         {
-            "id": "run_qc",
+            "id": "add_qc",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
@@ -95,7 +95,7 @@
             }
         },
         {
-            "id": "run_env_bioelement",
+            "id": "add_env_bioelement",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
@@ -119,7 +119,7 @@
             }
         },
         {
-            "id": "run_dbCAN",
+            "id": "add_dbCAN",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
@@ -140,6 +140,30 @@
                         "ui-name": "run_dbCAN-YES"
                     }
 		]
+            }
+	},
+        {
+            "id": "checkM_reduced_tree",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values":[1],
+            "field_type" : "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": 1,
+                        "display": "reduced tree",
+                        "id": "checkM_reduced_tree_TRUE",
+                        "ui-name": "checkM_reduced_tree_TRUE"
+                    },
+                    {
+                        "value": 0,
+                        "display": "full tree",
+                        "id": "checkM_reduced_tree_FALSE",
+                        "ui-name": "checkM_reduced_tree_FALSE"
+                    }
+                ]
             }
         }
     ],
@@ -167,16 +191,20 @@
                     "target_property": "show_sci_name"
                 },
                 {
-                    "input_parameter": "run_qc",
-                    "target_property": "run_qc"
+                    "input_parameter": "add_qc",
+                    "target_property": "add_qc"
                 },
                 {
-                    "input_parameter": "run_env_bioelement",
-                    "target_property": "run_env_bioelement"
+                    "input_parameter": "add_env_bioelement",
+                    "target_property": "add_env_bioelement"
                 },
                 {
-                    "input_parameter": "run_dbCAN",
-                    "target_property": "run_dbCAN"
+                    "input_parameter": "add_dbCAN",
+                    "target_property": "add_dbCAN"
+                },
+                {
+                    "input_parameter": "checkM_reduced_tree",
+                    "target_property": "checkM_reduced_tree"
                 }
             ],
             "output_mapping": [

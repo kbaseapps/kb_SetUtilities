@@ -11,6 +11,8 @@ from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.SetAPIServiceClient import SetAPI
 from installed_clients.WorkspaceClient import Workspace as workspaceService
 from installed_clients.DataFileUtilClient import DataFileUtil
+from installed_clients.kb_MsuiteClient import kb_Msuite
+from installed_clients.kb_hmmerClient import kb_hmmer
 #END_HEADER
 
 
@@ -35,7 +37,7 @@ class kb_SetUtilities:
     ######################################### noqa
     VERSION = "1.8.0"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "1d093bc1c3b896a541b850cd57b606bdea70d066"
+    GIT_COMMIT_HASH = "b1763a92e7786b049ba38a6f2d49667c08fd7025"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -3353,9 +3355,9 @@ class kb_SetUtilities:
            of a workspace or object.  This is received from Narrative.),
            parameter "input_ref" of type "data_obj_ref", parameter
            "use_newest_version" of type "bool", parameter "show_sci_name" of
-           type "bool", parameter "run_qc" of type "bool", parameter
-           "run_env_bioelement" of type "bool", parameter "run_dbCAN" of type
-           "bool"
+           type "bool", parameter "add_qc" of type "bool", parameter
+           "add_env_bioelement" of type "bool", parameter "add_dbCAN" of type
+           "bool", parameter "checkM_reduced_tree" of type "bool"
         :returns: instance of type "KButil_Summarize_GenomeSet_Output" ->
            structure: parameter "report_name" of type "data_obj_name",
            parameter "report_ref" of type "data_obj_ref"
@@ -3383,12 +3385,19 @@ class kb_SetUtilities:
                            'input_ref',
                            'use_newest_version',
                            'show_sci_name',
-                           'run_qc',
-                           'run_env_bioelement',
-                           'run_dbCAN'
+                           'add_qc',
+                           'add_env_bioelement',
+                           'add_dbCAN'
         ]
         self.check_params (params, required_params)
 
+        #### default params
+        ##
+        default_params = { 'checkM_reduced_tree': 1 }
+        for param in default_params.keys():
+            if param not in params:
+                params[param] = default_params[param]
+                
 
         #### Get GenomeSet
         ##
@@ -3435,10 +3444,99 @@ class kb_SetUtilities:
             for genome_newVer_ref in genome_obj_name_to_newVer_ref[genome_obj_name]:
                 genome_newVer_ref_order.append(genome_newVer_ref)
 
-        #### read genome objects to get table info
+
+        #### populate table info
         ##
         table = dict()
+
+        # QC
+        if int(params.get('add_qc', 0)) == 1:
+            for genome_newVer_ref in genome_newVer_ref_order:
+
+                if genome_newVer_ref not in table:
+                    table[genome_newVer_ref] = dict()
+
+                # want to obtain QC from newest object if it's been stored in Genome
+                (genome_data,
+                 info,
+                 this_genome_obj_name,
+                 type_name) = self.get_obj_data(genome_newVer_ref, 'genome')
+
+                # preferrably read QC from Genome object
+                if len(genome_data.get('quality_scores',[])) > 0:
+                    for qual_score in genome_data['quality_scorres']:
+                        if 'method' in qual_score and 'score' in qual_score:
+                            if qual_score['method'] == 'CheckM_completeness':
+                                table[genome_newVer_ref]['qc_complete'] = qual_score['score']
+                            elif qual_score['method'] == 'CheckM_contamination':
+                                table[genome_newVer_ref]['qc_contam'] = qual_score['score']
+
+            # run CheckM as subprocess for any Genomes that are missing QC scores
+            missing_qc = False
+            for genome_newVer_ref in genome_newVer_ref_order:
+                if 'qc_complete' not in table[genome_newVer_ref] or \
+                   'qc_contam' not in table[genome_newVer_ref]:
+                    
+                    missing_qc = True
+
+            if missing_qc:
+                sub_method = 'CheckM'
+                checkM_params = {'workspace_name': params['workspace_name'],
+                                 'input_ref': params['input_ref'],
+                                 'reduced_tree': params['checkM_reduced_tree'],
+                                 'save_output_dir': 0,
+                                 'save_plots_dir': 0,
+                                 'threads': 4
+                                 }
+                self.log(console, 'RUNNING CheckM')
+                try:
+                    checkM_Client = kb_Msuite(self.callbackURL, token=self.token, service_ver=self.SERVICE_VER)
+                except Exception as e:
+                    raise ValueError("unable to instantiate checkM_Client. "+str(e))
+                try:
+                    this_retVal = checkM_Client.run_checkM_lineage_wf(checkM_params)
+                except Exception as e:
+                    raise ValueError ("unable to run "+sub_method+". "+str(e))
+                try:
+                    this_report_obj = wsClient.get_objects2({'objects':[{'ref':this_retVal['report_ref']}]})['data'][0]['data']
+                except Exception as e:
+                    raise ValueError("unable to fetch "+sub_method+" report: " + this_retVal['report_ref']+". "+str(e))
+
+                # retrieve CheckM TSV file
+                checkM_tsv_outfile = os.path.join(outdir, 'checkM', 'checkM_summary.tsv')
+                found_checkM_summary = False
+                if len(this_report_obj.get('file_links',[])) > 0:
+                    for file_link in this_report_obj['file_links']:
+                        if 'name' in file_link and file_link['name'] == 'CheckM_summary_table.tsv.zip':
+                            download_ret = self.dfuClient.shock_to_file({'shock_id': file_link['shock_id'],
+                                                                         'file_path': checkM_tsv_outfile,
+                                                                         'unpack': 1})
+                            found_checkM_summary = True
+                            break
+                if not found_checkM_summary:
+                    raise ValueError ("Failure retrieving CheckM summary TSV file")
+                [GENOME_I, LINEAGE_I, GENOME_CNT_I, MARKER_CNT_I, MARKER_SET_I, CNT_0, CNT_1, CNT_2, CNT_3, CNT_4, CNT_5plus, COMPLETENESS_I, CONTAMINATION_I] = range(13)
+                self.log(console, "CheckM TSV:")
+                with open (checkM_tsv_outfile, 'r') as checkM_tsv_handle:
+                    for checkM_line in checkM_tsv_handle.readlines():
+                        checkM_line = checkM_line.rstrip()
+                        self.log(console, checkM_line)
+                        checkM_info = checkM_line.split("\t")
+                        genome_name = checkM_info[GENOME_I]
+                        if genome_name == 'Bin Name':
+                            continue
+                        for genome_newVer_ref in genome_obj_name_to_newVer_ref[genome_name]:
+                            table[genome_newVer_ref]['qc_complete'] = checkM_info[COMPLETENESS_I]
+                            table[genome_newVer_ref]['qc_contam'] = checkM_info[CONTAMINATION_I]
+
+                            
+        #### read genome objects to get rest of table info
+        ##
         for genome_newVer_ref in genome_newVer_ref_order:
+
+            if genome_newVer_ref not in table:
+                table[genome_newVer_ref] = dict()
+                
             if int(params['use_newest_version']) == 0:
                 genome_ref = genome_newVer_ref_to_oldVer_ref[genome_newVer_ref]
             else:
@@ -3449,7 +3547,6 @@ class kb_SetUtilities:
              this_genome_obj_name,
              type_name) = self.get_obj_data(genome_ref, 'genome')
             
-            table[genome_newVer_ref] = dict()
             if int(params.get('show_sci_name',1)) == 1:
                 table[genome_newVer_ref]['sci_name'] = self.get_genome_attribute(genome_data, 'sci_name', genome_newVer_ref)
             table[genome_newVer_ref]['taxonomy'] = self.get_genome_attribute(genome_data, 'taxonomy', genome_newVer_ref)
@@ -3470,6 +3567,8 @@ class kb_SetUtilities:
         TSV_table_buf = []
         field_titles = {'sci_name': 'Scientific Name',
                         'taxonomy': 'Taxonomy',
+                        'qc_complete': 'QC Complete',
+                        'qc_contam': 'QC Contam',
                         'contig_count': 'Num Contigs',
                         'genome_length': 'Genome Size (bp)',
                         'N50': 'N50',
@@ -3483,8 +3582,10 @@ class kb_SetUtilities:
         fields = []
         if int(params.get('show_sci_name',1)) == 1:
             fields.append('sci_name')
-        fields.extend(['taxonomy',
-                       'contig_count',
+        fields.append('taxonomy')
+        if int(params.get('add_qc', 0)) == 1:
+            fields.extend(['qc_complete', 'qc_contam'])
+        fields.extend(['contig_count',
                        'genome_length',
                        'N50',
                        'GC',

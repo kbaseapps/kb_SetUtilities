@@ -383,9 +383,10 @@ module kb_SetUtilities {
 	data_obj_ref   input_ref;
 	bool           use_newest_version;
 	bool           show_sci_name;
-	bool           run_qc;
-	bool           run_env_bioelement;
-	bool           run_dbCAN;
+	bool           add_qc;
+	bool           add_env_bioelement;
+	bool           add_dbCAN;
+	bool           checkM_reduced_tree;
     } KButil_Summarize_GenomeSet_Params;
 
     typedef structure {

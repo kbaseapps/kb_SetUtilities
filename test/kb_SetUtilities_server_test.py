@@ -2400,9 +2400,10 @@ class kb_SetUtilitiesTest(unittest.TestCase):
             'input_ref': set_1_ref,
             'use_newest_version': '1',
             'show_sci_name': '1',
-            'run_qc': '0',
-            'run_env_bioelement': '0',
-            'run_dbCAN': '0'            
+            'add_qc': '1',
+            'add_env_bioelement': '0',
+            'add_dbCAN': '0',
+            'checkM_reduced_tree': 1
         }
         result = self.getImpl().KButil_Summarize_GenomeSet(self.getContext(), params)
         print('RESULT:')
