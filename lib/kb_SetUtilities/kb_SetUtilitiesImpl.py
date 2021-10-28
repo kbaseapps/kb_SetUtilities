@@ -3508,11 +3508,11 @@ class kb_SetUtilities:
                 if len(this_report_obj.get('file_links',[])) > 0:
                     for file_link in this_report_obj['file_links']:
                         if 'name' in file_link and file_link['name'] == 'CheckM_summary_table.tsv.zip':
-                            # DEBUG
+                            self.log(console, "CheckM FILE_LINK contents")
                             for key in file_link.keys():
                                 self.log(console, "FILE_LINK "+key+": "+file_link[key])
                                 
-                            download_ret = self.dfuClient.shock_to_file({'shock_id': file_link['shock_id'],
+                            download_ret = self.dfuClient.shock_to_file({'namdle_id': file_link['handle'],
                                                                          'file_path': checkM_tsv_outfile,
                                                                          'unpack': 1})
                             found_checkM_summary = True
