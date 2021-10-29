@@ -3517,14 +3517,15 @@ class kb_SetUtilities:
                                 
                             download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
                                                                          'file_path': checkM_tsv_outfile+'.zip',
-#                                                                         'file_path': checkM_tsv_outfile,
-#                                                                         'file_path': checkM_outdir,
                                                                          'unpack': 'unpack'})
+                            # DEBUG
                             for key in download_ret.keys():
                                 self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
-                            #checkM_tsv_path = download_ret['file_path']
-                            #checkM_tsv_path= download_ret['file_path'].replace('.zip','')
-                            checkM_tsv_outfile= download_ret['node_file_name'].replace('.zip','')
+                            for inode in os.listdir(checkM_outdir):
+                                print ("INODE: "+str(inode))
+                                
+                            # dfu.shock_to_file() is failing to decompress .zip file
+                            checkM_tsv_path= download_ret['file_path'].replace('.zip','')
                             found_checkM_summary = True
                             break
                 if not found_checkM_summary:
