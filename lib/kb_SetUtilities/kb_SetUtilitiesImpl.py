@@ -3523,7 +3523,8 @@ class kb_SetUtilities:
                             for key in download_ret.keys():
                                 if key is not None:
                                     self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
-                            checkM_tsv_outfile = download_ret['node_file_name'].replace('.zip','')
+                            #checkM_tsv_outfile = download_ret['node_file_name'].replace('.zip','')
+                            checkM_tsv_outfile = download_ret['node_file_name']
                             found_checkM_summary = True
                             break
                 if not found_checkM_summary:
