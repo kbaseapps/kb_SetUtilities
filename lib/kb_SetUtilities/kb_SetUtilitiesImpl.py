@@ -3522,15 +3522,16 @@ class kb_SetUtilities:
                                                                          'unpack': 'unpack'})
                             for key in download_ret.keys():
                                 self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
-                            checkM_tsv_path= download_ret['file_path'].replace('.zip','')
                             #checkM_tsv_path = download_ret['file_path']
+                            #checkM_tsv_path= download_ret['file_path'].replace('.zip','')
+                            checkM_tsv_outfile= download_ret['node_file_name'].replace('.zip','')
                             found_checkM_summary = True
                             break
                 if not found_checkM_summary:
                     raise ValueError ("Failure retrieving CheckM summary TSV file")
                 [GENOME_I, LINEAGE_I, GENOME_CNT_I, MARKER_CNT_I, MARKER_SET_I, CNT_0, CNT_1, CNT_2, CNT_3, CNT_4, CNT_5plus, COMPLETENESS_I, CONTAMINATION_I] = range(13)
                 self.log(console, "CheckM TSV:")
-                #checkM_tsv_path = os.path.join(checkM_outdir, checkM_tsv_outfile)
+                checkM_tsv_path = os.path.join(checkM_outdir, checkM_tsv_outfile)
                 with open (checkM_tsv_path, 'r') as checkM_tsv_handle:
                     for checkM_line in checkM_tsv_handle.readlines():
                         checkM_line = checkM_line.rstrip()
