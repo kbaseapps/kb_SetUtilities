@@ -3,7 +3,7 @@
 #
 name: Summarize GenomeSet - v1.8.0
 tooltip: |
-    Allows user to view Genome summaries within a GenomeSet
+    View Genome summaries within a GenomeSet
 screenshots: []
 
 icon: kb-purple.png
