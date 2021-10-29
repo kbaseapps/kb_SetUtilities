@@ -3506,7 +3506,7 @@ class kb_SetUtilities:
                 checkM_outdir = os.path.join(outdir, 'checkM')
                 if not os.path.exists(checkM_outdir):
                     os.makedirs(checkM_outdir)
-                #checkM_tsv_outfile = os.path.join(checkM_outdir, 'checkM_summary.tsv')
+                checkM_tsv_outfile = os.path.join(checkM_outdir, 'checkM_summary.tsv')
                 found_checkM_summary = False
                 if len(this_report_obj.get('file_links',[])) > 0:
                     for file_link in this_report_obj['file_links']:
@@ -3516,22 +3516,21 @@ class kb_SetUtilities:
                                 self.log(console, "FILE_LINK "+key+": "+file_link[key])
                                 
                             download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
-#                                                                         'file_path': checkM_tsv_outfile+'.zip',
+                                                                         'file_path': checkM_tsv_outfile+'.zip',
 #                                                                         'file_path': checkM_tsv_outfile,
-                                                                         'file_path': checkM_outdir,
+#                                                                         'file_path': checkM_outdir,
                                                                          'unpack': 'unpack'})
                             for key in download_ret.keys():
-                                if key is not None:
-                                    self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
+                                self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
                             #checkM_tsv_outfile = download_ret['node_file_name'].replace('.zip','')
-                            checkM_tsv_outfile = download_ret['node_file_name']
+                            checkM_tsv_path = download_ret['file_path']
                             found_checkM_summary = True
                             break
                 if not found_checkM_summary:
                     raise ValueError ("Failure retrieving CheckM summary TSV file")
                 [GENOME_I, LINEAGE_I, GENOME_CNT_I, MARKER_CNT_I, MARKER_SET_I, CNT_0, CNT_1, CNT_2, CNT_3, CNT_4, CNT_5plus, COMPLETENESS_I, CONTAMINATION_I] = range(13)
                 self.log(console, "CheckM TSV:")
-                checkM_tsv_path = os.path.join(checkM_outdir, checkM_tsv_outfile)
+                #checkM_tsv_path = os.path.join(checkM_outdir, checkM_tsv_outfile)
                 with open (checkM_tsv_path, 'r') as checkM_tsv_handle:
                     for checkM_line in checkM_tsv_handle.readlines():
                         checkM_line = checkM_line.rstrip()
