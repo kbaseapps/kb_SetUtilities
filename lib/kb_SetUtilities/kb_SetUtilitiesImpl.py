@@ -3503,7 +3503,9 @@ class kb_SetUtilities:
                     raise ValueError("unable to fetch "+sub_method+" report: " + this_retVal['report_ref']+". "+str(e))
 
                 # retrieve CheckM TSV file
-                checkM_tsv_outdir = os.path.join(outdir, 'checkM')
+                checkM_outdir = os.path.join(outdir, 'checkM')
+                if not os.path.exists(checkM_outdir):
+                    os.makedirs(checkM_outdir)
                 #checkM_tsv_outfile = os.path.join(outdir, 'checkM', 'checkM_summary.tsv')
                 found_checkM_summary = False
                 if len(this_report_obj.get('file_links',[])) > 0:
@@ -3513,12 +3515,14 @@ class kb_SetUtilities:
                             for key in file_link.keys():
                                 self.log(console, "FILE_LINK "+key+": "+file_link[key])
                                 
-                            checkM_tsv_outfile = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
+                            download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
 #                                                                         'file_path': checkM_tsv_outfile+'.zip',
 #                                                                         'file_path': checkM_tsv_outfile,
-                                                                         'file_path': checkM_tsv_outdir,
-                                                                         'unpack': 'unpack'})['file_path']
-                            
+                                                                         'file_path': checkM_outdir,
+                                                                         'unpack': 'unpack'})
+                            for key in download_ret.keys():
+                                self.log(console, "DOWNLOAD "+key+": "+download_ret[key])
+                            checkM_tsv_outfile = download_ret['file_path']
                             found_checkM_summary = True
                             break
                 if not found_checkM_summary:
