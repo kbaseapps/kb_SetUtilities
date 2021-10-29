@@ -3522,7 +3522,7 @@ class kb_SetUtilities:
                                                                          'unpack': 'unpack'})
                             for key in download_ret.keys():
                                 if key is not None:
-                                    self.log(console, "DOWNLOAD "+key+": "+download_ret[key])
+                                    self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
                             checkM_tsv_outfile = download_ret['node_file_name'].replace('.zip','')
                             found_checkM_summary = True
                             break
@@ -3581,8 +3581,8 @@ class kb_SetUtilities:
         TSV_table_buf = []
         field_titles = {'sci_name': 'Scientific Name',
                         'taxonomy': 'Taxonomy',
-                        'qc_complete': 'QC Complete',
-                        'qc_contam': 'QC Contam',
+                        'qc_complete': 'CheckM Complete',
+                        'qc_contam': 'CheckM Contam',
                         'contig_count': 'Num Contigs',
                         'genome_length': 'Genome Size (bp)',
                         'N50': 'N50',
