@@ -3793,7 +3793,7 @@ class kb_SetUtilities:
             if not os.path.exists(EB_outdir):
                 os.makedirs(EB_outdir)
             EB_basename = 'HMMER_EnvBioelement_Search.TAB'
-            EB_hitdir = os.path.join(EB_outdir, EB_basename)
+            EB_hit_path = os.path.join(EB_outdir, EB_basename)
             found_EB_hits = False
             if len(this_report_obj.get('file_links',[])) > 0:
                 for file_link in this_report_obj['file_links']:
@@ -3803,15 +3803,13 @@ class kb_SetUtilities:
                             self.log(console, "FILE_LINK "+key+": "+str(file_link[key]))
                                 
                         download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
-                                                                     'file_path': EB_hitdir+'.zip',
+                                                                     'file_path': EB_hit_path+'.zip',
                                                                      'unpack': 'unpack'})
                         # DEBUG
                         for key in download_ret.keys():
                             self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
                         for inode in os.listdir(EB_outdir):
-                            print ("TOP INODE: "+str(inode))
-                        for inode in os.listdir(EB_hitdir):
-                            print ("HITDIR INODE: "+str(inode))
+                            print ("INODE: "+str(inode))
                                 
                         found_EB_hits = True
                         break
@@ -3830,16 +3828,17 @@ class kb_SetUtilities:
             genome_feature_delim = '.f:'
             for cat in categories:
                 for fam_id in fam_ids[cat]:
-                    hit_file = glob.glob(EB_hitdir + '/'+fam_id+'-'+'*'+'.hitout.txt')[0]
+                    hit_files = glob.glob(EB_outdir + '/'+fam_id+'-'+'*'+'.hitout.txt')
                     self.log(console, "READING "+fam_id+" hits")
-                    with open (hit_file, 'r') as hit_file_handle:
-                        for hit_line in hit_file_handle.readlines():
-                            hit_line = hit_line.strip()
-                            if hit_line.startswith('#'):
-                                continue
-                            this_genome_feature = hit_line.split()[FID_I]
-                            [this_genome_ref, this_genome_fid] = this_genome_feature.split(genome_feature_delim)
-                            EB_hits[this_genome_ref][cat][fam_id] = True
+                    for hit_file in hit_files:
+                        with open (hit_file, 'r') as hit_file_handle:
+                            for hit_line in hit_file_handle.readlines():
+                                hit_line = hit_line.strip()
+                                if hit_line.startswith('#'):
+                                    continue
+                                this_genome_feature = hit_line.split()[FID_I]
+                                [this_genome_ref, this_genome_fid] = this_genome_feature.split(genome_feature_delim)
+                                EB_hits[this_genome_ref][cat][fam_id] = True
             
             # fill table and store top val
             SMALL_VAL = -1
