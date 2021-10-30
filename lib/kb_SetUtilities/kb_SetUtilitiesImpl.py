@@ -3743,7 +3743,7 @@ class kb_SetUtilities:
 
             HMMER_params = {
                 'workspace_name': params['workspace_name'],
-                'input_many_refs': params['input_ref'],
+                'input_many_refs': [params['input_ref']],
                 'output_filtered_name': genomeSet_obj_name+'-'+sub_method+'.FeatureSet',
                 'genome_disp_name_config': 'obj_name',
                 'coalesce_output': 1,
