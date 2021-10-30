@@ -3691,7 +3691,7 @@ class kb_SetUtilities:
                         if 'name' in file_link and file_link['name'] == checkM_tsv_basefile+'.zip':
                             self.log(console, "CheckM FILE_LINK contents")
                             for key in file_link.keys():
-                                self.log(console, "FILE_LINK "+key+": "+file_link[key])
+                                self.log(console, "FILE_LINK "+key+": "+str(file_link[key]))
                                 
                             download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
                                                                          'file_path': checkM_tsv_path+'.zip',
@@ -3800,7 +3800,7 @@ class kb_SetUtilities:
                     if 'name' in file_link and file_link['name'] == EB_basename+'.zip':
                         self.log(console, "EnvBioelement FILE_LINK contents")
                         for key in file_link.keys():
-                            self.log(console, "FILE_LINK "+key+": "+file_link[key])
+                            self.log(console, "FILE_LINK "+key+": "+str(file_link[key]))
                                 
                         download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
                                                                      'file_path': EB_hitdir+'.zip',
