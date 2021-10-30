@@ -3587,6 +3587,7 @@ class kb_SetUtilities:
         if type_name != 'GenomeSet':
             raise ValueError("Bad Type:  Should be GenomeSet instead of '" + type_name + "'")
 
+        genome_oldVer_ref_to_newVer_ref = dict()
         genome_newVer_ref_to_oldVer_ref = dict()
         genome_newVer_ref_to_obj_name = dict()
         genome_obj_name_to_newVer_ref = dict()
@@ -3607,6 +3608,7 @@ class kb_SetUtilities:
             genome_newVer_ref = self.get_obj_ref_from_obj_info (genome_obj_info)
 
             # store mappings
+            genome_oldVer_ref_to_newVer_ref[genome_oldVer_ref] = genome_newVer_ref
             genome_newVer_ref_to_oldVer_ref[genome_newVer_ref] = genome_oldVer_ref
             genome_newVer_ref_to_obj_name[genome_newVer_ref]   = genome_obj_name
             
@@ -3741,7 +3743,7 @@ class kb_SetUtilities:
 
             HMMER_params = {
                 'workspace_name': params['workspace_name'],
-                'input_many_refs': genome_newVer_ref_order,
+                'input_many_refs': params['input_ref'],
                 'output_filtered_name': genomeSet_obj_name+'-'+sub_method+'.FeatureSet',
                 'genome_disp_name_config': 'obj_name',
                 'coalesce_output': 1,
@@ -3837,8 +3839,9 @@ class kb_SetUtilities:
                                 if hit_line.startswith('#'):
                                     continue
                                 this_genome_feature = hit_line.split()[FID_I]
-                                [this_genome_ref, this_genome_fid] = this_genome_feature.split(genome_feature_delim)
-                                EB_hits[this_genome_ref][cat][fam_id] = True
+                                [this_genome_oldVer_ref, this_genome_fid] = this_genome_feature.split(genome_feature_delim)
+                                this_genome_newVer_ref = genome_oldVer_ref_to_newVer_ref[this_genome_oldVer_ref]
+                                EB_hits[this_genome_newVer_ref][cat][fam_id] = True
             
             # fill table and store top val
             SMALL_VAL = -1
