@@ -442,20 +442,20 @@ class kb_SetUtilities:
                            'S': 'yellow',
                            'NitOR': 'turquoise'
             }
-            fam_ids['Nfix'] = [ 'anfD_nitrog',
+            fam_ids['Nfix'] = [ 'ANFD',
                                 'anfK_nitrog',
                                 'anfG_nitrog',
                                 'nifD',
                                 'nifK',
                                 'nifH',
-                                'vnfD_nitrog',
+                                'VNFD',
                                 'vnfK_nitrog',
                                 'vnfG_nitrog'
             ]
-            fam_disp['Nfix'] = { 'anfD_nitrog': 'anfD',
+            fam_disp['Nfix'] = { 'ANFD': 'anfD',
                                  'anfK_nitrog': 'anfK',
                                  'anfG_nitrog': 'anfG',
-                                 'vnfD_nitrog': 'vnfD',
+                                 'VNFD': 'vnfD',
                                  'vnfK_nitrog': 'vnfK',
                                  'vnfG_nitrog': 'vnfG'
             }
@@ -466,16 +466,16 @@ class kb_SetUtilities:
                                 'aclA',
                                 'aclB',
                                 'codh_catalytic',
-                                'codh_beta',
-                                'codh_delta'
+                                'codhC_beta',
+                                'codhD_delta'
             ]
             fam_disp['Cfix'] = { 'rubisco_form_I': 'Rubisco_I',
                                  'rubisco_form_II': 'Rubisco_II',
                                  'rubisco_form_II-III': 'Rubisco_II-III',
                                  'rubisco_form_III': 'Rubisco_III',
                                  'codh_catalytic': 'CO_DH_cata',
-                                 'codh_beta': 'cdhC',
-                                 'codh_delta': 'cdhD'
+                                 'codhC_beta': 'cdhC',
+                                 'codhD_delta': 'cdhD'
             }
             fam_ids['O'] = [ 'qoxA',
                              'qoxB',
@@ -557,7 +557,7 @@ class kb_SetUtilities:
                                  'norC',
                                  'nxrA',
                                  'nxrB',
-                                 'cyt_c552_large_NrfA',
+                                 'cyt_c552_large_NrFA',
                                  'cyt_c552_small_NrfH',
                                  'nirB',
                                  'nirD',
@@ -568,7 +568,7 @@ class kb_SetUtilities:
                                  'nosD',
                                  'nosZ'
             ]
-            fam_disp['NitOR'] = { 'cyt_c552_large_NrfA': 'nrfA',
+            fam_disp['NitOR'] = { 'cyt_c552_large_NrFA': 'nrfA',
                                   'cyt_c552_small_NrfH': 'nrfH'
             }
 
@@ -3755,6 +3755,15 @@ class kb_SetUtilities:
                 'vertical': '1',
                 'show_blanks': '0'
             }
+            HMMER_params['input_'+sub_method+'_As_ids'] = ['NONE']
+            HMMER_params['input_'+sub_method+'_C1_ids'] = ['NONE']
+            HMMER_params['input_'+sub_method+'_CH4N2O_ids'] = ['NONE']
+            HMMER_params['input_'+sub_method+'_CN_ids'] = ['NONE']
+            HMMER_params['input_'+sub_method+'_CO_ids'] = ['NONE']
+            HMMER_params['input_'+sub_method+'_Halo_ids'] = ['NONE']
+            HMMER_params['input_'+sub_method+'_Metal_ids'] = ['NONE']
+            HMMER_params['input_'+sub_method+'_Se_ids'] = ['NONE']
+
             input_fams = dict()
             for cat in categories:
                 cat_id = cat_ids[cat]
@@ -3841,7 +3850,10 @@ class kb_SetUtilities:
                     hit_fam_disp_list = []
                     for fam_id in fam_ids[cat]:
                         if fam_id in EB_hits[genome_newVer_ref][cat]:
-                            hit_fam_disp_list.append(fam_disp[fam_id])
+                            if fam_id in fam_disp:
+                                hit_fam_disp_list.append(fam_disp[fam_id])
+                            else:
+                                hit_fam_disp_list.append(fam_id)
                     hit_cnt = len(hit_fam_disp_list)
                     if hit_cnt == 0:
                         table[genome_newVer_ref][sub_method+':'+cat] = "-"
