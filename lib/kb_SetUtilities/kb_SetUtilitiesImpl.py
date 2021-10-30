@@ -3818,7 +3818,7 @@ class kb_SetUtilities:
 
             # prep hit storage
             EB_hits = dict()
-            for genome_newVer_ref in genome_newVer_refs:
+            for genome_newVer_ref in genome_newVer_ref_order:
                 EB_hits[genome_newVer_ref] = dict()
                 for cat in categories:
                     EB_hits[genome_newVer_ref][cat] = dict()
@@ -3844,7 +3844,7 @@ class kb_SetUtilities:
             SMALL_VAL = -1
             for cat in categories:
                 top_val[cat] = SMALL_VAL
-            for genome_newVer_ref in genome_newVer_refs:
+            for genome_newVer_ref in genome_newVer_ref_order:
                 for cat in categories:
                     hit_fam_disp_list = []
                     for fam_id in fam_ids[cat]:
