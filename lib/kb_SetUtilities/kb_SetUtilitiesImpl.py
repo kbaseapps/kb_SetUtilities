@@ -4,6 +4,7 @@ import os
 import re
 import sys
 import uuid
+import glob
 from datetime import datetime
 from pprint import pformat  # ,pprint
 
@@ -403,7 +404,183 @@ class kb_SetUtilities:
             raise ValueError ('wrong attr type for get_genome_attribute()')
             
         return str(val)
-    
+
+    # get_hmmer_fams
+    def get_hmmer_fams (self, collection):
+        categories = []
+        cat_ids = dict()
+        cat_colors = dict()
+        fam_ids = dict()
+        fam_disp = dict()
+
+        if collection == 'EnvBioelement':
+
+            categories = [ 'Nfix',
+                           'Cfix',
+                           'O',
+                           'H',
+                           'NH3',
+                           'CH4',
+                           'S',
+                           'NitOR'
+            ]
+            cat_ids = { 'Nfix': 'N',
+                        'Cfix': 'CFix',
+                        'O': 'O',
+                        'H': 'H',
+                        'NH3': 'N',
+                        'CH4': 'CH4',
+                        'S': 'S',
+                        'NitOR': 'N'
+            }
+            cat_colors = { 'Nfix': 'blue',
+                           'Cfix': 'green',
+                           'O': 'red',
+                           'H': 'magenta',
+                           'NH3': 'cyan',
+                           'CH4': 'brown',
+                           'S': 'yellow',
+                           'NitOR': 'turquoise'
+            }
+            fam_ids['Nfix'] = [ 'anfD_nitrog',
+                                'anfK_nitrog',
+                                'anfG_nitrog',
+                                'nifD',
+                                'nifK',
+                                'nifH',
+                                'vnfD_nitrog',
+                                'vnfK_nitrog',
+                                'vnfG_nitrog'
+            ]
+            fam_disp['Nfix'] = { 'anfD_nitrog': 'anfD',
+                                 'anfK_nitrog': 'anfK',
+                                 'anfG_nitrog': 'anfG',
+                                 'vnfD_nitrog': 'vnfD',
+                                 'vnfK_nitrog': 'vnfK',
+                                 'vnfG_nitrog': 'vnfG'
+            }
+            fam_ids['Cfix'] = [ 'rubisco_form_I',
+                                'rubisco_form_II',
+                                'rubisco_form_II-III',
+                                'rubisco_form_III',
+                                'aclA',
+                                'aclB',
+                                'codh_catalytic',
+                                'codh_beta',
+                                'codh_delta'
+            ]
+            fam_disp['Cfix'] = { 'rubisco_form_I': 'Rubisco_I',
+                                 'rubisco_form_II': 'Rubisco_II',
+                                 'rubisco_form_II-III': 'Rubisco_II-III',
+                                 'rubisco_form_III': 'Rubisco_III',
+                                 'codh_catalytic': 'CO_DH_cata',
+                                 'codh_beta': 'cdhC',
+                                 'codh_delta': 'cdhD'
+            }
+            fam_ids['O'] = [ 'qoxA',
+                             'qoxB',
+                             'cydA',
+                             'cydB',
+                             'cyoA',
+                             'cyoD',
+                             'cyoE',
+                             'coxA',
+                             'coxB',
+                             'ccoN',
+                             'ccoO',
+                             'ccoP'
+                             ]
+            fam_disp['O'] = {}
+            fam_ids['H'] = [ 'FeFe_hydrog_A',
+                             'FeFe_hydrog_B1',
+                             'NiFe_hydrog_1',
+                             'NiFe_hydrog_2a',
+                             'NiFe_hydrog_2b',
+                             'NiFe_hydrog_3a',
+                             'NiFe_hydrog_3b',
+                             'NiFe_hydrog_3c',
+                             'NiFe_hydrog_3d',
+                             'NiFe_hydrog_4'
+            ]
+            fam_disp['H'] = { 'FeFe_hydrog_A': 'hydrog_A',
+                              'FeFe_hydrog_B1': 'hydrog_B1',
+                              'NiFe_hydrog_1': 'hydrog_1',
+                              'NiFe_hydrog_2a': 'hydrog_2a',
+                              'NiFe_hydrog_2b': 'hydrog_2b',
+                              'NiFe_hydrog_3a': 'hydrog_3a',
+                              'NiFe_hydrog_3b': 'hydrog_3b',
+                              'NiFe_hydrog_3c': 'hydrog_3c',
+                              'NiFe_hydrog_3d': 'hydrog_3d',
+                              'NiFe_hydrog_4': 'hydrog_4'
+            }
+            fam_ids['NH3'] = [ 'amoA',
+                               'amoB',
+                               'amoC',
+                               'hzoA',
+                               'hzsA'
+            ]
+            fam_disp['NH3'] = {}
+            fam_ids['CH4'] = [ 'pmoA',
+                               'pmoB',
+                               'pmoC',
+                               'mmoB',
+                               'mmoD',
+                               'mcrA',
+                               'mcrB',
+                               'mcrG'
+            ]
+            fam_disp['CH4'] = {}
+            fam_ids['S'] = [ 'aprA',
+                             'cysC',
+                             'cysN',
+                             'sat',
+                             'fcc',
+                             'sqr',
+                             'asrA',
+                             'asrB',
+                             'asrC',
+                             'dsrD',
+                             'dsrA',
+                             'dsrB',
+                             'sor',
+                             'sulfur_dioxygenase',
+                             'phsA',
+                             'soxB',
+                             'soxC',
+                             'soxY'
+            ]
+            fam_disp['S'] = { 'sulfur_dioxygenase': 'S_dioxygenase' }
+            fam_ids['NitOR'] = [ 'napA',
+                                 'napB',
+                                 'narG',
+                                 'norB',
+                                 'norC',
+                                 'nxrA',
+                                 'nxrB',
+                                 'cyt_c552_large_NrfA',
+                                 'cyt_c552_small_NrfH',
+                                 'nirB',
+                                 'nirD',
+                                 'nirK',
+                                 'nirS',
+                                 'nrfD',
+                                 'octR',
+                                 'nosD',
+                                 'nosZ'
+            ]
+            fam_disp['NitOR'] = { 'cyt_c552_large_NrfA': 'nrfA',
+                                  'cyt_c552_small_NrfH': 'nrfH'
+            }
+
+        else:
+            raise ValueError ("unknown collection for get_hmmer_fams()")
+        
+        return (categories,
+                cat_ids,
+                cat_colors,
+                fam_ids,
+                fam_disp)
+
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -3540,8 +3717,138 @@ class kb_SetUtilities:
                         if genome_name == 'Bin Name':
                             continue
                         for genome_newVer_ref in genome_obj_name_to_newVer_ref[genome_name]:
-                            table[genome_newVer_ref]['qc_complete'] = checkM_info[COMPLETENESS_I]
-                            table[genome_newVer_ref]['qc_contam'] = checkM_info[CONTAMINATION_I]
+                            table[genome_newVer_ref]['qc_complete'] = str(checkM_info[COMPLETENESS_I]) + '%'
+                            table[genome_newVer_ref]['qc_contam'] = str(checkM_info[CONTAMINATION_I]) + '%'
+
+                            
+        # Env Bioelement
+        if int(params.get('add_env_bioelement', 0)) == 1:
+
+            for genome_newVer_ref in genome_newVer_ref_order:
+                if genome_newVer_ref not in table:
+                    table[genome_newVer_ref] = dict()
+
+            # configure categories and fams
+            (categories,
+             cat_ids,
+             cat_colors,
+             fam_ids,
+             fam_disp) = self.get_hmmer_fams ('EnvBioelement')
+
+            # run HMMER
+            sub_method = 'EnvBioelement'
+            self.log(console, 'RUNNING '+sub_method)
+
+            HMMER_params = {
+                'workspace_name': params['workspace_name'],
+                'input_many_refs': genome_newVer_ref_order,
+                'output_filtered_name': genomeSet_obj_name+'-'+sub_method+'.FeatureSet',
+                'genome_disp_name_config': 'obj_name',
+                'coalesce_output': 1,
+                'save_ALL_featureSets': 0,
+                'e_value': ".001",
+                'bitscore': "50",
+                'model_cov_perc': "35.0",
+                'maxaccepts': "10000",
+                'heatmap': '0',
+                'low_val': "detect",
+                'vertical': '1',
+                'show_blanks': '0'
+            }
+            input_fams = dict()
+            for cat in categories:
+                cat_id = cat_ids[cat]
+                if cat_id not in input_fams:
+                    input_fams[cat_id] = []
+                for fam_id in fam_ids[cat]:
+                    input_fams[cat_id].append(fam_id)
+            for cat_id in list(set(cat_ids.values())):
+                HMMER_params['input_'+sub_method+'_'+cat_id+'_ids'] = input_fams[cat_id]
+
+            try:
+                hmmer_Client = kb_hmmer(self.callbackURL, token=self.token, service_ver=self.SERVICE_VER)
+            except Exception as e:
+                raise ValueError("unable to instantiate hmmer_Client. "+str(e))
+            try:
+                this_retVal = hmmer_Client.HMMER_EnvBioelement_Search(HMMER_params)
+            except Exception as e:
+                raise ValueError ("unable to run "+sub_method+". "+str(e))
+            try:
+                this_report_obj = self.wsClient.get_objects2({'objects':[{'ref':this_retVal['report_ref']}]})['data'][0]['data']
+            except Exception as e:
+                raise ValueError("unable to fetch "+sub_method+" report: " + this_retVal['report_ref']+". "+str(e))
+
+
+            # get hmmer hit results
+            EB_outdir = os.path.join(outdir, 'EnvBioelement')
+            if not os.path.exists(EB_outdir):
+                os.makedirs(EB_outdir)
+            EB_basename = 'HMMER_EnvBioelement_Search.TAB'
+            EB_hitdir = os.path.join(EB_outdir, EB_basename)
+            found_EB_hits = False
+            if len(this_report_obj.get('file_links',[])) > 0:
+                for file_link in this_report_obj['file_links']:
+                    if 'name' in file_link and file_link['name'] == EB_basename+'.zip':
+                        self.log(console, "EnvBioelement FILE_LINK contents")
+                        for key in file_link.keys():
+                            self.log(console, "FILE_LINK "+key+": "+file_link[key])
+                                
+                        download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
+                                                                     'file_path': EB_hitdir+'.zip',
+                                                                     'unpack': 'unpack'})
+                        # DEBUG
+                        for key in download_ret.keys():
+                            self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
+                        for inode in os.listdir(EB_outdir):
+                            print ("TOP INODE: "+str(inode))
+                        for inode in os.listdir(EB_hitdir):
+                            print ("HITDIR INODE: "+str(inode))
+                                
+                        found_EB_hits = True
+                        break
+            if not found_EB_hits:
+                raise ValueError ("Failure retrieving EnvBioelement hits")
+
+            # prep hit storage
+            EB_hits = dict()
+            for genome_newVer_ref in genome_newVer_refs:
+                EB_hits[genome_newVer_ref] = dict()
+                for cat in categories:
+                    EB_hits[genome_newVer_ref][cat] = dict()
+
+            # parse hit results for each fam and tally cat hits for each Genome 
+            [FID_I, TACC_I, TLEN_I, QNAME_I, QACC_I, QLEN_I, F_E_VAL_I, F_BITSCORE_I, F_BIAS_I, D_NUM_I, D_TOT_I, D_C_E_VAL_I, D_I_E_VAL_I, D_BITSCORE_I, D_BIAS_I, HMM_BEG_I, HMM_END_I, T_BEG_I, T_END_I, T_ENV_BEG_I, T_ENV_END_I, ACC_I, T_DESC_I] = range(23)
+            genome_feature_delim = '.f:'
+            for cat in categories:
+                for fam_id in fam_ids[cat]:
+                    hit_file = glob.glob(EB_hitdir + '/'+fam_id+'-'+'*'+'.hitout.txt')[0]
+                    self.log(console, "READING "+fam_id+" hits")
+                    with open (hit_file, 'r') as hit_file_handle:
+                        for hit_line in hit_file_handle.readlines():
+                            hit_line = hit_line.strip()
+                            if hit_line.startswith('#'):
+                                continue
+                            this_genome_feature = hit_line.split()[FID_I]
+                            [this_genome_ref, this_genome_fid] = this_genome_feature.split(genome_feature_delim)
+                            EB_hits[this_genome_ref][cat][fam_id] = True
+            
+            # fill table and store top val
+            SMALL_VAL = -1
+            for cat in categories:
+                top_val[cat] = SMALL_VAL
+            for genome_newVer_ref in genome_newVer_refs:
+                for cat in categories:
+                    hit_fam_disp_list = []
+                    for fam_id in fam_ids[cat]:
+                        if fam_id in EB_hits[genome_newVer_ref][cat]:
+                            hit_fam_disp_list.append(fam_disp[fam_id])
+                    hit_cnt = len(hit_fam_disp_list)
+                    if hit_cnt == 0:
+                        table[genome_newVer_ref][sub_method+':'+cat] = "-"
+                    else:
+                        table[genome_newVer_ref][sub_method+':'+cat] = ",".join(hit_fam_disp_list)
+                        if hit_cnt > top_val[cat]:
+                            top_val[cat] = hit_cnt
 
                             
         #### read genome objects to get rest of table info
@@ -3592,7 +3899,16 @@ class kb_SetUtilities:
                         '5S_rRNA_count': '5S rRNA',
                         '16S_rRNA_count': '16S rRNA',
                         '23S_rRNA_count': '23S rRNA',
-                        'CRISPR_array_count': 'CRISPR arrays'}
+                        'CRISPR_array_count': 'CRISPR arrays',
+                        'EnvBioelement:Nfix': 'EB:N_fixation',
+                        'EnvBioelement:Cfix': 'EB:C_fixation',
+                        'EnvBioelement:O': 'EB:Oxygen',
+                        'EnvBioelement:H': 'EB:Hydrogen',
+                        'EnvBioelement:NH3': 'EB:Ammonia',
+                        'EnvBioelement:CH4': 'EB:CH4',
+                        'EnvBioelement:S': 'EB:Sulfur',
+                        'EnvBioelement:NitOR': 'EB:Nit_Ox_Red'
+        }
         fields = []
         if int(params.get('show_sci_name',1)) == 1:
             fields.append('sci_name')
@@ -3609,6 +3925,16 @@ class kb_SetUtilities:
                        '16S_rRNA_count',
                        '23S_rRNA_count',
                        'CRISPR_array_count'])
+        if int(params.get('add_envbioelement',0)) == 1:
+            fields.extend(['EnvBioelement:Nfix',
+                           'EnvBioelement:Cfix',
+                           'EnvBioelement:O',
+                           'EnvBioelement:H',
+                           'EnvBioelement:NH3',
+                           'EnvBioelement:CH4',
+                           'EnvBioelement:S',
+                           'EnvBioelement:NitOR'])
+
         # header
         TSV_row = ['Genome']
         for field in fields:
