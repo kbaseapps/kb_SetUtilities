@@ -3940,7 +3940,7 @@ class kb_SetUtilities:
                        '16S_rRNA_count',
                        '23S_rRNA_count',
                        'CRISPR_array_count'])
-        if int(params.get('add_envbioelement',0)) == 1:
+        if int(params.get('add_env_bioelement',0)) == 1:
             fields.extend(['EnvBioelement:Nfix',
                            'EnvBioelement:Cfix',
                            'EnvBioelement:O',
