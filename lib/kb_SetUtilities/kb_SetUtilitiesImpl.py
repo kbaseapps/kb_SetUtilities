@@ -3845,6 +3845,7 @@ class kb_SetUtilities:
             
             # fill table and store top val
             SMALL_VAL = -1
+            top_val = dict()
             for cat in categories:
                 top_val[cat] = SMALL_VAL
             for genome_newVer_ref in genome_newVer_ref_order:
