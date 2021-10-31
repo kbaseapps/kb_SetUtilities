@@ -4160,8 +4160,9 @@ class kb_SetUtilities:
                        cell_title_str = ' "'+cell_title+'"'
                    func_table_lines += ['<td valign=middle align=center'+cell_title_str+'>']
                    func_table_lines += [brief_field_titles[func_cat]+'<br>']
-                   cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
-                   func_table_lines += ['div class="'+cell_color_class+'"></div>']
+                   if genome_table[func_cat] != '-':
+                       cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
+                       func_table_lines += ['div class="'+cell_color_class+'"></div>']
                    func_table_lines += ['</td>']
                 func_table_lines += ['</tr>']
 
@@ -4177,7 +4178,7 @@ class kb_SetUtilities:
                    func_table_lines += ['<td valign=middle align=center'+cell_title_str+'>']
                    func_table_lines += [brief_field_titles[func_cat]+'<br>']
                    cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
-                   func_table_lines += ['div class="'+cell_color_class+'"></div>']
+                   func_table_lines += ['<div class="'+cell_color_class+'"></div>']
                    func_table_lines += ['</td>']
                 func_table_lines += ['</tr>']
 
