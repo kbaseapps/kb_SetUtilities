@@ -4139,9 +4139,9 @@ class kb_SetUtilities:
             return cat+'-heatmap_cell-'+str(cell_color_i)
 
         def build_func_table_html (genome_table):
-            func_cellpadding = 10
-            func_cellspacing = 5
-            func_border = 0
+            func_cellpadding = '10'
+            func_cellspacing = '5'
+            func_border = '0'
             func_bgcolor = 'white'
 
             func_table_lines = []
