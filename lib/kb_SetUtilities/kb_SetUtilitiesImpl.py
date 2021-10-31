@@ -3724,6 +3724,11 @@ class kb_SetUtilities:
 
                             
         # Env Bioelement
+        categories = list()
+        cat_ids = dict()
+        cat_colors = dict()
+        fam_ids = dict()
+        fam_disp = dict()
         if int(params.get('add_env_bioelement', 0)) == 1:
 
             for genome_newVer_ref in genome_newVer_ref_order:
@@ -3731,12 +3736,20 @@ class kb_SetUtilities:
                     table[genome_newVer_ref] = dict()
 
             # configure categories and fams
-            (categories,
-             cat_ids,
-             cat_colors,
-             fam_ids,
-             fam_disp) = self.get_hmmer_fams ('EnvBioelement')
+            (EB_categories,
+             EB_cat_ids,
+             EB_cat_colors,
+             EB_fam_ids,
+             EB_fam_disp) = self.get_hmmer_fams ('EnvBioelement')
 
+            # add to full set
+            for cat in EB_categories:
+                categories.append(cat)
+                cat_ids[cat] = EB_cat_ids[cat]
+                cat_colors[cat] = EB_cat_colors[cat]
+                fam_ids[cat] = EB_fam_ids[cat]
+                fam_disp[cat] = EB_fam_disp[cat]
+                
             # run HMMER
             sub_method = 'EnvBioelement'
             self.log(console, 'RUNNING '+sub_method)
@@ -3853,8 +3866,8 @@ class kb_SetUtilities:
                     hit_fam_disp_list = []
                     for fam_id in fam_ids[cat]:
                         if fam_id in EB_hits[genome_newVer_ref][cat]:
-                            if fam_id in fam_disp:
-                                hit_fam_disp_list.append(fam_disp[fam_id])
+                            if fam_id in fam_disp[cat]:
+                                hit_fam_disp_list.append(fam_disp[cat][fam_id])
                             else:
                                 hit_fam_disp_list.append(fam_id)
                     hit_cnt = len(hit_fam_disp_list)
@@ -4006,17 +4019,191 @@ class kb_SetUtilities:
         cellspacing = "2"
         border = "0"
 
+        brief_field_titles = {
+            'EnvBioelement:Nfix': 'Nfix',
+            'EnvBioelement:Cfix': 'Cfix',
+            'EnvBioelement:O': 'O',
+            'EnvBioelement:H': 'H',
+            'EnvBioelement:NH3': 'NH3',
+            'EnvBioelement:CH4': 'CH4',
+            'EnvBioelement:S': 'S',
+            'EnvBioelement:NitOR': 'NitOR'
+        }
+
+        # set some methods to use 
+        def header_cell_html (header_str):
+            return ['<td style="border-right:solid 2px '+border_head_color+'; border-bottom:solid 2px '+border_head_color+'"><font color="'+text_color+'" size='+text_fontsize+'><b>'+header_str+'</b></font></td>']
+        
+        def body_cell_html (cell_content_str):
+            return ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+cell_content_str+'</font></td>']
+
+        def get_color_list (cat):
+            color_list = dict()
+            color_list['Nfix'] = [ "#2222dd",
+                                   "#2222ff",
+                                   "#4444ff",
+                                   "#6666ff",
+                                   "#8888ff",
+                                   "#aaaaff",
+                                   "#ccccff"]
+            color_list['Cfix'] = [ "#2222dd",
+                                   "#2222ff",
+                                   "#4444ff",
+                                   "#6666ff",
+                                   "#8888ff",
+                                   "#aaaaff",
+                                   "#ccccff"]
+            color_list['O'] = [ "#2222dd",
+                                "#2222ff",
+                                "#4444ff",
+                                "#6666ff",
+                                "#8888ff",
+                                "#aaaaff",
+                                "#ccccff"]
+            color_list['H'] = [ "#2222dd",
+                                "#2222ff",
+                                "#4444ff",
+                                "#6666ff",
+                                "#8888ff",
+                                "#aaaaff",
+                                "#ccccff"]
+            color_list['NH3'] = [ "#2222dd",
+                                  "#2222ff",
+                                  "#4444ff",
+                                  "#6666ff",
+                                  "#8888ff",
+                                  "#aaaaff",
+                                  "#ccccff"]
+            color_list['CH4'] = [ "#2222dd",
+                                  "#2222ff",
+                                  "#4444ff",
+                                  "#6666ff",
+                                  "#8888ff",
+                                  "#aaaaff",
+                                  "#ccccff"]
+            color_list['S'] = [ "#2222dd",
+                                "#2222ff",
+                                "#4444ff",
+                                "#6666ff",
+                                "#8888ff",
+                                "#aaaaff",
+                                "#ccccff"]
+            color_list['NitOR'] = [ "#2222dd",
+                                    "#2222ff",
+                                    "#4444ff",
+                                    "#6666ff",
+                                    "#8888ff",
+                                    "#aaaaff",
+                                    "#ccccff"]
+            
+            return color_list[cat]
+
+        def get_color_index (cat, fam_hits):
+            # MORE HERE
+            plateau_hits = {'Nfix': 5,
+                            'Cfix': 5,
+                            'O': 5,
+                            'H': 5,
+                            'NH3': 5,
+                            'CH4': 5,
+                            'S': 5,
+                            'NitOR': 5
+                            }
+            num_hits = len(fam_hits.split(','))
+            if num_hits >= plateau_hits[cat]:
+                return 0
+            elif num_hits == 1:
+                return len(plateau_hits[cat]) - 1
+            else:
+                cell_color_i = plateau_hits[cat] - \
+                               int(round(plateau_hits[cat] * num_hits / float(plateau_hits[cat])))
+        
+        def generate_func_heatmap_class_html ():
+            cell_width = 10
+            cell_height = 10
+            corner_radius = 4
+            
+            class_lines = []
+            class_lines += ['<style>']
+
+            color_list = dict()
+            for cat in categories:
+                color_list[cat] = get_color_list(cat)
+                for color_i,color_val in enumerate(color_list[cat]):
+                    class_lines += ["."+cat+"-heatmap_cell-"+str(color_i)+" {\nwidth: "+str(cell_width)+"px;\nheight: "+str(cell_height)+"px;\nborder-radius: "+str(corner_radius)+"px;\nbackground-color: "+str(color_val)+";\ntext-align: center;\n}"]
+            class_lines += ['</style>']
+            return "\n".join(class_lines)
+            
+        def get_func_cell_color_class (cat, fam_hits):
+            cell_color_i = get_color_index (cat, fam_hits)
+            return cat+'-heatmap_cell-'+str(cell_color_i)
+
+        def build_func_table_html (genome_table):
+            func_cellpadding = 10
+            func_cellspacing = 5
+            func_border = 0
+            func_bgcolor = 'white'
+
+            func_table_lines = []
+            func_table_lines += ['<table cellpadding='+func_cellpadding+' cellspacing = '+func_cellspacing+' border='+func_border+'>']
+            
+            if int(params.get('add_env_bioelement',0)) == 1:
+                # Nfix Cfix O H
+                func_table_lines += ['<tr bgcolor="'+head_color+'">']
+                for cat in ['Nfix', 'Cfix', 'O', 'H']:
+                   func_cat = 'EnvBioelement'+':'+cat
+
+                   cell_title_str = ''
+                   if genome_table[func_cat] != '-':
+                       cell_title = genome_table[func_cat].replace(',',"\n")
+                       cell_title_str = ' "'+cell_title+'"'
+                   func_table_lines += ['<td valign=middle align=center'+cell_title_str+'>']
+                   func_table_lines += [brief_field_titles[func_cat]+'<br>']
+                   cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
+                   func_table_lines += ['div class="'+cell_color_class+'"></div>']
+                   func_table_lines += ['</td>']
+                func_table_lines += ['</tr>']
+
+                # NH3 CH4 S NitOR
+                func_table_lines += ['<tr bgcolor="'+head_color+'">']
+                for cat in ['NH3', 'CH4', 'S', 'NitOR']:
+                   func_cat = 'EnvBioelement'+':'+cat
+
+                   cell_title_str = ''
+                   if genome_table[func_cat] != '-':
+                       cell_title = genome_table[func_cat].replace(',',"\n")
+                       cell_title_str = ' "'+cell_title+'"'
+                   func_table_lines += ['<td valign=middle align=center'+cell_title_str+'>']
+                   func_table_lines += [brief_field_titles[func_cat]+'<br>']
+                   cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
+                   func_table_lines += ['div class="'+cell_color_class+'"></div>']
+                   func_table_lines += ['</td>']
+                func_table_lines += ['</tr>']
+
+            func_table_lines += ['</table>']
+            return "\n".join(func_table_lines)
+        
+                
         # begin buffer and table header
         html_report_lines = []
         html_report_lines += ['<html>']
+        html_report_lines += ['<head>']
+        html_report_lines += ['<title>KBase GenomeSet Summary - '+genomeSet_obj_name+'</title>']
+        html_report_lines += [generate_func_heatmap_class_html()]
         html_report_lines += ['<body bgcolor="white">']
         html_report_lines += ['<p>']
 
         html_report_lines += ['<table cellpadding='+cellpadding+' cellspacing = '+cellspacing+' border='+border+'>']
         html_report_lines += ['<tr bgcolor="'+head_color+'">']
-        html_report_lines += ['<td style="border-right:solid 2px '+border_head_color+'; border-bottom:solid 2px '+border_head_color+'"><font color="'+text_color+'" size='+text_fontsize+'><b>'+'Genome'+'</b></font></td>']
+
+        html_report_lines += header_cell_html ('Genome')
+
+        if int(params.get('add_env_bioelement',0)) == 1 or \
+           int(params.get('add_dbCAN',0)) == 1:
+            html_report_lines += header_cell_html ('Functions')
+            
         for field in fields:
-            html_report_lines += ['<td style="border-right:solid 2px '+border_head_color+'; border-bottom:solid 2px '+border_head_color+'"><font color="'+text_color+'" size='+text_fontsize+'><b>'+field_titles[field]+'</b></font></td>']
+            html_report_lines += header_cell_html (field_titles[field])
         html_report_lines += ['</tr>']
 
         # add in data
@@ -4024,14 +4211,20 @@ class kb_SetUtilities:
             row_color = accept_row_color
             html_report_lines += ['<tr bgcolor="'+row_color+'">']
             genome_obj_name = genome_newVer_ref_to_obj_name[genome_newVer_ref]
-            html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+genome_obj_name+'</font></td>']
+            html_report_lines += body_cell_html (genome_obj_name)
+
+            if int(params.get('add_env_bioelement',0)) == 1 or \
+                int(params.get('add_dbCAN',0)) == 1:
+                func_table_html = build_func_table_html (table[genome_newVer_ref])
+                html_report_lines += body_cell_html (func_table_html)
+                
             for field in fields:
                 if field == 'taxonomy':
                     val = "</nobr><br><nobr>".join(table[genome_newVer_ref][field].split(';'))
                     val = '<nobr>'+val+'</nobr>'
                 else:
                     val = str(table[genome_newVer_ref][field])
-                html_report_lines += ['<td style="border-right:solid 1px '+border_body_color+'; border-bottom:solid 1px '+border_body_color+'"><font color="'+text_color+'" size='+text_fontsize+'>'+val+'</font></td>']
+                html_report_lines += body_cell_html (val)
             html_report_lines += ['</tr>']
 
         html_report_lines += ['</table>']
