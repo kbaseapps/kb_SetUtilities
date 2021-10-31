@@ -4120,9 +4120,9 @@ class kb_SetUtilities:
                 cell_color_i = (len(color_list)-1) - int(round((len(color_list)-1) * num_hits / float(plateau_hits[cat])))
         
         def generate_func_heatmap_class_html ():
-            cell_width = 10
-            cell_height = 10
-            corner_radius = 4
+            cell_width = '40'
+            cell_height = '30'
+            corner_radius = '4'
             
             class_lines = []
             class_lines += ['<style>']
@@ -4162,7 +4162,7 @@ class kb_SetUtilities:
                    func_table_lines += [brief_field_titles[func_cat]+'<br>']
                    if genome_table[func_cat] != '-':
                        cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
-                       func_table_lines += ['div class="'+cell_color_class+'"></div>']
+                       func_table_lines += ['<div class="'+cell_color_class+'"></div>']
                    func_table_lines += ['</td>']
                 func_table_lines += ['</tr>']
 
