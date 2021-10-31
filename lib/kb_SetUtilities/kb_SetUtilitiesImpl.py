@@ -4039,6 +4039,7 @@ class kb_SetUtilities:
 
         def get_color_list (cat):
             color_list = dict()
+            # MORE HERE: fix colors
             color_list['Nfix'] = [ "#2222dd",
                                    "#2222ff",
                                    "#4444ff",
@@ -4099,7 +4100,8 @@ class kb_SetUtilities:
             return color_list[cat]
 
         def get_color_index (cat, fam_hits):
-            # MORE HERE
+            color_list = get_color_list(cat)
+            # MORE HERE: fix plateau hit vals
             plateau_hits = {'Nfix': 5,
                             'Cfix': 5,
                             'O': 5,
@@ -4113,10 +4115,9 @@ class kb_SetUtilities:
             if num_hits >= plateau_hits[cat]:
                 return 0
             elif num_hits == 1:
-                return len(plateau_hits[cat]) - 1
+                return len(color_list) - 1
             else:
-                cell_color_i = plateau_hits[cat] - \
-                               int(round(plateau_hits[cat] * num_hits / float(plateau_hits[cat])))
+                cell_color_i = (len(color_list)-1) - int(round((len(color_list)-1) * num_hits / float(plateau_hits[cat])))
         
         def generate_func_heatmap_class_html ():
             cell_width = 10
@@ -4128,8 +4129,8 @@ class kb_SetUtilities:
 
             color_list = dict()
             for cat in categories:
-                color_list[cat] = get_color_list(cat)
-                for color_i,color_val in enumerate(color_list[cat]):
+                color_list = get_color_list(cat)
+                for color_i,color_val in enumerate(color_list):
                     class_lines += ["."+cat+"-heatmap_cell-"+str(color_i)+" {\nwidth: "+str(cell_width)+"px;\nheight: "+str(cell_height)+"px;\nborder-radius: "+str(corner_radius)+"px;\nbackground-color: "+str(color_val)+";\ntext-align: center;\n}"]
             class_lines += ['</style>']
             return "\n".join(class_lines)
