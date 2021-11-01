@@ -4120,6 +4120,8 @@ class kb_SetUtilities:
             class_lines = []
             class_lines += ['<style>']
 
+            class_lines += ["."+'blank'+"-heatmap_cell"+" {\nwidth: "+str(cell_width)+"px;\nheight: "+str(cell_height)+"px;\nborder-radius: "+str(corner_radius)+"px;\nbackground-color: "+'#ffffff'+";\ntext-align: center;\n}"]
+
             color_list = dict()
             for cat in categories:
                 color_list = get_color_list(cat)
@@ -4157,6 +4159,9 @@ class kb_SetUtilities:
                     if genome_table[func_cat] != '-':
                         cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
                         func_table_lines += ['<div class="'+cell_color_class+'"></div>']
+                    else:
+                        func_table_lines += ['<div class="'+'blank-heatmap_cell'+'"></div>']
+                        
                     func_table_lines += ['</font>']
                     func_table_lines += ['</td>']
                 func_table_lines += ['</tr>']
@@ -4169,13 +4174,15 @@ class kb_SetUtilities:
                     cell_title_str = ''
                     if genome_table[func_cat] != '-':
                         cell_title = genome_table[func_cat].replace(',',"\n")
-                        cell_title_str = ' "'+cell_title+'"'
-                    func_table_lines += ['<td valign=top align=center'+cell_title_str+'>']
+                        cell_title_str = ' title="'+cell_title+'"'
+                    func_table_lines += ['<td bgcolor='+func_bgcolor+' valign=top align=center'+cell_title_str+'>']
                     func_table_lines += ['<font color="'+text_color+'" size='+text_fontsize+'>']
                     func_table_lines += [brief_field_titles[func_cat]+'<br>']
                     if genome_table[func_cat] != '-':
                         cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
                         func_table_lines += ['<div class="'+cell_color_class+'"></div>']
+                    else:
+                        func_table_lines += ['<div class="'+'blank-heatmap_cell'+'"></div>']
                     func_table_lines += ['</font>']
                     func_table_lines += ['</td>']
                 func_table_lines += ['</tr>']
