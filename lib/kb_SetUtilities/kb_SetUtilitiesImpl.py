@@ -4039,77 +4039,70 @@ class kb_SetUtilities:
 
         def get_color_list (cat):
             color_list = dict()
-            # MORE HERE: fix colors
-            color_list['Nfix'] = [ "#2222dd",
-                                   "#2222ff",
+            color_list['Nfix'] = [ "#2222ff",
+                                   "#3333ff",
                                    "#4444ff",
                                    "#6666ff",
                                    "#8888ff",
                                    "#aaaaff",
                                    "#ccccff"]
-            color_list['Cfix'] = [ "#2222dd",
-                                   "#2222ff",
-                                   "#4444ff",
-                                   "#6666ff",
-                                   "#8888ff",
-                                   "#aaaaff",
-                                   "#ccccff"]
-            color_list['O'] = [ "#2222dd",
-                                "#2222ff",
-                                "#4444ff",
-                                "#6666ff",
-                                "#8888ff",
-                                "#aaaaff",
-                                "#ccccff"]
-            color_list['H'] = [ "#2222dd",
-                                "#2222ff",
-                                "#4444ff",
-                                "#6666ff",
-                                "#8888ff",
-                                "#aaaaff",
-                                "#ccccff"]
-            color_list['NH3'] = [ "#2222dd",
-                                  "#2222ff",
-                                  "#4444ff",
-                                  "#6666ff",
-                                  "#8888ff",
-                                  "#aaaaff",
-                                  "#ccccff"]
-            color_list['CH4'] = [ "#2222dd",
-                                  "#2222ff",
-                                  "#4444ff",
-                                  "#6666ff",
-                                  "#8888ff",
-                                  "#aaaaff",
-                                  "#ccccff"]
-            color_list['S'] = [ "#2222dd",
-                                "#2222ff",
-                                "#4444ff",
-                                "#6666ff",
-                                "#8888ff",
-                                "#aaaaff",
-                                "#ccccff"]
-            color_list['NitOR'] = [ "#2222dd",
-                                    "#2222ff",
-                                    "#4444ff",
-                                    "#6666ff",
-                                    "#8888ff",
-                                    "#aaaaff",
-                                    "#ccccff"]
+            color_list['Cfix'] = [ "#22ff22",
+                                   "#66ff66",
+                                   "#aaffaa"]
+            color_list['O'] = [ "#ff2222",
+                                "#ff3333",
+                                "#ff4444",
+                                "#ff5555",
+                                "#ff6666",
+                                "#ff7777",
+                                "#ff8888",
+                                "#ffaaaa",
+                                "#ffcccc"]
+            color_list['H'] = [ "#ff22ff",
+                                "#ff33ff",
+                                "#ff44ff",
+                                "#ff55ff",
+                                "#ff66ff",
+                                "#ff77ff",
+                                "#ff88ff",
+                                "#ffaaff",
+                                "#ffccff"]
+            color_list['NH3'] = [ "#22ffff",
+                                  "#aaffff"]
+            color_list['CH4'] = [ "#228080",
+                                  "#668080",
+                                  "#aa8080"]
+            color_list['S'] = [ "#ff8c22",
+                                "#ff8c33",
+                                "#ff8c44",
+                                "#ff8c55",
+                                "#ff8c66",
+                                "#ff8c77",
+                                "#ff8c88",
+                                "#ff8caa",
+                                "#ff8ccc"]
+            color_list['NitOR'] = [ "#9922cc",
+                                    "#9933cc",
+                                    "#9944cc",
+                                    "#9955cc",
+                                    "#9966cc",
+                                    "#9977cc",
+                                    "#9988cc",
+                                    "#99aacc",
+                                    "#99cccc"]
             
             return color_list[cat]
 
         def get_color_index (cat, fam_hits):
             color_list = get_color_list(cat)
-            # MORE HERE: fix plateau hit vals
-            plateau_hits = {'Nfix': 5,
-                            'Cfix': 5,
-                            'O': 5,
-                            'H': 5,
-                            'NH3': 5,
-                            'CH4': 5,
-                            'S': 5,
-                            'NitOR': 5
+            plateau_hits = {'Nfix': 7,
+                            'Cfix': 3,
+                            'O': 9,
+                            'H': 9,
+                            'NH3': 2,
+                            'CH4': 3,
+                            'S': 9,
+                            'NitOR': 9
                             }
             num_hits = len(fam_hits.split(','))
             if num_hits >= plateau_hits[cat]:
@@ -4120,8 +4113,8 @@ class kb_SetUtilities:
                 cell_color_i = (len(color_list)-1) - int(round((len(color_list)-1) * num_hits / float(plateau_hits[cat])))
         
         def generate_func_heatmap_class_html ():
-            cell_width = '40'
-            cell_height = '30'
+            cell_width = '30'
+            cell_height = '20'
             corner_radius = '4'
             
             class_lines = []
@@ -4140,8 +4133,8 @@ class kb_SetUtilities:
             return cat+'-heatmap_cell-'+str(cell_color_i)
 
         def build_func_table_html (genome_table):
-            func_cellpadding = '10'
-            func_cellspacing = '5'
+            func_cellpadding = '5'
+            func_cellspacing = '0'
             func_border = '0'
             func_bgcolor = 'white'
 
@@ -4152,34 +4145,39 @@ class kb_SetUtilities:
                 # Nfix Cfix O H
                 func_table_lines += ['<tr bgcolor="'+head_color+'">']
                 for cat in ['Nfix', 'Cfix', 'O', 'H']:
-                   func_cat = 'EnvBioelement'+':'+cat
+                    func_cat = 'EnvBioelement'+':'+cat
 
-                   cell_title_str = ''
-                   if genome_table[func_cat] != '-':
-                       cell_title = genome_table[func_cat].replace(',',"\n")
-                       cell_title_str = ' "'+cell_title+'"'
-                   func_table_lines += ['<td valign=middle align=center'+cell_title_str+'>']
-                   func_table_lines += [brief_field_titles[func_cat]+'<br>']
-                   if genome_table[func_cat] != '-':
-                       cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
-                       func_table_lines += ['<div class="'+cell_color_class+'"></div>']
-                   func_table_lines += ['</td>']
+                    cell_title_str = ''
+                    if genome_table[func_cat] != '-':
+                        cell_title = genome_table[func_cat].replace(',',"\n")
+                        cell_title_str = ' title="'+cell_title+'"'
+                    func_table_lines += ['<td bgcolor='+func_bgcolor+' valign=top align=center'+cell_title_str+'>']
+                    func_table_lines += ['<font color="'+text_color+'" size='+text_fontsize+'>']
+                    func_table_lines += [brief_field_titles[func_cat]+'<br>']
+                    if genome_table[func_cat] != '-':
+                        cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
+                        func_table_lines += ['<div class="'+cell_color_class+'"></div>']
+                    func_table_lines += ['</font>']
+                    func_table_lines += ['</td>']
                 func_table_lines += ['</tr>']
 
                 # NH3 CH4 S NitOR
                 func_table_lines += ['<tr bgcolor="'+head_color+'">']
                 for cat in ['NH3', 'CH4', 'S', 'NitOR']:
-                   func_cat = 'EnvBioelement'+':'+cat
+                    func_cat = 'EnvBioelement'+':'+cat
 
-                   cell_title_str = ''
-                   if genome_table[func_cat] != '-':
-                       cell_title = genome_table[func_cat].replace(',',"\n")
-                       cell_title_str = ' "'+cell_title+'"'
-                   func_table_lines += ['<td valign=middle align=center'+cell_title_str+'>']
-                   func_table_lines += [brief_field_titles[func_cat]+'<br>']
-                   cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
-                   func_table_lines += ['<div class="'+cell_color_class+'"></div>']
-                   func_table_lines += ['</td>']
+                    cell_title_str = ''
+                    if genome_table[func_cat] != '-':
+                        cell_title = genome_table[func_cat].replace(',',"\n")
+                        cell_title_str = ' "'+cell_title+'"'
+                    func_table_lines += ['<td valign=top align=center'+cell_title_str+'>']
+                    func_table_lines += ['<font color="'+text_color+'" size='+text_fontsize+'>']
+                    func_table_lines += [brief_field_titles[func_cat]+'<br>']
+                    if genome_table[func_cat] != '-':
+                        cell_color_class = get_func_cell_color_class (cat, genome_table[func_cat])
+                        func_table_lines += ['<div class="'+cell_color_class+'"></div>']
+                    func_table_lines += ['</font>']
+                    func_table_lines += ['</td>']
                 func_table_lines += ['</tr>']
 
             func_table_lines += ['</table>']
