@@ -3955,19 +3955,20 @@ class kb_SetUtilities:
                        '16S_rRNA_count',
                        '23S_rRNA_count',
                        'CRISPR_array_count'])
+        TSV_fields = fields
         if int(params.get('add_env_bioelement',0)) == 1:
-            fields.extend(['EnvBioelement:Nfix',
-                           'EnvBioelement:Cfix',
-                           'EnvBioelement:O',
-                           'EnvBioelement:H',
-                           'EnvBioelement:NH3',
-                           'EnvBioelement:CH4',
-                           'EnvBioelement:S',
-                           'EnvBioelement:NitOR'])
+            TSV_fields.extend(['EnvBioelement:Nfix',
+                               'EnvBioelement:Cfix',
+                               'EnvBioelement:O',
+                               'EnvBioelement:H',
+                               'EnvBioelement:NH3',
+                               'EnvBioelement:CH4',
+                               'EnvBioelement:S',
+                               'EnvBioelement:NitOR'])
 
         # header
         TSV_row = ['Genome']
-        for field in fields:
+        for field in TSV_fields:
             TSV_row.append(field_titles[field])
         TSV_table_buf.append("\t".join(TSV_row))
 
@@ -3975,7 +3976,7 @@ class kb_SetUtilities:
         for genome_newVer_ref in genome_newVer_ref_order:
             genome_obj_name = genome_newVer_ref_to_obj_name[genome_newVer_ref]
             TSV_row = [genome_obj_name]
-            for field in fields:
+            for field in TSV_fields:
                 TSV_row.append(table[genome_newVer_ref][field])
             TSV_table_buf.append("\t".join(TSV_row))
 
