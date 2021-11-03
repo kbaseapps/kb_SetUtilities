@@ -3760,7 +3760,9 @@ class kb_SetUtilities:
                 'output_filtered_name': genomeSet_obj_name+'-'+sub_method+'.FeatureSet',
                 'genome_disp_name_config': 'obj_name',
                 'coalesce_output': 1,
-                'save_ALL_featureSets': 0,
+                'show_target_block_headers': '0',
+                'save_ALL_featureSets': '0',
+                'save_ANY_featureSets': '0',
                 'e_value': ".001",
                 'bitscore': "50",
                 'model_cov_perc': "35.0",
@@ -4045,10 +4047,10 @@ class kb_SetUtilities:
                                    "#6666ff",
                                    "#8888ff",
                                    "#aaaaff",
-                                   "#ccccff"]
+                                   "#eeeeff"]
             color_list['Cfix'] = [ "#22ff22",
                                    "#66ff66",
-                                   "#aaffaa"]
+                                   "#eeffee"]
             color_list['O'] = [ "#ff2222",
                                 "#ff3333",
                                 "#ff4444",
@@ -4057,7 +4059,7 @@ class kb_SetUtilities:
                                 "#ff7777",
                                 "#ff8888",
                                 "#ffaaaa",
-                                "#ffcccc"]
+                                "#ffeeee"]
             color_list['H'] = [ "#ff22ff",
                                 "#ff33ff",
                                 "#ff44ff",
@@ -4066,12 +4068,12 @@ class kb_SetUtilities:
                                 "#ff77ff",
                                 "#ff88ff",
                                 "#ffaaff",
-                                "#ffccff"]
-            color_list['NH3'] = [ "#22ffff",
-                                  "#aaffff"]
+                                "#ffddff"]
+            color_list['NH3'] = [ "#48d1cc",
+                                  "#afeeee"]
             color_list['CH4'] = [ "#228080",
-                                  "#668080",
-                                  "#aa8080"]
+                                  "#00ced1",
+                                  "#b0e0e6"]
             color_list['S'] = [ "#ff8c22",
                                 "#ff8c33",
                                 "#ff8c44",
@@ -4111,7 +4113,8 @@ class kb_SetUtilities:
                 return len(color_list) - 1
             else:
                 cell_color_i = (len(color_list)-1) - int(round((len(color_list)-1) * num_hits / float(plateau_hits[cat])))
-        
+                return cell_color_i
+                
         def generate_func_heatmap_class_html ():
             cell_width = '30'
             cell_height = '20'
