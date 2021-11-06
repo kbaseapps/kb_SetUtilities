@@ -95,7 +95,7 @@
             }
         },
         {
-            "id": "add_env_bioelement",
+            "id": "add_bioelement",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
@@ -106,14 +106,14 @@
                     {
                         "value": "0",
                         "display": "NO",
-                        "id": "run_env_bioelement-NO",
-                        "ui-name": "run_env_bioelement-NO"
+                        "id": "run_bioelement-NO",
+                        "ui-name": "run_bioelement-NO"
                     },
                     {
                         "value": "1",
                         "display": "YES",
-                        "id": "run_env_bioelement-YES",
-                        "ui-name": "run_env_bioelement-YES"
+                        "id": "run_bioelement-YES",
+                        "ui-name": "run_bioelement-YES"
                     }
 		]
             }
@@ -195,8 +195,8 @@
                     "target_property": "add_qc"
                 },
                 {
-                    "input_parameter": "add_env_bioelement",
-                    "target_property": "add_env_bioelement"
+                    "input_parameter": "add_bioelement",
+                    "target_property": "add_bioelement"
                 },
                 {
                     "input_parameter": "add_dbCAN",

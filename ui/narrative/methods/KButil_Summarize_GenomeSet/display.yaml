@@ -47,11 +47,11 @@ parameters :
             Add Quality Scores
         short-hint : |
             Decide whether to run CheckM completeness and contamination QC
-    add_env_bioelement:
+    add_bioelement:
         ui-name : |
-            Add EnvBioelement
+            Add Bioelement
         short-hint : |
-            Decide whether to run EnvBioelement functional summaries
+            Decide whether to run MicroTrait Bioelement functional summaries
     add_dbCAN:
         ui-name : |
             Add dbCAN2 CAZy

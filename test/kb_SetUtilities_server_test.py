@@ -2401,7 +2401,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
             'use_newest_version': '1',
             'show_sci_name': '1',
             'add_qc': '0',
-            'add_env_bioelement': '1',
+            'add_bioelement': '1',
             'add_dbCAN': '0',
             'checkM_reduced_tree': 1
         }

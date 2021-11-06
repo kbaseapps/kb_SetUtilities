@@ -38,7 +38,7 @@ class kb_SetUtilities:
     ######################################### noqa
     VERSION = "1.8.0"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "b1763a92e7786b049ba38a6f2d49667c08fd7025"
+    GIT_COMMIT_HASH = "4cc455128b45c2ea3e290ae18e4008488c23c7ea"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -409,11 +409,10 @@ class kb_SetUtilities:
     def get_hmmer_fams (self, collection):
         categories = []
         cat_ids = dict()
-        cat_colors = dict()
         fam_ids = dict()
         fam_disp = dict()
 
-        if collection == 'EnvBioelement':
+        if collection == 'MT_Bioelement':
 
             categories = [ 'Nfix',
                            'Cfix',
@@ -433,49 +432,25 @@ class kb_SetUtilities:
                         'S': 'S',
                         'NitOR': 'N'
             }
-            cat_colors = { 'Nfix': 'blue',
-                           'Cfix': 'green',
-                           'O': 'red',
-                           'H': 'magenta',
-                           'NH3': 'cyan',
-                           'CH4': 'brown',
-                           'S': 'yellow',
-                           'NitOR': 'turquoise'
-            }
-            fam_ids['Nfix'] = [ 'ANFD',
-                                'anfK_nitrog',
-                                'anfG_nitrog',
-                                'nifD',
+            fam_ids['Nfix'] = [ 'nifD',
                                 'nifK',
+                                'anfG',
                                 'nifH',
-                                'VNFD',
-                                'vnfK_nitrog',
-                                'vnfG_nitrog'
+                                'vnfD',
+                                'vnfK',
+                                'vnfG'
             ]
-            fam_disp['Nfix'] = { 'ANFD': 'anfD',
-                                 'anfK_nitrog': 'anfK',
-                                 'anfG_nitrog': 'anfG',
-                                 'VNFD': 'vnfD',
-                                 'vnfK_nitrog': 'vnfK',
-                                 'vnfG_nitrog': 'vnfG'
-            }
-            fam_ids['Cfix'] = [ 'rubisco_form_I',
-                                'rubisco_form_II',
-                                'rubisco_form_II-III',
-                                'rubisco_form_III',
+            fam_disp['Nfix'] = {}
+            fam_ids['Cfix'] = [ 'rbcS',
+                                'rbcL',
                                 'aclA',
                                 'aclB',
-                                'codh_catalytic',
-                                'codhC_beta',
-                                'codhD_delta'
+                                'cooS',
+                                'cdhC',
+                                'acsD'
             ]
-            fam_disp['Cfix'] = { 'rubisco_form_I': 'Rubisco_I',
-                                 'rubisco_form_II': 'Rubisco_II',
-                                 'rubisco_form_II-III': 'Rubisco_II-III',
-                                 'rubisco_form_III': 'Rubisco_III',
-                                 'codh_catalytic': 'CO_DH_cata',
-                                 'codhC_beta': 'cdhC',
-                                 'codhD_delta': 'cdhD'
+            fam_disp['Cfix'] = { 'rbcS': 'Rubisco-S',
+                                 'rbcL': 'Rubisco-L'
             }
             fam_ids['O'] = [ 'qoxA',
                              'qoxB',
@@ -491,38 +466,82 @@ class kb_SetUtilities:
                              'ccoP'
                              ]
             fam_disp['O'] = {}
-            fam_ids['H'] = [ 'FeFe_hydrog_A',
-                             'FeFe_hydrog_B1',
-                             'NiFe_hydrog_1',
-                             'NiFe_hydrog_2a',
-                             'NiFe_hydrog_2b',
-                             'NiFe_hydrog_3a',
-                             'NiFe_hydrog_3b',
-                             'NiFe_hydrog_3c',
-                             'NiFe_hydrog_3d',
-                             'NiFe_hydrog_4'
+            fam_ids['H'] = [
+                'hydrogenase_FeFeGroupA1',
+                'hydrogenase_FeFeGroupA2',
+                'hydrogenase_FeFeGroupA3',
+                'hydrogenase_FeFeGroupA4',
+                'hydrogenase_FeFeGroupB',
+                'hydrogenase_NiFeGroup1a',
+                'hydrogenase_NiFeGroup1b',
+                'hydrogenase_NiFeGroup1c',
+                'hydrogenase_NiFeGroup1d',
+                'hydrogenase_NiFeGroup1e',
+                'hydrogenase_NiFeGroup1f',
+                'hydrogenase_NiFeGroup1g',
+                'hydrogenase_NiFeGroup1h',
+                'hydrogenase_NiFeGroup1i',
+                'hydrogenase_NiFeGroup1j',
+                'hydrogenase_NiFeGroup1k',
+                'hydrogenase_NiFeGroup2a',
+                'hydrogenase_NiFeGroup2b',
+                'hydrogenase_NiFeGroup3a',
+                'hydrogenase_NiFeGroup3b',
+                'hydrogenase_NiFeGroup3c',
+                'hydrogenase_NiFeGroup3d',
+                'hydrogenase_NiFeGroup4a',
+                'hydrogenase_NiFeGroup4b',
+                'hydrogenase_NiFeGroup4c',
+                'hydrogenase_NiFeGroup4d',
+                'hydrogenase_NiFeGroup4e',
+                'hydrogenase_NiFeGroup4f',
+                'hydrogenase_NiFeGroup4g',
+                'hydrogenase_NiFeGroup4h',
+                'hydrogenase_NiFeGroup4i'
             ]
-            fam_disp['H'] = { 'FeFe_hydrog_A': 'hydrog_A',
-                              'FeFe_hydrog_B1': 'hydrog_B1',
-                              'NiFe_hydrog_1': 'hydrog_1',
-                              'NiFe_hydrog_2a': 'hydrog_2a',
-                              'NiFe_hydrog_2b': 'hydrog_2b',
-                              'NiFe_hydrog_3a': 'hydrog_3a',
-                              'NiFe_hydrog_3b': 'hydrog_3b',
-                              'NiFe_hydrog_3c': 'hydrog_3c',
-                              'NiFe_hydrog_3d': 'hydrog_3d',
-                              'NiFe_hydrog_4': 'hydrog_4'
+            fam_disp['H'] = {
+                'hydrogenase_FeFeGroupA1': 'hydrog_FeFe_A1',
+                'hydrogenase_FeFeGroupA2': 'hydrog_FeFe_A2',
+                'hydrogenase_FeFeGroupA3': 'hydrog_FeFe_A3',
+                'hydrogenase_FeFeGroupA4': 'hydrog_FeFe_A4',
+                'hydrogenase_FeFeGroupB':  'hydrog_FeFe_B',
+                'hydrogenase_NiFeGroup1a': 'hydrog_NiFe_1a',
+                'hydrogenase_NiFeGroup1b': 'hydrog_NiFe_1b',
+                'hydrogenase_NiFeGroup1c': 'hydrog_NiFe_1c',
+                'hydrogenase_NiFeGroup1d': 'hydrog_NiFe_1d',
+                'hydrogenase_NiFeGroup1e': 'hydrog_NiFe_1e',
+                'hydrogenase_NiFeGroup1f': 'hydrog_NiFe_1f',
+                'hydrogenase_NiFeGroup1g': 'hydrog_NiFe_1g',
+                'hydrogenase_NiFeGroup1h': 'hydrog_NiFe_1h',
+                'hydrogenase_NiFeGroup1i': 'hydrog_NiFe_1i',
+                'hydrogenase_NiFeGroup1j': 'hydrog_NiFe_1j',
+                'hydrogenase_NiFeGroup1k': 'hydrog_NiFe_1k',
+                'hydrogenase_NiFeGroup2a': 'hydrog_NiFe_2a',
+                'hydrogenase_NiFeGroup2b': 'hydrog_NiFe_2b',
+                'hydrogenase_NiFeGroup3a': 'hydrog_NiFe_3a',
+                'hydrogenase_NiFeGroup3b': 'hydrog_NiFe_3b',
+                'hydrogenase_NiFeGroup3c': 'hydrog_NiFe_3c',
+                'hydrogenase_NiFeGroup3d': 'hydrog_NiFe_3d',
+                'hydrogenase_NiFeGroup4a': 'hydrog_NiFe_4a',
+                'hydrogenase_NiFeGroup4b': 'hydrog_NiFe_4b',
+                'hydrogenase_NiFeGroup4c': 'hydrog_NiFe_4c',
+                'hydrogenase_NiFeGroup4d': 'hydrog_NiFe_4d',
+                'hydrogenase_NiFeGroup4e': 'hydrog_NiFe_4e',
+                'hydrogenase_NiFeGroup4f': 'hydrog_NiFe_4f',
+                'hydrogenase_NiFeGroup4g': 'hydrog_NiFe_4g',
+                'hydrogenase_NiFeGroup4h': 'hydrog_NiFe_4h',
+                'hydrogenase_NiFeGroup4i': 'hydrog_NiFe_4i'
             }
-            fam_ids['NH3'] = [ 'amoA',
-                               'amoB',
-                               'amoC',
-                               'hzoA',
+            fam_ids['NH3'] = [ 'pmoA-amoA',
+                               'pmoB-amoB',
+                               'pmoC-amoC',
+                               'hdh',
                                'hzsA'
             ]
             fam_disp['NH3'] = {}
-            fam_ids['CH4'] = [ 'pmoA',
-                               'pmoB',
-                               'pmoC',
+            fam_ids['CH4'] = [ 'pmoA-amoA',
+                               'pmoB-amoB',
+                               'pmoC-amoC',
                                'mmoB',
                                'mmoD',
                                'mcrA',
@@ -534,7 +553,7 @@ class kb_SetUtilities:
                              'cysC',
                              'cysN',
                              'sat',
-                             'fcc',
+                             'fccB',
                              'sqr',
                              'asrA',
                              'asrB',
@@ -543,22 +562,22 @@ class kb_SetUtilities:
                              'dsrA',
                              'dsrB',
                              'sor',
-                             'sulfur_dioxygenase',
+                             'sdo',
                              'phsA',
                              'soxB',
                              'soxC',
                              'soxY'
             ]
-            fam_disp['S'] = { 'sulfur_dioxygenase': 'S_dioxygenase' }
+            fam_disp['S'] = {}
             fam_ids['NitOR'] = [ 'napA',
                                  'napB',
                                  'narG',
                                  'norB',
                                  'norC',
-                                 'nxrA',
-                                 'nxrB',
-                                 'cyt_c552_large_NrFA',
-                                 'cyt_c552_small_NrfH',
+                                 'narG',
+                                 'narH',
+                                 'nrfA',
+                                 'nrfH',
                                  'nirB',
                                  'nirD',
                                  'nirK',
@@ -568,16 +587,13 @@ class kb_SetUtilities:
                                  'nosD',
                                  'nosZ'
             ]
-            fam_disp['NitOR'] = { 'cyt_c552_large_NrFA': 'nrfA',
-                                  'cyt_c552_small_NrfH': 'nrfH'
-            }
+            fam_disp['NitOR'] = {}
 
         else:
             raise ValueError ("unknown collection for get_hmmer_fams()")
         
         return (categories,
                 cat_ids,
-                cat_colors,
                 fam_ids,
                 fam_disp)
 
@@ -3533,7 +3549,7 @@ class kb_SetUtilities:
            parameter "input_ref" of type "data_obj_ref", parameter
            "use_newest_version" of type "bool", parameter "show_sci_name" of
            type "bool", parameter "add_qc" of type "bool", parameter
-           "add_env_bioelement" of type "bool", parameter "add_dbCAN" of type
+           "add_bioelement" of type "bool", parameter "add_dbCAN" of type
            "bool", parameter "checkM_reduced_tree" of type "bool"
         :returns: instance of type "KButil_Summarize_GenomeSet_Output" ->
            structure: parameter "report_name" of type "data_obj_name",
@@ -3563,7 +3579,7 @@ class kb_SetUtilities:
                            'use_newest_version',
                            'show_sci_name',
                            'add_qc',
-                           'add_env_bioelement',
+                           'add_bioelement',
                            'add_dbCAN'
         ]
         self.check_params (params, required_params)
@@ -3723,35 +3739,32 @@ class kb_SetUtilities:
                             table[genome_newVer_ref]['qc_contam'] = str(checkM_info[CONTAMINATION_I]) + '%'
 
                             
-        # Env Bioelement
+        # MT_Bioelement
         categories = list()
         cat_ids = dict()
-        cat_colors = dict()
         fam_ids = dict()
         fam_disp = dict()
-        if int(params.get('add_env_bioelement', 0)) == 1:
+        if int(params.get('add_bioelement', 0)) == 1:
 
             for genome_newVer_ref in genome_newVer_ref_order:
                 if genome_newVer_ref not in table:
                     table[genome_newVer_ref] = dict()
 
             # configure categories and fams
-            (EB_categories,
-             EB_cat_ids,
-             EB_cat_colors,
-             EB_fam_ids,
-             EB_fam_disp) = self.get_hmmer_fams ('EnvBioelement')
+            (BioE_categories,
+             BioE_cat_ids,
+             BioE_fam_ids,
+             BioE_fam_disp) = self.get_hmmer_fams ('MT_Bioelement')
 
             # add to full set
-            for cat in EB_categories:
+            for cat in BioE_categories:
                 categories.append(cat)
-                cat_ids[cat] = EB_cat_ids[cat]
-                cat_colors[cat] = EB_cat_colors[cat]
-                fam_ids[cat] = EB_fam_ids[cat]
-                fam_disp[cat] = EB_fam_disp[cat]
+                cat_ids[cat] = BioE_cat_ids[cat]
+                fam_ids[cat] = BioE_fam_ids[cat]
+                fam_disp[cat] = BioE_fam_disp[cat]
                 
             # run HMMER
-            sub_method = 'EnvBioelement'
+            sub_method = 'MT_Bioelement'
             self.log(console, 'RUNNING '+sub_method)
 
             HMMER_params = {
@@ -3760,11 +3773,12 @@ class kb_SetUtilities:
                 'output_filtered_name': genomeSet_obj_name+'-'+sub_method+'.FeatureSet',
                 'genome_disp_name_config': 'obj_name',
                 'coalesce_output': 1,
+                'use_model_specific_thresholds': '1',
                 'show_target_block_headers': '0',
                 'save_ALL_featureSets': '0',
                 'save_ANY_featureSets': '0',
                 'e_value': ".001",
-                'bitscore': "50",
+                'bitscore': "100",
                 'model_cov_perc': "35.0",
                 'maxaccepts': "10000",
                 'heatmap': '0',
@@ -3792,11 +3806,13 @@ class kb_SetUtilities:
                 HMMER_params['input_'+sub_method+'_'+cat_id+'_ids'] = input_fams[cat_id]
 
             try:
-                hmmer_Client = kb_hmmer(self.callbackURL, token=self.token, service_ver=self.SERVICE_VER)
+                HMMER_SERVICE_VER = 'beta'
+                #hmmer_Client = kb_hmmer(self.callbackURL, token=self.token, service_ver=self.SERVICE_VER)
+                hmmer_Client = kb_hmmer(self.callbackURL, token=self.token, service_ver=HMMER_SERVICE_VER)
             except Exception as e:
                 raise ValueError("unable to instantiate hmmer_Client. "+str(e))
             try:
-                this_retVal = hmmer_Client.HMMER_EnvBioelement_Search(HMMER_params)
+                this_retVal = hmmer_Client.HMMER_MT_Bioelement_Search(HMMER_params)
             except Exception as e:
                 raise ValueError ("unable to run "+sub_method+". "+str(e))
             try:
@@ -3806,46 +3822,46 @@ class kb_SetUtilities:
 
 
             # get hmmer hit results
-            EB_outdir = os.path.join(outdir, 'EnvBioelement')
-            if not os.path.exists(EB_outdir):
-                os.makedirs(EB_outdir)
-            EB_basename = 'HMMER_EnvBioelement_Search.TAB'
-            EB_hit_path = os.path.join(EB_outdir, EB_basename)
-            found_EB_hits = False
+            BioE_outdir = os.path.join(outdir, 'MT_Bioelement')
+            if not os.path.exists(BioE_outdir):
+                os.makedirs(BioE_outdir)
+            BioE_basename = 'HMMER_MT_Bioelement_Search.TAB'
+            BioE_hit_path = os.path.join(BioE_outdir, BioE_basename)
+            found_BioE_hits = False
             if len(this_report_obj.get('file_links',[])) > 0:
                 for file_link in this_report_obj['file_links']:
-                    if 'name' in file_link and file_link['name'] == EB_basename+'.zip':
-                        self.log(console, "EnvBioelement FILE_LINK contents")
+                    if 'name' in file_link and file_link['name'] == BioE_basename+'.zip':
+                        self.log(console, "MT_Bioelement FILE_LINK contents")
                         for key in file_link.keys():
                             self.log(console, "FILE_LINK "+key+": "+str(file_link[key]))
                                 
                         download_ret = self.dfuClient.shock_to_file({'handle_id': file_link['handle'],
-                                                                     'file_path': EB_hit_path+'.zip',
+                                                                     'file_path': BioE_hit_path+'.zip',
                                                                      'unpack': 'unpack'})
                         # DEBUG
                         for key in download_ret.keys():
                             self.log(console, "DOWNLOAD "+str(key)+": "+str(download_ret[key]))
-                        for inode in os.listdir(EB_outdir):
+                        for inode in os.listdir(BioE_outdir):
                             print ("INODE: "+str(inode))
                                 
-                        found_EB_hits = True
+                        found_BioE_hits = True
                         break
-            if not found_EB_hits:
-                raise ValueError ("Failure retrieving EnvBioelement hits")
+            if not found_BioE_hits:
+                raise ValueError ("Failure retrieving MT_Bioelement hits")
 
             # prep hit storage
-            EB_hits = dict()
+            BioE_hits = dict()
             for genome_newVer_ref in genome_newVer_ref_order:
-                EB_hits[genome_newVer_ref] = dict()
+                BioE_hits[genome_newVer_ref] = dict()
                 for cat in categories:
-                    EB_hits[genome_newVer_ref][cat] = dict()
+                    BioE_hits[genome_newVer_ref][cat] = dict()
 
             # parse hit results for each fam and tally cat hits for each Genome 
             [FID_I, TACC_I, TLEN_I, QNAME_I, QACC_I, QLEN_I, F_E_VAL_I, F_BITSCORE_I, F_BIAS_I, D_NUM_I, D_TOT_I, D_C_E_VAL_I, D_I_E_VAL_I, D_BITSCORE_I, D_BIAS_I, HMM_BEG_I, HMM_END_I, T_BEG_I, T_END_I, T_ENV_BEG_I, T_ENV_END_I, ACC_I, T_DESC_I] = range(23)
             genome_feature_delim = '.f:'
             for cat in categories:
                 for fam_id in fam_ids[cat]:
-                    hit_files = glob.glob(EB_outdir + '/'+fam_id+'-'+'*'+'.hitout.txt')
+                    hit_files = glob.glob(BioE_outdir + '/'+fam_id+'-'+'*'+'.hitout.txt')
                     self.log(console, "READING "+fam_id+" hits")
                     for hit_file in hit_files:
                         with open (hit_file, 'r') as hit_file_handle:
@@ -3856,7 +3872,7 @@ class kb_SetUtilities:
                                 this_genome_feature = hit_line.split()[FID_I]
                                 [this_genome_oldVer_ref, this_genome_fid] = this_genome_feature.split(genome_feature_delim)
                                 this_genome_newVer_ref = genome_oldVer_ref_to_newVer_ref[this_genome_oldVer_ref]
-                                EB_hits[this_genome_newVer_ref][cat][fam_id] = True
+                                BioE_hits[this_genome_newVer_ref][cat][fam_id] = True
             
             # fill table and store top val
             SMALL_VAL = -1
@@ -3867,7 +3883,7 @@ class kb_SetUtilities:
                 for cat in categories:
                     hit_fam_disp_list = []
                     for fam_id in fam_ids[cat]:
-                        if fam_id in EB_hits[genome_newVer_ref][cat]:
+                        if fam_id in BioE_hits[genome_newVer_ref][cat]:
                             if fam_id in fam_disp[cat]:
                                 hit_fam_disp_list.append(fam_disp[cat][fam_id])
                             else:
@@ -3930,14 +3946,14 @@ class kb_SetUtilities:
                         '16S_rRNA_count': '16S rRNA',
                         '23S_rRNA_count': '23S rRNA',
                         'CRISPR_array_count': 'CRISPR arrays',
-                        'EnvBioelement:Nfix': 'EB:N_fixation',
-                        'EnvBioelement:Cfix': 'EB:C_fixation',
-                        'EnvBioelement:O': 'EB:Oxygen',
-                        'EnvBioelement:H': 'EB:Hydrogen',
-                        'EnvBioelement:NH3': 'EB:Ammonia',
-                        'EnvBioelement:CH4': 'EB:CH4',
-                        'EnvBioelement:S': 'EB:Sulfur',
-                        'EnvBioelement:NitOR': 'EB:Nit_Ox_Red'
+                        'MT_Bioelement:Nfix': 'BioE:N_fixation',
+                        'MT_Bioelement:Cfix': 'BioE:C_fixation',
+                        'MT_Bioelement:O': 'BioE:Oxygen',
+                        'MT_Bioelement:H': 'Bi0E:Hydrogen',
+                        'MT_Bioelement:NH3': 'BioE:Ammonia',
+                        'MT_Bioelement:CH4': 'BioE:CH4',
+                        'MT_Bioelement:S': 'BioE:Sulfur',
+                        'MT_Bioelement:NitOR': 'BioE:Nit_Ox_Red'
         }
         fields = []
         if int(params.get('show_sci_name',1)) == 1:
@@ -3956,15 +3972,15 @@ class kb_SetUtilities:
                        '23S_rRNA_count',
                        'CRISPR_array_count'])
         TSV_fields = fields
-        if int(params.get('add_env_bioelement',0)) == 1:
-            TSV_fields.extend(['EnvBioelement:Nfix',
-                               'EnvBioelement:Cfix',
-                               'EnvBioelement:O',
-                               'EnvBioelement:H',
-                               'EnvBioelement:NH3',
-                               'EnvBioelement:CH4',
-                               'EnvBioelement:S',
-                               'EnvBioelement:NitOR'])
+        if int(params.get('add_bioelement',0)) == 1:
+            TSV_fields.extend(['MT_Bioelement:Nfix',
+                               'MT_Bioelement:Cfix',
+                               'MT_Bioelement:O',
+                               'MT_Bioelement:H',
+                               'MT_Bioelement:NH3',
+                               'MT_Bioelement:CH4',
+                               'MT_Bioelement:S',
+                               'MT_Bioelement:NitOR'])
 
         # header
         TSV_row = ['Genome']
@@ -4012,25 +4028,19 @@ class kb_SetUtilities:
         text_fontsize = "2"
         text_color = '#606060'
         border_body_color = "#cccccc"
-        bar_width = 100
-        bar_height = 15
-        bar_color = "lightblue"
-        bar_line_color = "#cccccc"
-        bar_fontsize = "1"
-        bar_char = "."
         cellpadding = "3"
         cellspacing = "2"
         border = "0"
 
         brief_field_titles = {
-            'EnvBioelement:Nfix': 'Nfix',
-            'EnvBioelement:Cfix': 'Cfix',
-            'EnvBioelement:O': 'O',
-            'EnvBioelement:H': 'H',
-            'EnvBioelement:NH3': 'NH3',
-            'EnvBioelement:CH4': 'CH4',
-            'EnvBioelement:S': 'S',
-            'EnvBioelement:NitOR': 'NitOR'
+            'MT_Bioelement:Nfix': 'Nfix',
+            'MT_Bioelement:Cfix': 'Cfix',
+            'MT_Bioelement:O': 'O',
+            'MT_Bioelement:H': 'H',
+            'MT_Bioelement:NH3': 'NH3',
+            'MT_Bioelement:CH4': 'CH4',
+            'MT_Bioelement:S': 'S',
+            'MT_Bioelement:NitOR': 'NitOR'
         }
 
         # set some methods to use 
@@ -4043,21 +4053,16 @@ class kb_SetUtilities:
         def get_color_list (cat):
             color_list = dict()
             color_list['Nfix'] = [ "#2222ff",
-                                   "#3333ff",
-                                   "#4444ff",
-                                   "#6666ff",
+                                   "#5555ff",
                                    "#8888ff",
-                                   "#aaaaff",
-                                   "#eeeeff"]
+                                   "#ccccff"]
             color_list['Cfix'] = [ "#22ff22",
                                    "#66ff66",
                                    "#eeffee"]
             color_list['O'] = [ "#ff2222",
                                 "#ff3333",
                                 "#ff4444",
-                                "#ff5555",
                                 "#ff6666",
-                                "#ff7777",
                                 "#ff8888",
                                 "#ffaaaa",
                                 "#ffeeee"]
@@ -4068,7 +4073,9 @@ class kb_SetUtilities:
                                 "#ff66ff",
                                 "#ff77ff",
                                 "#ff88ff",
+                                "#ff99ff",
                                 "#ffaaff",
+                                "#ffbbff",
                                 "#ffddff"]
             color_list['NH3'] = [ "#48d1cc",
                                   "#afeeee"]
@@ -4076,20 +4083,15 @@ class kb_SetUtilities:
                                   "#00ced1",
                                   "#b0e0e6"]
             color_list['S'] = [ "#ff8c22",
-                                "#ff8c33",
                                 "#ff8c44",
-                                "#ff8c55",
                                 "#ff8c66",
-                                "#ff8c77",
                                 "#ff8c88",
                                 "#ff8caa",
                                 "#ff8ccc"]
             color_list['NitOR'] = [ "#9922cc",
                                     "#9933cc",
                                     "#9944cc",
-                                    "#9955cc",
                                     "#9966cc",
-                                    "#9977cc",
                                     "#9988cc",
                                     "#99aacc",
                                     "#99cccc"]
@@ -4098,14 +4100,14 @@ class kb_SetUtilities:
 
         def get_color_index (cat, fam_hits):
             color_list = get_color_list(cat)
-            plateau_hits = {'Nfix': 7,
+            plateau_hits = {'Nfix': 4,
                             'Cfix': 3,
-                            'O': 9,
-                            'H': 9,
+                            'O': 7,
+                            'H': 11,
                             'NH3': 2,
                             'CH4': 3,
-                            'S': 9,
-                            'NitOR': 9
+                            'S': 6,
+                            'NitOR': 7
                             }
             num_hits = len(fam_hits.split(','))
             if num_hits >= plateau_hits[cat]:
@@ -4147,11 +4149,11 @@ class kb_SetUtilities:
             func_table_lines = []
             func_table_lines += ['<table cellpadding='+func_cellpadding+' cellspacing = '+func_cellspacing+' border='+func_border+'>']
             
-            if int(params.get('add_env_bioelement',0)) == 1:
+            if int(params.get('add_bioelement',0)) == 1:
                 # Nfix Cfix O H
                 func_table_lines += ['<tr bgcolor="'+head_color+'">']
                 for cat in ['Nfix', 'Cfix', 'O', 'H']:
-                    func_cat = 'EnvBioelement'+':'+cat
+                    func_cat = 'MT_Bioelement'+':'+cat
 
                     cell_title_str = ''
                     if genome_table[func_cat] != '-':
@@ -4173,7 +4175,7 @@ class kb_SetUtilities:
                 # NH3 CH4 S NitOR
                 func_table_lines += ['<tr bgcolor="'+head_color+'">']
                 for cat in ['NH3', 'CH4', 'S', 'NitOR']:
-                    func_cat = 'EnvBioelement'+':'+cat
+                    func_cat = 'MT_Bioelement'+':'+cat
 
                     cell_title_str = ''
                     if genome_table[func_cat] != '-':
@@ -4209,7 +4211,7 @@ class kb_SetUtilities:
 
         html_report_lines += header_cell_html ('Genome')
 
-        if int(params.get('add_env_bioelement',0)) == 1 or \
+        if int(params.get('add_bioelement',0)) == 1 or \
            int(params.get('add_dbCAN',0)) == 1:
             html_report_lines += header_cell_html ('Functions')
             
@@ -4224,7 +4226,7 @@ class kb_SetUtilities:
             genome_obj_name = genome_newVer_ref_to_obj_name[genome_newVer_ref]
             html_report_lines += body_cell_html (genome_obj_name)
 
-            if int(params.get('add_env_bioelement',0)) == 1 or \
+            if int(params.get('add_bioelement',0)) == 1 or \
                 int(params.get('add_dbCAN',0)) == 1:
                 func_table_html = build_func_table_html (table[genome_newVer_ref])
                 html_report_lines += body_cell_html (func_table_html)
