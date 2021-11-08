@@ -3976,7 +3976,8 @@ class kb_SetUtilities:
                        '16S_rRNA_count',
                        '23S_rRNA_count',
                        'CRISPR_array_count'])
-        TSV_fields = fields
+        TSV_fields = []
+        TSV_fields.extend(fields)
         if int(params.get('add_bioelement',0)) == 1:
             TSV_fields.extend(['MT_Bioelement:Nfix',
                                'MT_Bioelement:Cfix',
@@ -4061,9 +4062,9 @@ class kb_SetUtilities:
                                    "#8080ff",
                                    "#ccccff",
                                    "#e6e6ff"]
-            color_list['Cfix'] = [ "#00b3cc",
-                                   "#66ff99",
-                                   "#ccffdc"]
+            color_list['Cfix'] = [ "#33cc33",
+                                   "#85e085",
+                                   "#d6f5d6"]
             color_list['O'] = [ "#ff1a1a",
                                 "#ff4d4d",
                                 "#ff6666",
