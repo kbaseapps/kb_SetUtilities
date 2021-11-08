@@ -507,11 +507,15 @@ class kb_SetUtilities:
                 'hydrogenase_NiFeGroup4i'
             ]
             fam_disp['H'] = {
+                'hydrogenase_Fe':          'hydrog_Fe',
                 'hydrogenase_FeFeGroupA1': 'hydrog_FeFe_A1',
                 'hydrogenase_FeFeGroupA2': 'hydrog_FeFe_A2',
                 'hydrogenase_FeFeGroupA3': 'hydrog_FeFe_A3',
                 'hydrogenase_FeFeGroupA4': 'hydrog_FeFe_A4',
                 'hydrogenase_FeFeGroupB':  'hydrog_FeFe_B',
+                'hydrogenase_FeFeGroupC1': 'hydrog_FeFe_C1',
+                'hydrogenase_FeFeGroupC2': 'hydrog_FeFe_C2',
+                'hydrogenase_FeFeGroupC3': 'hydrog_FeFe_C3',
                 'hydrogenase_NiFeGroup1a': 'hydrog_NiFe_1a',
                 'hydrogenase_NiFeGroup1b': 'hydrog_NiFe_1b',
                 'hydrogenase_NiFeGroup1c': 'hydrog_NiFe_1c',
@@ -525,6 +529,9 @@ class kb_SetUtilities:
                 'hydrogenase_NiFeGroup1k': 'hydrog_NiFe_1k',
                 'hydrogenase_NiFeGroup2a': 'hydrog_NiFe_2a',
                 'hydrogenase_NiFeGroup2b': 'hydrog_NiFe_2b',
+                'hydrogenase_NiFeGroup2c': 'hydrog_NiFe_2c',
+                'hydrogenase_NiFeGroup2d': 'hydrog_NiFe_2d',
+                'hydrogenase_NiFeGroup2e': 'hydrog_NiFe_2e',
                 'hydrogenase_NiFeGroup3a': 'hydrog_NiFe_3a',
                 'hydrogenase_NiFeGroup3b': 'hydrog_NiFe_3b',
                 'hydrogenase_NiFeGroup3c': 'hydrog_NiFe_3c',
