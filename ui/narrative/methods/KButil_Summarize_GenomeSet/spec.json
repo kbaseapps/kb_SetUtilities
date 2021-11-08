@@ -119,30 +119,6 @@
             }
         },
         {
-            "id": "add_dbCAN",
-            "optional": false,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [ "0" ],
-            "field_type": "dropdown",
-            "dropdown_options": {
-                "options": [
-                    {
-                        "value": "0",
-                        "display": "NO",
-                        "id": "run_dbCAN-NO",
-                        "ui-name": "run_dbCAN-NO"
-                    },
-                    {
-                        "value": "1",
-                        "display": "YES",
-                        "id": "run_dbCAN-YES",
-                        "ui-name": "run_dbCAN-YES"
-                    }
-		]
-            }
-	},
-        {
             "id": "checkM_reduced_tree",
             "optional": true,
             "advanced": true,
@@ -197,10 +173,6 @@
                 {
                     "input_parameter": "add_bioelement",
                     "target_property": "add_bioelement"
-                },
-                {
-                    "input_parameter": "add_dbCAN",
-                    "target_property": "add_dbCAN"
                 },
                 {
                     "input_parameter": "checkM_reduced_tree",

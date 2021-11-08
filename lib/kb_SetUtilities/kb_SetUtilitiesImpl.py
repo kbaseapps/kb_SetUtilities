@@ -38,7 +38,7 @@ class kb_SetUtilities:
     ######################################### noqa
     VERSION = "1.8.0"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "4cc455128b45c2ea3e290ae18e4008488c23c7ea"
+    GIT_COMMIT_HASH = "6ce0777ac7193331b74e97ba137dc197dcb4d0c6"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -421,7 +421,7 @@ class kb_SetUtilities:
                            'NH3',
                            'CH4',
                            'S',
-                           'NitOR'
+                           'Nit'
             ]
             cat_ids = { 'Nfix': 'N',
                         'Cfix': 'CFix',
@@ -430,7 +430,7 @@ class kb_SetUtilities:
                         'NH3': 'N',
                         'CH4': 'CH4',
                         'S': 'S',
-                        'NitOR': 'N'
+                        'Nit': 'N'
             }
             fam_ids['Nfix'] = [ 'nifD',
                                 'nifK',
@@ -467,11 +467,15 @@ class kb_SetUtilities:
                              ]
             fam_disp['O'] = {}
             fam_ids['H'] = [
+                'hydrogenase_Fe',
                 'hydrogenase_FeFeGroupA1',
                 'hydrogenase_FeFeGroupA2',
                 'hydrogenase_FeFeGroupA3',
                 'hydrogenase_FeFeGroupA4',
                 'hydrogenase_FeFeGroupB',
+                'hydrogenase_FeFeGroupC1',
+                'hydrogenase_FeFeGroupC2',
+                'hydrogenase_FeFeGroupC3',
                 'hydrogenase_NiFeGroup1a',
                 'hydrogenase_NiFeGroup1b',
                 'hydrogenase_NiFeGroup1c',
@@ -485,6 +489,9 @@ class kb_SetUtilities:
                 'hydrogenase_NiFeGroup1k',
                 'hydrogenase_NiFeGroup2a',
                 'hydrogenase_NiFeGroup2b',
+                'hydrogenase_NiFeGroup2c',
+                'hydrogenase_NiFeGroup2d',
+                'hydrogenase_NiFeGroup2e',
                 'hydrogenase_NiFeGroup3a',
                 'hydrogenase_NiFeGroup3b',
                 'hydrogenase_NiFeGroup3c',
@@ -569,9 +576,8 @@ class kb_SetUtilities:
                              'soxY'
             ]
             fam_disp['S'] = {}
-            fam_ids['NitOR'] = [ 'napA',
+            fam_ids['Nit'] = [ 'napA',
                                  'napB',
-                                 'narG',
                                  'norB',
                                  'norC',
                                  'narG',
@@ -587,7 +593,7 @@ class kb_SetUtilities:
                                  'nosD',
                                  'nosZ'
             ]
-            fam_disp['NitOR'] = {}
+            fam_disp['Nit'] = {}
 
         else:
             raise ValueError ("unknown collection for get_hmmer_fams()")
@@ -3549,8 +3555,8 @@ class kb_SetUtilities:
            parameter "input_ref" of type "data_obj_ref", parameter
            "use_newest_version" of type "bool", parameter "show_sci_name" of
            type "bool", parameter "add_qc" of type "bool", parameter
-           "add_bioelement" of type "bool", parameter "add_dbCAN" of type
-           "bool", parameter "checkM_reduced_tree" of type "bool"
+           "add_bioelement" of type "bool", parameter "checkM_reduced_tree"
+           of type "bool"
         :returns: instance of type "KButil_Summarize_GenomeSet_Output" ->
            structure: parameter "report_name" of type "data_obj_name",
            parameter "report_ref" of type "data_obj_ref"
@@ -3579,8 +3585,7 @@ class kb_SetUtilities:
                            'use_newest_version',
                            'show_sci_name',
                            'add_qc',
-                           'add_bioelement',
-                           'add_dbCAN'
+                           'add_bioelement'
         ]
         self.check_params (params, required_params)
 
@@ -3953,7 +3958,7 @@ class kb_SetUtilities:
                         'MT_Bioelement:NH3': 'BioE:Ammonia',
                         'MT_Bioelement:CH4': 'BioE:CH4',
                         'MT_Bioelement:S': 'BioE:Sulfur',
-                        'MT_Bioelement:NitOR': 'BioE:Nit_Ox_Red'
+                        'MT_Bioelement:Nit': 'BioE:Nit_Ox_Red'
         }
         fields = []
         if int(params.get('show_sci_name',1)) == 1:
@@ -3980,7 +3985,7 @@ class kb_SetUtilities:
                                'MT_Bioelement:NH3',
                                'MT_Bioelement:CH4',
                                'MT_Bioelement:S',
-                               'MT_Bioelement:NitOR'])
+                               'MT_Bioelement:Nit'])
 
         # header
         TSV_row = ['Genome']
@@ -4040,7 +4045,7 @@ class kb_SetUtilities:
             'MT_Bioelement:NH3': 'NH3',
             'MT_Bioelement:CH4': 'CH4',
             'MT_Bioelement:S': 'S',
-            'MT_Bioelement:NitOR': 'NitOR'
+            'MT_Bioelement:Nit': 'Nit'
         }
 
         # set some methods to use 
@@ -4052,49 +4057,49 @@ class kb_SetUtilities:
 
         def get_color_list (cat):
             color_list = dict()
-            color_list['Nfix'] = [ "#2222ff",
-                                   "#5555ff",
-                                   "#8888ff",
-                                   "#ccccff"]
-            color_list['Cfix'] = [ "#22ff22",
-                                   "#66ff66",
-                                   "#eeffee"]
-            color_list['O'] = [ "#ff2222",
-                                "#ff3333",
-                                "#ff4444",
+            color_list['Nfix'] = [ "#3333ff",
+                                   "#8080ff",
+                                   "#ccccff",
+                                   "#e6e6ff"]
+            color_list['Cfix'] = [ "#00b3cc",
+                                   "#66ff99",
+                                   "#ccffdc"]
+            color_list['O'] = [ "#ff1a1a",
+                                "#ff4d4d",
                                 "#ff6666",
-                                "#ff8888",
-                                "#ffaaaa",
-                                "#ffeeee"]
-            color_list['H'] = [ "#ff22ff",
-                                "#ff33ff",
-                                "#ff44ff",
-                                "#ff55ff",
-                                "#ff66ff",
-                                "#ff77ff",
-                                "#ff88ff",
-                                "#ff99ff",
-                                "#ffaaff",
-                                "#ffbbff",
-                                "#ffddff"]
-            color_list['NH3'] = [ "#48d1cc",
-                                  "#afeeee"]
-            color_list['CH4'] = [ "#228080",
-                                  "#00ced1",
-                                  "#b0e0e6"]
-            color_list['S'] = [ "#ff8c22",
-                                "#ff8c44",
-                                "#ff8c66",
-                                "#ff8c88",
-                                "#ff8caa",
-                                "#ff8ccc"]
-            color_list['NitOR'] = [ "#9922cc",
-                                    "#9933cc",
-                                    "#9944cc",
-                                    "#9966cc",
-                                    "#9988cc",
-                                    "#99aacc",
-                                    "#99cccc"]
+                                "#ff8080",
+                                "#ff9999",
+                                "#ffcccc",
+                                "#ffe6e6"]
+            color_list['H'] = [ "#cc0099",
+                                "#e600ac",
+                                "#ff00bf",
+                                "#ff1ac6",
+                                "#ff33cc",
+                                "#ff4dd2",
+                                "#ff66d9",
+                                "#ff80df",
+                                "#ffb3ec",
+                                "#ffccf2",
+                                "#ffe6f9"]
+            color_list['NH3'] = [ "#00c3ff",
+                                  "#ccf3ff"]
+            color_list['CH4'] = [ "#33cccc",
+                                  "#c1f0f0",
+                                  "#eafafa"]
+            color_list['S'] = [ "#ff7700",
+                                "#ff9233",
+                                "#ffbb80",
+                                "#ffd7b3",
+                                "#ffe5cc",
+                                "#fff2e6"]
+            color_list['Nit'] = [ "#6600ff",
+                                  "#8533ff",
+                                  "#b380ff",
+                                  "#c299ff",
+                                  "#d1b3ff",
+                                  "#e0ccff",
+                                  "#f0e6ff"]
             
             return color_list[cat]
 
@@ -4107,7 +4112,7 @@ class kb_SetUtilities:
                             'NH3': 2,
                             'CH4': 3,
                             'S': 6,
-                            'NitOR': 7
+                            'Nit': 7
                             }
             num_hits = len(fam_hits.split(','))
             if num_hits >= plateau_hits[cat]:
@@ -4172,9 +4177,9 @@ class kb_SetUtilities:
                     func_table_lines += ['</td>']
                 func_table_lines += ['</tr>']
 
-                # NH3 CH4 S NitOR
+                # NH3 CH4 S Nit
                 func_table_lines += ['<tr bgcolor="'+head_color+'">']
-                for cat in ['NH3', 'CH4', 'S', 'NitOR']:
+                for cat in ['NH3', 'CH4', 'S', 'Nit']:
                     func_cat = 'MT_Bioelement'+':'+cat
 
                     cell_title_str = ''

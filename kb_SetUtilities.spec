@@ -385,7 +385,6 @@ module kb_SetUtilities {
 	bool           show_sci_name;
 	bool           add_qc;
 	bool           add_bioelement;
-	bool           add_dbCAN;
 	bool           checkM_reduced_tree;
     } KButil_Summarize_GenomeSet_Params;
 

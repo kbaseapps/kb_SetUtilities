@@ -52,11 +52,6 @@ parameters :
             Add Bioelement
         short-hint : |
             Decide whether to run MicroTrait Bioelement functional summaries
-    add_dbCAN:
-        ui-name : |
-            Add dbCAN2 CAZy
-        short-hint : |
-            Decide whether to run dbCAN2 CAZy summaries
     checkM_reduced_tree :
         ui-name : |
             CheckM Reference Tree
