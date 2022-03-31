@@ -285,6 +285,7 @@ class kb_SetUtilities:
             
             if len(genome_data.get('contig_lengths',[])) > 0:
                 sorted_contig_lengths = sorted(genome_data['contig_lengths'], key=int, reverse=True)
+
             elif genome_data.get('assembly_ref'):
                 (assembly_obj_data,
                  assembly_obj_info,
@@ -309,6 +310,7 @@ class kb_SetUtilities:
                 running_sum += contig_length
                 if running_sum >= half_length:
                     N50 = contig_length
+                    break
             val = N50
         
         # GC
