@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Remove Genomes from GenomeSet - v1.5.0
+name: Remove Genomes from GenomeSet - v1.8.0
 tooltip: |
     Allows user to remove Genome(s) from a GenomeSet
 

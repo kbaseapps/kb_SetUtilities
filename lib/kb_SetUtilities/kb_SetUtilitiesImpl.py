@@ -2566,11 +2566,10 @@ class kb_SetUtilities:
                 skip_genomes_by_ref[standardized_genomeRef] = True
         if params.get('nonlocal_genome_names'):
 
-            # DEBUG
-            print ("GS WS:() ".format(genomeSet_workspace))
+            # validate genome names
             for genome_name in params['nonlocal_genome_names']:
-                print ("NONLOCAL NAME:{}".format(genome_name))
-
+                if len(genome_name.split()) != 1:
+                    raise ValueError ("cannot have spaces in object names: '{}'".format(genome_name))
             for gId in list(genomeSet['elements'].keys()):
                 genomeRef = genomeSet['elements'][gId]['ref']
                 (genome_obj_info,
@@ -2579,12 +2578,8 @@ class kb_SetUtilities:
 
                 this_genome_workspace = genome_obj_info[WORKSPACE_I]
                 standardized_genomeRef = self.get_obj_ref_from_obj_info_noVer(genome_obj_info)
-                # DEBUG
-                print ("GS INFO name:{} type:{} ws:{} ref:{}".format(this_genome_objname, type_name, this_genome_workspace, standardized_genomeRef))
-                
                 if this_genome_workspace != genomeSet_workspace \
                    and this_genome_objname in params['nonlocal_genome_names']:
-                    print ("GOT ONE! ref:{}".format(standardized_genomeRef))  # DEBUG
                     skip_genomes_by_ref[standardized_genomeRef] = True
                     nonlocal_skip_genome_refs.append(standardized_genomeRef)
                 
