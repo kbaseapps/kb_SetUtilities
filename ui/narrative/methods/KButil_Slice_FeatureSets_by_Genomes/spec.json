@@ -1,5 +1,5 @@
 {
-    "ver": "1.7.0",
+    "ver": "1.8.0",
     "authors": [
         "dylan"
     ],
@@ -41,7 +41,7 @@
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": [ "KBaseGenomes.Genome","KBaseMetagenomes.AnnotatedMetagenomeAssembly" ]
+                "valid_ws_types": [ "KBaseGenomes.Genome","KBaseSearch.GenomeSet","KBaseMetagenomes.AnnotatedMetagenomeAssembly" ]
             }
         },
         {

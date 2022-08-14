@@ -1139,8 +1139,25 @@ class kb_SetUtilities:
         # clean input_genome_refs
         clean_input_refs = []
         for ref in params['input_genome_refs']:
-            if ref is not None and ref != '' and ref not in clean_input_refs:
-                clean_input_refs.append(ref)
+            try:
+                obj_info = self.wsClient.get_object_info_new ({'objects':[{'ref':ref}]})[0]
+            except Exception as e:
+                self.ws_fetch_error(obj_type_desc+' object info', ref, error=e)
+            (obj_name, obj_type) = self.get_obj_name_and_type_from_obj_info (obj_info, full_type=False)
+
+            if obj_type == 'GenomeSet':
+                (this_genomeSet,
+                 info,
+                 this_genomeSet_obj_name,
+                 type_name) = self.get_obj_data(ref, 'genomeSet')
+
+                for genome_id in sorted(this_genomeSet['elements'].keys()):
+                    gs_ref = this_genomeSet['elements'][genome_id]['ref']
+                    if gs_ref is not None and gs_ref != '' and gs_ref not in clean_input_refs:
+                        clean_input_refs.append(gs_ref)
+            else:
+                if ref is not None and ref != '' and ref not in clean_input_refs:
+                    clean_input_refs.append(ref)
         params['input_genome_refs'] = clean_input_refs
 
 
