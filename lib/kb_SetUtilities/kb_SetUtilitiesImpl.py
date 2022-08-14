@@ -1163,10 +1163,13 @@ class kb_SetUtilities:
 
         # Standardize genome refs so string comparisons are valid (only do requested genomes)
         #
-        genome_ref_to_standardized                 = dict()
+        filter_genome_VER                          = dict()
+        genome_ref_to_standardized_noVer           = dict()
         genome_ref_from_standardized_in_input_flag = dict()
         for this_genome_ref in params['input_genome_refs']:
 
+            this_genome_ref_noVer = '/'.join(this_genome_ref.split('/')[0:2])
+            this_genome_VER = this_genome_ref.split('/')[2]
             (genome_obj_info,
              genome_obj_name,
              genome_obj_type) = self.get_obj_info(this_genome_ref, 'genome', full_type=True)
@@ -1176,15 +1179,17 @@ class kb_SetUtilities:
                 raise ValueError("Input Genome of type: '" + genome_obj_type +
                                  "'.  Must be one of " + ", ".join(acceptable_types))
 
-            this_standardized_genome_ref = self.get_obj_ref_from_obj_info(genome_obj_info)
-            genome_ref_to_standardized[this_genome_ref] = this_standardized_genome_ref
-            genome_ref_from_standardized_in_input_flag[this_standardized_genome_ref] = True
+            this_standardized_genome_ref_noVer = self.get_obj_ref_from_obj_info_noVer(genome_obj_info)
+            filter_genome_VER[this_genome_ref_noVer] = this_genome_VER
+            genome_ref_to_standardized_noVer[this_genome_ref_noVer] = this_standardized_genome_ref_noVer
+            genome_ref_from_standardized_in_input_flag[this_standardized_genome_ref_noVer] = True
 
 
         # Build FeatureSets
         #
         featureSet_seen = dict()
-        featureSet_genome_ref_to_standardized = dict()  # have to map genome refs in featureSets also because might be mixed WS_ID-WS_NAME/OBJID-OBJNAME and not exactly correspond with input genome refs
+        featureSet_genome_ref_to_standardized_noVer = dict()  # have to map genome refs in featureSets also because might be mixed WS_ID-WS_NAME/OBJID-OBJNAME and not exactly correspond with input genome refs
+        featureSet_genome_VER = dict()
         feature_list_lens = []
         objects_created = []
 
@@ -1226,12 +1231,13 @@ class kb_SetUtilities:
                 for this_genome_ref in this_featureSet['elements'][fId]:
                     genome_hit = False
 
-                    if this_genome_ref in genome_ref_to_standardized:  # The KEY line
+                    this_genome_ref_noVer = '/'.join(this_genome_ref.split('/')[0:2])
+                    if this_genome_ref_noVer in genome_ref_to_standardized_noVer:  # The KEY line
                         genome_hit = True
-                        standardized_genome_ref = genome_ref_to_standardized[this_genome_ref]
-                    elif this_genome_ref in featureSet_genome_ref_to_standardized:
-                        standardized_genome_ref = featureSet_genome_ref_to_standardized[this_genome_ref]
-                        if standardized_genome_ref in genome_ref_from_standardized_in_input_flag:
+                        standardized_genome_ref_noVer = genome_ref_to_standardized_noVer[this_genome_ref_noVer]
+                    elif this_genome_ref_noVer in featureSet_genome_ref_to_standardized_noVer:
+                        standardized_genome_ref_noVer = featureSet_genome_ref_to_standardized_noVer[this_genome_ref_noVer]
+                        if standardized_genome_ref_noVer in genome_ref_from_standardized_in_input_flag:
                             genome_hit = True
                     else:  # get standardized genome_ref
                         (genome_obj_info,
@@ -1243,18 +1249,32 @@ class kb_SetUtilities:
                             raise ValueError("Input Genome of type: '" + genome_obj_type +
                                              "'.  Must be one of " + ", ".join(acceptable_types))
 
-                        standardized_genome_ref = self.get_obj_ref_from_obj_info(genome_obj_info)
-                        featureSet_genome_ref_to_standardized[this_genome_ref] = standardized_genome_ref
-                        if standardized_genome_ref in genome_ref_from_standardized_in_input_flag:
+                        standardized_genome_ref_noVer = self.get_obj_ref_from_obj_info_noVer(genome_obj_info)
+                        genome_VER = this_genome_ref.split('/')[2]
+
+                        featureSet_genome_VER[standardized_genome_ref_noVer] = genome_VER
+                        featureSet_genome_ref_to_standardized_noVer[this_genome_ref_noVer] = standardized_genome_ref_noVer
+                        if standardized_genome_ref_noVer in genome_ref_from_standardized_in_input_flag:
                             genome_hit = True
 
                     if genome_hit:
                         feature_hit = True
-                        genomes_retained.append(standardized_genome_ref)
+                        genomes_retained.append(standardized_genome_ref_noVer)
 
                 if feature_hit:
                     element_ordering.append(fId)
-                    elements[fId] = genomes_retained
+                    new_featureSet_genome_refs = []
+                    for genome_ref_noVer in genomes_retained:
+                        newest_VER = None
+                        if genome_ref_noVer in featureSet_genome_VER:
+                            newest_VER = int(featureSet_genome_VER[genome_ref_noVer])
+                        if genome_ref_noVer in filter_genome_VER:
+                            if newest_VER is None or int(filter_genome_VER[genome_ref_noVer]) > newest_VER:
+                                newest_VER = int(filter_genome_VER[genome_ref_noVer])
+                        if newest_VER is None:
+                            raise ValueError ("missing VER for genome ref: {}".format(genome_ref_noVER))
+                        new_featureSet_genome_refs.append(genome_ref_noVer+'/'+str(newest_VER))
+                    elements[fId] = new_featureSet_genome_refs
             logMsg = 'features in sliced output set: {}'.format(len(element_ordering))
             self.log(console, logMsg)
 
