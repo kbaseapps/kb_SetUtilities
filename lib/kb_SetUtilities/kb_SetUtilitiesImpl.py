@@ -705,7 +705,8 @@ class kb_SetUtilities:
                            'split_num'
                            ]
         self.check_params (params, required_params)
-        params['split_num'] = int(params['split_num'])
+        input_ref = params['input_ref']
+        split_num = int(params['split_num'])
         
         # Get GenomeSet
         #
@@ -729,19 +730,19 @@ class kb_SetUtilities:
 
         # Split into subsets
         #
-        subset_base_size = int(src_set_size / params['split_num'])
+        subset_base_size = int(src_set_size / split_num)
         objects_created = []
         subset_sizes = []
         subset_names = []
         if subset_base_size == 0:
-            logMsg = "input set {} doesn't have enough members ({}) to split with split num {}".format (this_genomeSet_obj_name, src_set_size, params['split_num'])
+            logMsg = "input set {} doesn't have enough members ({}) to split with split num {}".format (this_genomeSet_obj_name, src_set_size, split_num)
             self.log(console, logMsg)
             report += logMsg
         else:
             provenance = self.set_provenance(ctx, [input_ref], 'kb_SetUtilities', 'KButil_Split_GenomeSet')
             last_pos = -1
             remainder = src_set_size % subset_base_size
-            for subset_i in range(params['split_nunm']):
+            for subset_i in range(split_nunm):
                 output_name = this_genomeSet_obj_name+'-'+str(subset_i+1)
                 subset_names.append(output_name)
                 output_desc = ''
