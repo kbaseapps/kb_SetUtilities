@@ -778,10 +778,11 @@ class kb_SetUtilities:
 
         # build output report object
         self.log(console, "BUILDING REPORT")
+        report += "\n"
         for subset_i,subset_size in enumerate(subset_sizes):
             logMsg = "subset {} has {} genomes".format(subset_names[subset_i],subset_size)
             self.log(console, logMsg)
-            report += logMsg
+            report += logMsg+"\n"
             
         reportObj = {
             'objects_created': objects_created,
