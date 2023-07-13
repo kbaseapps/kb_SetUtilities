@@ -1,0 +1,50 @@
+#
+# define display information
+#
+name: Split GenomeSet - v1.9.0
+tooltip: |
+    Allows user to evenly split a GenomeSet
+screenshots: []
+
+icon: kb-purple.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    input_ref:
+        ui-name : |
+            GenomeSet
+        short-hint : |
+            The GenomeSet to Split
+    split_num:
+        ui-name : |
+            Split Num
+        short-hint : |
+            Number of split GenomeSets to create
+
+
+description : |
+    <p>This App allows the user to split a <b><i>Genome Set</i></b> into evenly-sized subsets.</p>
+    <hr>
+    <p>written for KBase by <a href="mailto:DCChivian@lbl.gov">Dylan Chivian</a></p>
+    <hr>
+    <p>
+    <h3>Description</h3>
+    <b>Split GenomeSet</b> will break the GenomeSet into as many evenly sized Genome sub sets as it can.  Some of the sub sets may have one extra member.  The Subset objects have the same name as the source object, followed by -1, -2, etc.
+    </p>

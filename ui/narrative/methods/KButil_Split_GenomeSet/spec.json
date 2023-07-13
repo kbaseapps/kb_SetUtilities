@@ -1,0 +1,79 @@
+{
+    "ver": "1.9.0",
+    "authors": [
+        "dylan"
+    ],
+    "contact": "http://www.kbase.us/support",
+    "visible": true,
+    "categories": ["active","util","comparative_genomics"],
+    "widgets": {
+        "input": null,
+        "output": "kbaseReportView"
+    },
+    "parameters": [ 
+        {
+            "id": "input_ref",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ "KBaseSearch.GenomeSet" ]
+            }
+        },
+        {
+            "id": "split_num",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "2" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as": "int",
+                "min_int" : 2
+            }
+        }
+    ],
+    "behavior": {
+        "service-mapping": {
+            "url": "",
+            "name": "kb_SetUtilities",
+            "method": "KButil_Split_GenomeSet",
+            "input_mapping": [
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
+                },
+                {
+                    "input_parameter": "input_ref",
+                    "target_property": "input_ref",
+		    "target_type_transform": "resolved-ref"
+                },
+                {
+                    "input_parameter": "split_num",
+                    "target_property": "split_num"
+                }
+            ],
+            "output_mapping": [
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
+                },
+                {
+                    "service_method_output_path": [0, "report_name"],
+                    "target_property": "report_name"
+                },
+                {
+                    "service_method_output_path": [0, "report_ref"],
+                    "target_property": "report_ref"
+                },
+                {
+		    "constant_value": "5",
+                    "target_property": "report_window_line_height"
+                }
+            ]
+        }
+    },
+    "job_id_output_field": "docker"
+}

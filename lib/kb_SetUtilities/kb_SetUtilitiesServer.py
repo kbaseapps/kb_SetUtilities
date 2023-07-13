@@ -338,6 +338,10 @@ class Application(object):
         self.serverlog.set_log_level(6)
         self.rpc_service = JSONRPCServiceCustom()
         self.method_authentication = dict()
+        self.rpc_service.add(impl_kb_SetUtilities.KButil_Split_GenomeSet,
+                             name='kb_SetUtilities.KButil_Split_GenomeSet',
+                             types=[dict])
+        self.method_authentication['kb_SetUtilities.KButil_Split_GenomeSet'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_SetUtilities.KButil_Localize_GenomeSet,
                              name='kb_SetUtilities.KButil_Localize_GenomeSet',
                              types=[dict])

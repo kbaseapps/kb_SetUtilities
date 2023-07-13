@@ -36,9 +36,9 @@ class kb_SetUtilities:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.8.0"
+    VERSION = "1.9.0"
     GIT_URL = "https://github.com/kbaseapps/kb_SetUtilities"
-    GIT_COMMIT_HASH = "6ce0777ac7193331b74e97ba137dc197dcb4d0c6"
+    GIT_COMMIT_HASH = "f496ce7d9d6c60257d8b6003237e195eca82d08c"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -668,6 +668,138 @@ class kb_SetUtilities:
         #END_CONSTRUCTOR
         pass
 
+
+    def KButil_Split_GenomeSet(self, ctx, params):
+        """
+        :param params: instance of type "KButil_Split_GenomeSet_Params"
+           (KButil_Split_GenomeSet() ** **  Method for evenly splitting
+           Genome Set) -> structure: parameter "workspace_name" of type
+           "workspace_name" (** The workspace object refs are of form: ** ** 
+           objects = ws.get_objects([{'ref':
+           params['workspace_id']+'/'+params['obj_name']}]) ** ** "ref" means
+           the entire name combining the workspace id and the object name **
+           "id" is a numerical identifier of the workspace or object, and
+           should just be used for workspace ** "name" is a string identifier
+           of a workspace or object.  This is received from Narrative.),
+           parameter "input_ref" of type "data_obj_ref", parameter
+           "split_num" of Long
+        :returns: instance of type "KButil_Split_GenomeSet_Output" ->
+           structure: parameter "report_name" of type "data_obj_name",
+           parameter "report_ref" of type "data_obj_ref"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN KButil_Split_GenomeSet
+        console = []
+        invalid_msgs = []
+        self.log(console, 'Running Split_GenomeSet with params=')
+        self.log(console, "\n" + pformat(params))
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = list(range(11))  # object_info tuple
+        logMsg = ''
+        report = ''
+
+
+        # check params
+        required_params = ['workspace_name',
+                           'input_ref',
+                           'split_num'
+                           ]
+        self.check_params (params, required_params)
+        params['split_num'] = int(params['split_num'])
+        
+        # Get GenomeSet
+        #
+        (this_genomeSet,
+         info,
+         this_genomeSet_obj_name,
+         type_name) = self.get_obj_data(input_ref, 'genomeSet')
+
+        input_genomeSet_name = this_genomeSet_obj_name
+
+        if type_name != 'GenomeSet':
+            raise ValueError("Bad Type:  Should be GenomeSet instead of '" + type_name + "'")
+
+        genome_id_order = sorted(this_genomeSet['elements'].keys()) 
+        #this_genomeSet['elements'][genome_id]['ref']
+        src_set_size = len(genome_id_order)
+        logMsg = 'genomes in input set {}: {}'.format(this_genomeSet_obj_name, src_set_size)
+        self.log(console, logMsg)
+        report += logMsg+"\n"
+
+
+        # Split into subsets
+        #
+        subset_base_size = int(src_set_size / params['split_num'])
+        objects_created = []
+        subset_sizes = []
+        subset_names = []
+        if subset_base_size == 0:
+            logMsg = "input set {} doesn't have enough members ({}) to split with split num {}".format (this_genomeSet_obj_name, src_set_size, params['split_num'])
+            self.log(console, logMsg)
+            report += logMsg
+        else:
+            provenance = self.set_provenance(ctx, [input_ref], 'kb_SetUtilities', 'KButil_Split_GenomeSet')
+            last_pos = -1
+            remainder = src_set_size % subset_base_size
+            for subset_i in range(params['split_nunm']):
+                output_name = this_genomeSet_obj_name+'-'+str(subset_i+1)
+                subset_names.append(output_name)
+                output_desc = ''
+                if this_genomeSet.get('description'):
+                    output_desc = this_genomeSet['description']+' - '
+                output_desc += 'subset '+str(subset_i+1)
+
+                output_elements = dict()
+                for genome_id_i in range(last_pos+1, last_pos+1+subset_base_size, 1):
+                    output_elements[genome_id_order[genome_id_i]] = {'ref': this_genomeSet['elements'][genome_id_order[genome_id_i]]['ref']}
+                    last_pos = genome_id_i
+                if subset_i < remainder:
+                    genome_id_i = last_pos+1
+                    output_elements[genome_id_order[genome_id_i]] = {'ref': this_genomeSet['elements'][genome_id_order[genome_id_i]]['ref']}
+                    last_pos = genome_id_i
+
+                subset_sizes.append(len(list(output_elements.keys())))
+                output_genomeSet_obj = { 'description': output_desc,
+                                         'elements': output_elements
+                }
+                new_obj_info = self.wsClient.save_objects({'workspace': params['workspace_name'],
+                                                           'objects': [{
+                                                               'type': 'KBaseSearch.GenomeSet',
+                                                               'data': output_genomeSet_obj,
+                                                               'name': output_name,
+                                                               'meta': {},
+                                                               'provenance': provenance}]})[0]
+
+                objects_created.append({'ref': params['workspace_name'] + '/' + output_name,
+                                        'description': output_desc})
+
+            
+
+        # build output report object
+        self.log(console, "BUILDING REPORT")
+        for subset_i,subset_size in enumerate(subset_sizes):
+            logMsg = "subset {} has {} genomes".format(subset_names[subset_i],subset_size)
+            self.log(console, logMsg)
+            report += logMsg
+            
+        reportObj = {
+            'objects_created': objects_created,
+            'text_message': report
+        }
+
+        # Save report
+        report_info = self.reportClient.create({'report':reportObj, 'workspace_name':params['workspace_name']})
+
+        returnVal = { 'report_name': report_info['name'], 'report_ref': report_info['ref'] }
+        self.log(console, "KButil_Split_GenomeSet DONE")
+        #END KButil_Split_GenomeSet
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method KButil_Split_GenomeSet return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
 
     def KButil_Localize_GenomeSet(self, ctx, params):
         """

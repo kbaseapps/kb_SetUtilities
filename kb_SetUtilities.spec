@@ -24,6 +24,24 @@ module kb_SetUtilities {
     typedef int    bool;
 
 
+    /* KButil_Split_GenomeSet()
+    **
+    **  Method for evenly splitting Genome Set
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	data_obj_ref   input_ref;
+	int            split_num;
+    } KButil_Split_GenomeSet_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Split_GenomeSet_Output;
+
+    funcdef KButil_Split_GenomeSet (KButil_Split_GenomeSet_Params params)  returns (KButil_Split_GenomeSet_Output) authentication required;
+
+
     /* KButil_Localize_GenomeSet()
     **
     **  Method for creating Genome Set with all local Genomes

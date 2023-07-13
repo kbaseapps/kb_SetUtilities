@@ -1,3 +1,7 @@
+### Version 1.9.0
+__Changes__
+- Added "Split GenomeSet" App
+
 ### Version 1.8.0
 __Changes__
 - Added "Summarize Genome Set" App
