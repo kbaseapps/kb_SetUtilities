@@ -742,7 +742,7 @@ class kb_SetUtilities:
             provenance = self.set_provenance(ctx, [input_ref], 'kb_SetUtilities', 'KButil_Split_GenomeSet')
             last_pos = -1
             remainder = src_set_size % subset_base_size
-            for subset_i in range(split_nunm):
+            for subset_i in range(split_num):
                 output_name = this_genomeSet_obj_name+'-'+str(subset_i+1)
                 subset_names.append(output_name)
                 output_desc = ''
