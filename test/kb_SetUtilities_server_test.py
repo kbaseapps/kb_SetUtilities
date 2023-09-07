@@ -148,8 +148,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         self.__class__.genomeName_list[lib_i] = genome_basename
         return new_obj_info
 
-    # DEBUG
-    """
     
     # call this method to get the WS object info of a Single End Library (will
     # upload the example data if this is the first time the method is called during tests)
@@ -360,7 +358,6 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         self.__class__.pairedEndLib_SetInfo = new_obj_set_info
         return new_obj_set_info
 
-    """
 
     ##############
     # UNIT TESTS #
@@ -1448,7 +1445,9 @@ class kb_SetUtilitiesTest(unittest.TestCase):
         pprint(result)
 
         # check the output
-        objects_created = result['objects_created']
+        report_ref = result[0]['report_ref']
+        report_obj_data = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        objects_created = report_obj_data['objects_created']
         for obj_i,this_obj in enumerate(objects_created):
             output_ref = this_obj['ref']
             output_obj = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
