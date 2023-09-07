@@ -1446,7 +1446,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
         # check the output
         report_ref = result[0]['report_ref']
-        report_obj_data = self.getWsClient().get_objects2({'objects': [{'ref': output_ref}]})['data'][0]['data']
+        report_obj_data = self.getWsClient().get_objects2({'objects': [{'ref': report_ref}]})['data'][0]['data']
         objects_created = report_obj_data['objects_created']
         for obj_i,this_obj in enumerate(objects_created):
             output_ref = this_obj['ref']
