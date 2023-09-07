@@ -3996,7 +3996,7 @@ class kb_SetUtilities:
                 HMMER_params['input_'+sub_method+'_'+cat_id+'_ids'] = input_fams[cat_id]
 
             try:
-                HMMER_SERVICE_VER = 'beta'
+                HMMER_SERVICE_VER = 'release'
                 #hmmer_Client = kb_hmmer(self.callbackURL, token=self.token, service_ver=self.SERVICE_VER)
                 hmmer_Client = kb_hmmer(self.callbackURL, token=self.token, service_ver=HMMER_SERVICE_VER)
             except Exception as e:

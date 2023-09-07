@@ -24,7 +24,7 @@ class kb_hmmer(object):
             password=None, token=None, ignore_authrc=False,
             trust_all_ssl_certificates=False,
             auth_svc='https://ci.kbase.us/services/auth/api/legacy/KBase/Sessions/Login',
-            service_ver='beta',
+            service_ver='release',
             async_job_check_time_ms=100, async_job_check_time_scale_percent=150, 
             async_job_check_max_time_ms=300000):
         if url is None:
@@ -222,9 +222,9 @@ class kb_hmmer(object):
            parameter "input_MT_Bioelement_Halo_ids" of type "data_obj_ref",
            parameter "input_many_refs" of type "data_obj_ref", parameter
            "output_filtered_name" of type "data_obj_name", parameter
-           "genome_disp_name_config" of String, parameter
-           "use_model_specific_thresholds" of type "bool", parameter
-           "show_target_block_headers" of type "bool", parameter
+           "genome_disp_name_config" of String, parameter "count_category" of
+           String, parameter "use_model_specific_thresholds" of type "bool",
+           parameter "show_target_block_headers" of type "bool", parameter
            "coalesce_output" of type "bool", parameter "save_ALL_featureSets"
            of type "bool", parameter "save_ANY_featureSets" of type "bool",
            parameter "e_value" of Double, parameter "bitscore" of Double,

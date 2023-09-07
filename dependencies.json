@@ -13,7 +13,7 @@
 }, {
   "module_name" : "kb_hmmer",
   "type" : "sdk",
-  "version_tag" : "beta"
+  "version_tag" : "release"
 }, {
   "module_name" : "kb_Msuite",
   "type" : "sdk",
