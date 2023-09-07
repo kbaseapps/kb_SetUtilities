@@ -1385,7 +1385,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Split_GenomeSet_01()
     ##
-    # HIDE # HIDE @unittest.skip("skipped test_KButil_Split_GenomeSet_01()")  # uncomment to skip
+    # HIDE @unittest.skip("skipped test_KButil_Split_GenomeSet_01()")  # uncomment to skip
     def test_KButil_Split_GenomeSet_01(self):
         method = 'KButil_Split_GenomeSet_01'
         msg = "RUNNING: " + method + "()"
@@ -1433,7 +1433,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
             genomeSet_info[OBJID_I]) + '/' + str(genomeSet_info[VERSION_I])
             
         # run method
-        num_genome_elements = [2, 1, 1]
+        num_genome_elements = [1, 1, 2]
         split_num = 3
         params = {
             'workspace_name': self.getWsName(),
