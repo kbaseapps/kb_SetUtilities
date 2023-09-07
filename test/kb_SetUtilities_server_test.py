@@ -2428,7 +2428,8 @@ class kb_SetUtilitiesTest(unittest.TestCase):
 
     #### test_KButil_Summarize_GenomeSet_01()
     ##
-    # HIDE @unittest.skip("skipped test_KButil_Summarize_GenomeSet_01()")  # uncomment to skip
+    ## SKIP for Github Actions testing which requires refdata for CheckM
+    @unittest.skip("skipped test_KButil_Summarize_GenomeSet_01()")  # uncomment to skip
     def test_KButil_Summarize_GenomeSet_01(self):
         method = 'KButil_Summarize_GenomeSet_01'
         msg = "RUNNING: " + method + "()"
