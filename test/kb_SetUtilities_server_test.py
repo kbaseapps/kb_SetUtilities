@@ -1433,7 +1433,7 @@ class kb_SetUtilitiesTest(unittest.TestCase):
             genomeSet_info[OBJID_I]) + '/' + str(genomeSet_info[VERSION_I])
             
         # run method
-        num_genome_elements = [1, 1, 2]
+        num_genome_elements = [2, 1, 1]
         split_num = 3
         params = {
             'workspace_name': self.getWsName(),

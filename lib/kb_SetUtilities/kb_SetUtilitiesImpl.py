@@ -731,6 +731,10 @@ class kb_SetUtilities:
         # Split into subsets
         #
         subset_base_size = int(src_set_size / split_num)
+        logMsg = 'split_num {}'.format(split_num)
+        self.log(console, logMsg)
+        logMsg = 'subset_base_size: {}'.format(subset_base_size)
+        self.log(console, logMsg)
         objects_created = []
         subset_sizes = []
         subset_names = []
@@ -741,7 +745,9 @@ class kb_SetUtilities:
         else:
             provenance = self.set_provenance(ctx, [input_ref], 'kb_SetUtilities', 'KButil_Split_GenomeSet')
             last_pos = -1
-            remainder = src_set_size % subset_base_size
+            remainder = src_set_size - (split_num * subset_base_size)
+            logMsg = "remainder: {}".format(remainder)
+            self.log(console, logMsg)
             for subset_i in range(split_num):
                 output_name = this_genomeSet_obj_name+'-'+str(subset_i+1)
                 subset_names.append(output_name)
@@ -752,10 +758,14 @@ class kb_SetUtilities:
 
                 output_elements = dict()
                 for genome_id_i in range(last_pos+1, last_pos+1+subset_base_size, 1):
+                    logMsg = "subset_i: {} genome_id_i: {}".format(subset_i, genome_id_i)
+                    self.log(console, logMsg)
                     output_elements[genome_id_order[genome_id_i]] = {'ref': this_genomeSet['elements'][genome_id_order[genome_id_i]]['ref']}
                     last_pos = genome_id_i
                 if subset_i < remainder:
                     genome_id_i = last_pos+1
+                    logMsg = "remainder subset_i: {} genome_id_i: {}".format(subset_i, genome_id_i)
+                    self.log(console, logMsg)
                     output_elements[genome_id_order[genome_id_i]] = {'ref': this_genomeSet['elements'][genome_id_order[genome_id_i]]['ref']}
                     last_pos = genome_id_i
 
