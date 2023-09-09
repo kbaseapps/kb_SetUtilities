@@ -2987,6 +2987,7 @@ class kb_SetUtilities:
         # return variables are: returnVal
         #BEGIN KButil_Merge_MultipleReadsSets_to_OneReadsSet
         console = []
+        invalid_msgs = []
         report = ''
         self.log(console, 'Running KButil_Merge_MultipleReadsSets_to_OneReadsSet with parameters: ')
         self.log(console, "\n"+pformat(params))
