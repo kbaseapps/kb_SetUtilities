@@ -74,8 +74,8 @@ description : |
     <p><strong>Please cite:</strong>
       <ul>
         <li>Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
-	<li>Karaoz U, Brodie EL. microTrait: A Toolset for a Trait-Based Representation of Microbial Genomes. Front Bioinform. 2022 Jul 22;2:918853. doi: 10.3389/fbinf.2022.918853
-	<li>Parks DH, Imelfort M, Skennerton CT, Hugenholtz P, Tyson GW. CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Res. 2015;25: 1043–1055. doi:10.1101/gr.186072.114
+        <li>Karaoz U, Brodie EL. microTrait: A Toolset for a Trait-Based Representation of Microbial Genomes. Front Bioinform. 2022 Jul 22;2:918853. doi: 10.3389/fbinf.2022.918853
+        <li>Parks DH, Imelfort M, Skennerton CT, Hugenholtz P, Tyson GW. CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Res. 2015;25: 1043–1055. doi:10.1101/gr.186072.114
       </ul>
     </p>
 
