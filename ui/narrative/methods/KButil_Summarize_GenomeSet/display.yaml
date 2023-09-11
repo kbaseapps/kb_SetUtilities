@@ -61,6 +61,13 @@ parameters :
 description : |
     <p>This App allows the user to view summaries of the <b><i>Genomes</i></b> in a <b><i>Genome Set</i></b>.  This includes any taxonomic classification, tallies of feature types (e.g. number of protein encoding genes, ribosomal RNA genes, etc.).  Optionally, and slower, the user can include quality completeness and contamination measures from CheckM, and environmental bioelement processing functional summaries.</p>
 
+
+    <p><hr></p>
+    <p><b>Tool and Data Sources:</b></p>
+    <p>MicroTrait v1.0 HMMs are installed from <a href="https://github.com/ukaraoz/microtrait-hmm/tree/master/data.kb_hmmer/hmm">https://github.com/ukaraoz/microtrait-hmm/tree/master/data.kb_hmmer/hmm</a></p>
+    <p><b>CheckM v1.1.2</b> is installed from <a href="https://github.com/Ecogenomics/CheckM/releases/tag/v1.1.2">https://github.com/Ecogenomics/CheckM/releases/tag/v1.1.2</a> with reference data version <b>2015_01_16</b> from <a href="https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz">https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz</a>.</p>
+    
+
     <p><hr></p>
     <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
     
