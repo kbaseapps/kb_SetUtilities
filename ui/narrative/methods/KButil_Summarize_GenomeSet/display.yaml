@@ -4,7 +4,7 @@
 name: Summarize GenomeSet - v1.8.0
 tooltip: |
     View Genome summaries within a GenomeSet
-screenshots: []
+screenshots: [Summarize_GenomeSet.png]
 
 icon: kb-purple.png
 
@@ -59,6 +59,21 @@ parameters :
             Select the CheckM reference tree to use. The reduced tree is faster and requires less memory because it is smaller. The developers recommend using the full tree, if possible, even though tests suggest that the same lineage-specific marker set will be selected for the vast majority of genomes regardless of the underlying reference tree.
 
 description : |
-    <p>This App allows the user to view summaries of the <b><i>Genomes</i></b> in a <b><i>Genome Set</i></b>.  This includes any taxonomic classification, tallies of feature types (e.g. number of protein encoding genes, ribosomal RNA genes, etc.).  Optionally, and slower, the user can include quality completeness and contamination measures from CheckM, environmental bioelement processing functional summaries, and CAZy gene family summaries.</p>
-    <hr>
-    <p>Team members who contributed to this application: <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a></p>
+    <p>This App allows the user to view summaries of the <b><i>Genomes</i></b> in a <b><i>Genome Set</i></b>.  This includes any taxonomic classification, tallies of feature types (e.g. number of protein encoding genes, ribosomal RNA genes, etc.).  Optionally, and slower, the user can include quality completeness and contamination measures from CheckM, and environmental bioelement processing functional summaries.</p>
+
+    <p><hr></p>
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
+    
+    <p><strong>Please cite:</strong>
+      <ul>
+        <li>Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
+      </ul>
+    </p>
+
+
+publications :
+    -
+        pmid: 36376589
+        display-text: |
+            Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
+        link: https://www.nature.com/articles/s41596-022-00747-x
