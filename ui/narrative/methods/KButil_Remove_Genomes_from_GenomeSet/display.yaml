@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Remove Genomes from GenomeSet - v1.5.0
+name: Remove Genomes from GenomeSet - v1.8.0
 tooltip: |
     Allows user to remove Genome(s) from a GenomeSet
 
@@ -61,13 +61,26 @@ parameters :
 description : |
     <p><b>Remove Genomes from GenomeSet</b> allows a user to reduce the membership of a set of genomes (each of which is a set of DNA contigs including structural and functional annotations). The GenomeSet object can be used in subsequent Apps allowing for bulk operations on Genome objects. The GenomeSet must already be within the Narrative's data workspace.  Genomes to be removed that are also in the same Narrative as the GenomeSet can be configured with the <i>"Remove Genome Objects"</i> pull-down option.  Genomes that are not in the same Narrative (e.g. RefSeq reference genomes) can be removed from the GenomeSet by adding the name of the Genome object with the <i>"Remove Nonlocal Genome Names"</i> text option.</p>
 
+    <p><hr></p>
     <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
+
+    <p><strong>Please cite:</strong>
+      <ul>
+        <li>Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
+      </ul>
+    </p>
+
 
 result : |
     <p>The result tab of this App displays the name of the created GenomeSet object. It also displays the number of the Genome objects in this set. To see the component assembly object names, go to the “View Configure” tab within the App.</p>
 
 
 publications :
+    -
+        pmid: 36376589
+        display-text: |
+            Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
+        link: https://www.nature.com/articles/s41596-022-00747-x
     -
         display-text: |
             Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163

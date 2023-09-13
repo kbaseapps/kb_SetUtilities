@@ -1,5 +1,5 @@
 {
-    "ver": "1.8.0",
+    "ver": "1.9.0",
     "authors": [
         "dylan"
     ],
@@ -10,50 +10,28 @@
         "input": null,
         "output": "no-display"
     },
-    "parameters": [
+    "parameters": [ 
         {
-            "id": "desc",
-            "optional": true,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-		"is_output_name": false
-            }
-        },
-        {
-            "id": "input_featureSet_refs",
-            "optional": false,
-            "advanced": false,
-            "allow_multiple": true,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ "KBaseCollections.FeatureSet" ]
-            }
-        },
-        {
-            "id": "input_genome_refs",
-            "optional": false,
-            "advanced": false,
-            "allow_multiple": true,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ "KBaseGenomes.Genome","KBaseSearch.GenomeSet","KBaseMetagenomes.AnnotatedMetagenomeAssembly" ]
-            }
-        },
-        {
-            "id": "output_name",
+            "id": "input_ref",
             "optional": false,
             "advanced": false,
             "allow_multiple": false,
             "default_values": [ "" ],
             "field_type": "text",
             "text_options": {
-                "valid_ws_types": [ "KBaseCollections.FeatureSet" ],
-		"is_output_name": true
+                "valid_ws_types": [ "KBaseSearch.GenomeSet" ]
+            }
+        },
+        {
+            "id": "split_num",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "2" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as": "int",
+                "min_int" : 2
             }
         }
     ],
@@ -61,29 +39,20 @@
         "service-mapping": {
             "url": "",
             "name": "kb_SetUtilities",
-            "method": "KButil_Slice_FeatureSets_by_Genomes",
+            "method": "KButil_Split_GenomeSet",
             "input_mapping": [
                 {
                     "narrative_system_variable": "workspace",
                     "target_property": "workspace_name"
                 },
                 {
-                    "input_parameter": "desc",
-                    "target_property": "desc"
+                    "input_parameter": "input_ref",
+                    "target_property": "input_ref",
+		    "target_type_transform": "resolved-ref"
                 },
                 {
-                    "input_parameter": "input_featureSet_refs",
-                    "target_property": "input_featureSet_refs",
-		    "target_type_transform": "list<resolved-ref>"
-                },
-                {
-                    "input_parameter": "input_genome_refs",
-                    "target_property": "input_genome_refs",
-		    "target_type_transform": "list<resolved-ref>"
-                },
-                {
-                    "input_parameter": "output_name",
-                    "target_property": "output_name"
+                    "input_parameter": "split_num",
+                    "target_property": "split_num"
                 }
             ],
             "output_mapping": [

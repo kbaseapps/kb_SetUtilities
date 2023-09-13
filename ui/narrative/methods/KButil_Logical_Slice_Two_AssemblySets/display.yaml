@@ -60,6 +60,7 @@ parameters :
 description : |
     <p>This App allows users to create an intersection set or difference set from two <b><i>Assembly Sets</i></b>, A and B, ie, a new <b><i>AssemblySet</i></b> containing only assemblys that correspond to present in {A and B}, or {A and (not B)}, or {(not A) and B}.</p>
 
+    <p><hr></p>
     <p><b>Running the App:</b> <i>Note that in this App, all inputs are required or mandatory.</i> The first two inputs are sets of genome assemblys (AssemblySets), which may have been created by any of several Apps in KBase, such as Build Assembly Set from Genome, BLASTp prot-prot Search, Merge AssemblySets, Slice AssemblySets by Genomes, among others.</p>
 
     <p>This is followed by a pull-down menu for “Logical slice” which indicates which set (Venn diagram) operation to perform:
@@ -72,9 +73,23 @@ description : |
 
     <p>Below that is a text entry field for a meaningful description of the resultant set, followed by the name to be given to the resultant <b>AssemblySet</b> object. Upon successful completion, a new <b>AssemblySet</b> object with the given name will appear in the Data Pane, and a short report listing the description and number of assemblys in this set will appear below the App cell window in the Narrative.</p>
 
+
+    <p><hr></p>
     <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
 
+    <p><strong>Please cite:</strong>
+      <ul>
+        <li>Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
+      </ul>
+    </p>
+
+
 publications :
+    -
+        pmid: 36376589
+        display-text: |
+            Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
+        link: https://www.nature.com/articles/s41596-022-00747-x
     -
         display-text: |
             Arkin AP, Cottingham RW, Henry CS, Harris NL, Stevens RL, Maslov S, et al. KBase: The United States Department of Energy Systems Biology Knowledgebase. Nature Biotechnology. 2018;36: 566. doi: 10.1038/nbt.4163
