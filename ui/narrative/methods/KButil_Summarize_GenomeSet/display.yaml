@@ -1,0 +1,98 @@
+#
+# define display information
+#
+name: Summarize GenomeSet - v1.8.0
+tooltip: |
+    View Genome summaries within a GenomeSet
+screenshots: [Summarize_GenomeSet.png]
+
+icon: kb-purple.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    input_ref:
+        ui-name : |
+            GenomeSet
+        short-hint : |
+            The GenomeSet to Summarize
+    use_newest_version:
+        ui-name : |
+            Use Newest Genome Version
+        short-hint : |
+            GenomeSet may include older version of Genome object, so you can use the newest version instead.
+    show_sci_name:
+        ui-name : |
+            Scientific Name
+        short-hint : |
+            Show or hide the scientific name in the table (many MAGs have no meaningful name)
+    add_qc:
+        ui-name : |
+            Add Quality Scores
+        short-hint : |
+            Decide whether to run CheckM completeness and contamination QC
+    add_bioelement:
+        ui-name : |
+            Add Bioelement
+        short-hint : |
+            Decide whether to run MicroTrait Bioelement functional summaries
+    checkM_reduced_tree :
+        ui-name : |
+            CheckM Reference Tree
+        short-hint : |
+            Select the CheckM reference tree to use. The reduced tree is faster and requires less memory because it is smaller. The developers recommend using the full tree, if possible, even though tests suggest that the same lineage-specific marker set will be selected for the vast majority of genomes regardless of the underlying reference tree.
+
+description : |
+    <p>This App allows the user to view summaries of the <b><i>Genomes</i></b> in a <b><i>Genome Set</i></b>.  This includes any taxonomic classification, tallies of feature types (e.g. number of protein encoding genes, ribosomal RNA genes, etc.).  Optionally, and slower, the user can include quality completeness and contamination measures from CheckM, and environmental bioelement processing functional summaries.</p>
+
+
+    <p><hr></p>
+    <p><b>Tool and Data Sources:</b></p>
+    <p>MicroTrait v1.0 HMMs are installed from <a href="https://github.com/ukaraoz/microtrait-hmm/tree/master/data.kb_hmmer/hmm">https://github.com/ukaraoz/microtrait-hmm/tree/master/data.kb_hmmer/hmm</a></p>
+    <p><b>CheckM v1.1.2</b> is installed from <a href="https://github.com/Ecogenomics/CheckM/releases/tag/v1.1.2">https://github.com/Ecogenomics/CheckM/releases/tag/v1.1.2</a> with reference data version <b>2015_01_16</b> from <a href="https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz">https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz</a>.</p>
+    
+
+    <p><hr></p>
+    <p><strong>Team members who developed &amp; deployed App in KBase:</strong> <a href="https://narrative.kbase.us/#people/dylan">Dylan Chivian</a>. For questions, please <a href=”http://www.kbase.us/support/”>contact us</a>.</p>
+    
+    <p><strong>Please cite:</strong>
+      <ul>
+        <li>Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
+        <li>Karaoz U, Brodie EL. microTrait: A Toolset for a Trait-Based Representation of Microbial Genomes. Front Bioinform. 2022 Jul 22;2:918853. doi: 10.3389/fbinf.2022.918853
+        <li>Parks DH, Imelfort M, Skennerton CT, Hugenholtz P, Tyson GW. CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Res. 2015;25: 1043–1055. doi:10.1101/gr.186072.114
+      </ul>
+    </p>
+
+
+publications :
+    -
+        pmid: 36376589
+        display-text: |
+            Chivian D, Jungbluth SP, Dehal PS, Wood-Charlson EM, Canon RS, Allen BH, Clark MM, Gu T, Land ML, Price GA, Riehl WJ, Sneddon MW, Sutormin R, Zhang Q, Cottingham RW, Henry CS, Arkin AP. Metagenome-assembled genome extraction and analysis from microbiomes using KBase. Nat Protoc. 2023 Jan;18(1):208-238. doi: 10.1038/s41596-022-00747-x
+        link: https://www.nature.com/articles/s41596-022-00747-x
+    -
+        pmid: 36304272
+        display-text: |
+            Karaoz U, Brodie EL. microTrait: A Toolset for a Trait-Based Representation of Microbial Genomes. Front Bioinform. 2022 Jul 22;2:918853. doi: 10.3389/fbinf.2022.918853
+        link: https://www.frontiersin.org/articles/10.3389/fbinf.2022.918853/full
+    -
+        pmid: 25977477
+        display-text: |
+            Parks DH, Imelfort M, Skennerton CT, Hugenholtz P, Tyson GW. CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Res. 2015;25: 1043–1055. doi:10.1101/gr.186072.114
+        link: https://genome.cshlp.org/content/25/7/1043.long

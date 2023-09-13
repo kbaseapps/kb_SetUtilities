@@ -1,3 +1,12 @@
+### Version 1.9.0
+__Changes__
+- Added "Split GenomeSet" App
+
+### Version 1.8.0
+__Changes__
+- Added "Summarize Genome Set" App
+- Added GenomeSet as valid filter to Slice FeatureSets by Genomes()
+
 ### Version 1.7.6
 __Changes__
 - fixed bugs found in narrative beta testing

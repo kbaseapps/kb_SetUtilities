@@ -1,0 +1,203 @@
+{
+    "ver": "1.8.0",
+    "authors": [
+        "dylan"
+    ],
+    "contact": "http://www.kbase.us/support",
+    "visible": true,
+    "categories": ["active","util","comparative_genomics"],
+    "widgets": {
+        "input": null,
+        "output": "no-display"
+    },
+    "parameters": [ 
+        {
+            "id": "input_ref",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "" ],
+            "field_type": "text",
+            "text_options": {
+                "valid_ws_types": [ "KBaseSearch.GenomeSet" ]
+            }
+        },
+        {
+            "id": "use_newest_version",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "1" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": "0",
+                        "display": "NO",
+                        "id": "use_newest_version-NO",
+                        "ui-name": "use_newest_version-NO"
+                    },
+                    {
+                        "value": "1",
+                        "display": "YES",
+                        "id": "use_newest_version-YES",
+                        "ui-name": "use_newest_version-YES"
+                    }
+		]
+            }
+        },
+        {
+            "id": "show_sci_name",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "0" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": "0",
+                        "display": "HIDE",
+                        "id": "scow_sci_name-HIDE",
+                        "ui-name": "show_sci_name-HIDE"
+                    },
+                    {
+                        "value": "1",
+                        "display": "SHOW",
+                        "id": "show_sci_name-SHOW",
+                        "ui-name": "show_sci_name-SHOW"
+                    }
+		]
+            }
+        },
+        {
+            "id": "add_qc",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "0" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": "0",
+                        "display": "NO",
+                        "id": "run_qc-NO",
+                        "ui-name": "run_qc-NO"
+                    },
+                    {
+                        "value": "1",
+                        "display": "YES",
+                        "id": "run_qc-YES",
+                        "ui-name": "run_qc-YES"
+                    }
+		]
+            }
+        },
+        {
+            "id": "add_bioelement",
+            "optional": false,
+            "advanced": false,
+            "allow_multiple": false,
+            "default_values": [ "0" ],
+            "field_type": "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": "0",
+                        "display": "NO",
+                        "id": "run_bioelement-NO",
+                        "ui-name": "run_bioelement-NO"
+                    },
+                    {
+                        "value": "1",
+                        "display": "YES",
+                        "id": "run_bioelement-YES",
+                        "ui-name": "run_bioelement-YES"
+                    }
+		]
+            }
+        },
+        {
+            "id": "checkM_reduced_tree",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values":[1],
+            "field_type" : "dropdown",
+            "dropdown_options": {
+                "options": [
+                    {
+                        "value": 1,
+                        "display": "reduced tree",
+                        "id": "checkM_reduced_tree_TRUE",
+                        "ui-name": "checkM_reduced_tree_TRUE"
+                    },
+                    {
+                        "value": 0,
+                        "display": "full tree",
+                        "id": "checkM_reduced_tree_FALSE",
+                        "ui-name": "checkM_reduced_tree_FALSE"
+                    }
+                ]
+            }
+        }
+    ],
+    "behavior": {
+        "service-mapping": {
+            "url": "",
+            "name": "kb_SetUtilities",
+            "method": "KButil_Summarize_GenomeSet",
+            "input_mapping": [
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
+                },
+                {
+                    "input_parameter": "input_ref",
+                    "target_property": "input_ref",
+		    "target_type_transform": "resolved-ref"
+                },
+                {
+                    "input_parameter": "use_newest_version",
+                    "target_property": "use_newest_version"
+                },
+                {
+                    "input_parameter": "show_sci_name",
+                    "target_property": "show_sci_name"
+                },
+                {
+                    "input_parameter": "add_qc",
+                    "target_property": "add_qc"
+                },
+                {
+                    "input_parameter": "add_bioelement",
+                    "target_property": "add_bioelement"
+                },
+                {
+                    "input_parameter": "checkM_reduced_tree",
+                    "target_property": "checkM_reduced_tree"
+                }
+            ],
+            "output_mapping": [
+                {
+                    "narrative_system_variable": "workspace",
+                    "target_property": "workspace_name"
+                },
+                {
+                    "service_method_output_path": [0, "report_name"],
+                    "target_property": "report_name"
+                },
+                {
+                    "service_method_output_path": [0, "report_ref"],
+                    "target_property": "report_ref"
+                },
+                {
+		    "constant_value": "40",
+                    "target_property": "report_window_line_height"
+                }
+            ]
+        }
+    },
+    "job_id_output_field": "docker"
+}

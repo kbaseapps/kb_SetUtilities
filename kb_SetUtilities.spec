@@ -24,6 +24,24 @@ module kb_SetUtilities {
     typedef int    bool;
 
 
+    /* KButil_Split_GenomeSet()
+    **
+    **  Method for evenly splitting Genome Set
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	data_obj_ref   input_ref;
+	int            split_num;
+    } KButil_Split_GenomeSet_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Split_GenomeSet_Output;
+
+    funcdef KButil_Split_GenomeSet (KButil_Split_GenomeSet_Params params)  returns (KButil_Split_GenomeSet_Output) authentication required;
+
+
     /* KButil_Localize_GenomeSet()
     **
     **  Method for creating Genome Set with all local Genomes
@@ -374,6 +392,26 @@ module kb_SetUtilities {
     funcdef KButil_Batch_Create_GenomeSet (KButil_Batch_Create_GenomeSet_Params params)  returns (KButil_Batch_Create_GenomeSet_Output) authentication required;
 
 
+    /* KButil_Summarize_GenomeSet()
+    **
+    **  Method for building an HTML report with Genome summaries
+    */
+    typedef structure {
+        workspace_name workspace_name;
+	data_obj_ref   input_ref;
+	bool           use_newest_version;
+	bool           show_sci_name;
+	bool           add_qc;
+	bool           add_bioelement;
+	bool           checkM_reduced_tree;
+    } KButil_Summarize_GenomeSet_Params;
+
+    typedef structure {
+	data_obj_name report_name;
+	data_obj_ref  report_ref;
+    } KButil_Summarize_GenomeSet_Output;
+
+    funcdef KButil_Summarize_GenomeSet (KButil_Summarize_GenomeSet_Params params)  returns (KButil_Summarize_GenomeSet_Output) authentication required;
 
 };
 
