@@ -14,6 +14,14 @@ from installed_clients.WorkspaceClient import Workspace as workspaceService
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.kb_MsuiteClient import kb_Msuite
 from installed_clients.kb_hmmerClient import kb_hmmer
+
+
+##############################################################################################
+# TODO: 1. move utility methods into a separate module or lib, such as get_newest_obj_info() #
+#       2. make configuration in external yaml or similar file                               #
+#       3. use a template for html in reports
+##############################################################################################
+
 #END_HEADER
 
 
